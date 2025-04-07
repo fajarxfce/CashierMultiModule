@@ -24,6 +24,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.navigation.compose.rememberNavController
+import com.google.samples.apps.nowinandroid.navigation.RootNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import java.nio.file.WatchEvent
 
@@ -34,13 +36,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
+            val navController = rememberNavController()
             Scaffold(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Text(
-                    text = "Hello World!",
-                )
-            }
+                modifier = Modifier.fillMaxSize(),
+                content = { innerPadding ->
+                    RootNavHost(navController)
+                }
+            )
         }
     }
 }

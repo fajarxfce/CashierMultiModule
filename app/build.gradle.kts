@@ -69,10 +69,10 @@ android {
 }
 
 dependencies {
-//    implementation(projects.feature.interests)
-//    implementation(projects.feature.foryou)
-//    implementation(projects.feature.bookmarks)
-//    implementation(projects.feature.topic)
+    implementation(projects.feature.splash)
+    implementation(projects.feature.onboarding)
+    implementation(projects.feature.main)
+    implementation(projects.feature.auth)
 //    implementation(projects.feature.search)
 //    implementation(projects.feature.settings)
 //
