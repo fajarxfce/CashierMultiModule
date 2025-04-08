@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package com.google.samples.apps.nowinandroid
+package com.fajarxfce.apps
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.ui.Modifier
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
-import com.google.samples.apps.nowinandroid.navigation.RootNavHost
-import com.google.samples.apps.nowinandroid.ui.theme.AppTheme
+import com.fajarxfce.apps.navigation.RootNavHost
+import com.fajarxfce.apps.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import java.nio.file.WatchEvent
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

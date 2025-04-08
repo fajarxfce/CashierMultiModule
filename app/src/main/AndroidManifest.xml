@@ -21,7 +21,7 @@
 
 
     <application
-        android:name=".NiaApplication"
+        android:name="com.fajarxfce.apps.NiaApplication"
         android:allowBackup="true"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
@@ -32,7 +32,7 @@
         <profileable android:shell="true" tools:targetApi="q" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.fajarxfce.apps.MainActivity"
             android:configChanges="uiMode"
             android:exported="true">
             <intent-filter>

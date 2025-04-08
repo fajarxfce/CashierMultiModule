@@ -1,17 +1,13 @@
-package com.google.samples.apps.nowinandroid.navigation
+package com.fajarxfce.apps.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import com.fajarxfce.feature.main.navigation.MainRoute
 import com.fajarxfce.feature.main.navigation.mainSection
-import com.fajarxfce.feature.main.ui.MainScreen
 import com.fajarxfce.feature.onboarding.navigation.OnBoardingRoute
-import com.fajarxfce.feature.onboarding.navigation.navigteToOnBoarding
 import com.fajarxfce.feature.onboarding.navigation.onBoardingSection
 import com.fajarxfce.feature.splash.navigation.SplashBaseRoute
-import com.fajarxfce.feature.splash.navigation.SplashRoute
 import com.fajarxfce.feature.splash.navigation.splashSection
 
 @Composable

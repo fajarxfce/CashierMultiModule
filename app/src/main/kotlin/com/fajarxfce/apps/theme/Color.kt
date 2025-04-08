@@ -1,4 +1,4 @@
-package com.fajar.nestednavigation.ui.theme
+package com.fajarxfce.apps.theme
 import androidx.compose.ui.graphics.Color
 
 val dark_primary = Color(0xFFFFFFFF)
