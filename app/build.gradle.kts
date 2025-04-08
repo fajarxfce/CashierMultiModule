@@ -102,6 +102,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines.guava)
     implementation(libs.coil.kt)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.androidx.ui.text.google.fonts)
 
     ksp(libs.hilt.compiler)
 

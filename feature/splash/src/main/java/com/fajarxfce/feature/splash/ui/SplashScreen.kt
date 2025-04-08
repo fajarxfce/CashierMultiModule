@@ -49,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fajarxfce.feature.splash.R
 import kotlinx.coroutines.delay
 
 @Composable
@@ -94,15 +95,17 @@ fun SplashScreen(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Replace resource ID with your actual logo
-//            Image(
-//                painter = painterResource(id = android.R.drawable.sym_def_app_icon),
-//                contentDescription = "App Logo",
-//                modifier = Modifier
-//                    .size(150.dp)
-//                    .scale(logoScale)
-//                    .alpha(logoAlpha)
-//            )
+            Image(
+                painter = painterResource(
+                    R.drawable.splash_logo
+                ),
+                contentDescription = "App Logo",
+                modifier = Modifier
+                    .size(150.dp)
+                    .scale(logoScale)
+                    .alpha(logoAlpha)
+            )
+
 
             Spacer(modifier = Modifier.height(24.dp))
 

@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.google.samples.apps.nowinandroid.navigation.RootNavHost
+import com.google.samples.apps.nowinandroid.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import java.nio.file.WatchEvent
 
@@ -37,12 +38,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-            Scaffold(
-                modifier = Modifier.fillMaxSize(),
-                content = { innerPadding ->
-                    RootNavHost(navController)
-                }
-            )
+            AppTheme(navController = navController) {
+                RootNavHost(
+                    navController = navController,
+                )
+            }
         }
     }
 }
