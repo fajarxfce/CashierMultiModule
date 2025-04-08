@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.fajarxfce.shopping.ui.ShoppingScreen
 import kotlinx.serialization.Serializable
 
 @Serializable data object ShoppingBaseRoute
@@ -18,10 +19,14 @@ fun NavGraphBuilder.shoppingSection(
 
 ) {
     navigation<ShoppingBaseRoute>(
-        startDestination = ShoppingRoute
+        startDestination = ShoppingRoute,
     ) {
         composable<ShoppingRoute> {
+            ShoppingScreen(
+                onAddToCart = { productId, qty ->
 
+                },
+            )
         }
     }
 }

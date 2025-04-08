@@ -20,6 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.fajarxfce.core.designsystem.theme.AppTheme
@@ -28,8 +30,8 @@ import com.fajarxfce.core.designsystem.theme.AppTheme
 fun ShoppingScreen(
     onAddToCart: (String, Int) -> Unit,
 ) {
-    val viewModel: ShoppingViewModel = viewModel()
-    val products = viewModel.products.collectAsState().value
+    val viewModel: ShoppingViewModel = hiltViewModel()
+    val products = viewModel.products.collectAsStateWithLifecycle().value
 
     Column(
         modifier = Modifier

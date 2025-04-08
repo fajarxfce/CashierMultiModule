@@ -1,6 +1,8 @@
 package com.fajarxfce.shopping.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +15,6 @@ data class Product(
     val imageUrl: String,
     var quantity: Int = 0
 )
-
 class ShoppingViewModel : ViewModel() {
 
     private val _products = MutableStateFlow<List<Product>>(generateDummyProducts())
@@ -32,6 +33,7 @@ class ShoppingViewModel : ViewModel() {
     }
 
     private fun generateDummyProducts(): List<Product> {
+        Log.d("ShoppingViewModel", "Generating dummy products")
         return listOf(
             Product("1", "Smartphone", 699.99, "https://picsum.photos/id/1/300/300"),
             Product("2", "Laptop", 1299.99, "https://picsum.photos/id/2/300/300"),

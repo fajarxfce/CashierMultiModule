@@ -5,6 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.fajarxfce.feature.account.navigation.accountSection
+import com.fajarxfce.shopping.navigation.ShoppingBaseRoute
 import com.fajarxfce.shopping.navigation.ShoppingRoute
 import com.fajarxfce.shopping.navigation.shoppingSection
 import kotlinx.serialization.Serializable
@@ -17,7 +18,7 @@ fun MainNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = ShoppingRoute,
+        startDestination = ShoppingBaseRoute,
     ) {
         accountSection()
         shoppingSection()
