@@ -1,4 +1,4 @@
-package com.fajarxfce.apps.theme
+package com.fajarxfce.core.designsystem.theme
 import androidx.compose.ui.graphics.Color
 
 val dark_primary = Color(0xFFFFFFFF)

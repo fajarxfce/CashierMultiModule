@@ -21,7 +21,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.navigation.compose.rememberNavController
 import com.fajarxfce.apps.navigation.RootNavHost
-import com.fajarxfce.apps.theme.AppTheme
+import com.fajarxfce.core.designsystem.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

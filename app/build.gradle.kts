@@ -29,7 +29,7 @@ plugins {
 
 android {
     defaultConfig {
-        applicationId = "com.google.samples.apps.nowinandroid"
+        applicationId = "com.fajarxfce.apps"
         versionCode = 8
         versionName = "0.1.2" // X.Y.Z; X = Major, Y = minor, Z = Patch level
 
@@ -65,7 +65,7 @@ android {
             isIncludeAndroidResources = true
         }
     }
-    namespace = "com.google.samples.apps.nowinandroid"
+    namespace = "com.fajarxfce.apps"
 }
 
 dependencies {
@@ -73,6 +73,7 @@ dependencies {
     implementation(projects.feature.onboarding)
     implementation(projects.feature.main)
     implementation(projects.feature.auth)
+    implementation(projects.core.designsystem)
 //    implementation(projects.feature.search)
 //    implementation(projects.feature.settings)
 //
@@ -102,8 +103,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.guava)
     implementation(libs.coil.kt)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.accompanist.systemuicontroller)
-    implementation(libs.androidx.ui.text.google.fonts)
+
 
     ksp(libs.hilt.compiler)
 

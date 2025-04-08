@@ -1,4 +1,4 @@
-package com.fajarxfce.apps.theme
+package com.fajarxfce.core.designsystem.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.fajarxfce.feature.splash.navigation.SplashRoute
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
@@ -56,7 +55,7 @@ fun AppTheme(
 
     LaunchedEffect(navBackStackEntry) {
         val currentRoute = navBackStackEntry?.destination?.route
-        val inNavigationBarScreen = currentRoute == SplashRoute.toString()  ||
+        val inNavigationBarScreen =
                 currentRoute == "onboarding" || currentRoute == "splash"
 
         val gestureBarColor = if (inNavigationBarScreen) {

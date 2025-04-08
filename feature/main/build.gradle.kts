@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.nowinandroid.android.library.jacoco)
 }
 android {
-    namespace = "com.fajarxfce.feature.onboarding"
+    namespace = "com.fajarxfce.feature.main"
 }
 
 dependencies {
@@ -17,6 +17,9 @@ dependencies {
     api(libs.androidx.compose.material3.navigationSuite)
     api(libs.androidx.compose.runtime)
     api(libs.androidx.compose.ui.util)
+
+    implementation(projects.feature.account)
+    implementation(projects.feature.shopping)
 
     testImplementation(libs.robolectric)
 

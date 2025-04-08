@@ -32,6 +32,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
 include(":core")
 include(":feature")
+//include(":feature:product")
 
 check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
     """
@@ -46,3 +47,7 @@ include(":feature:onboarding")
 include(":feature:main")
 include(":core:common")
 include(":core:designsystem")
+include(":feature:shopping")
+include(":feature:cart")
+include(":feature:favorite")
+include(":feature:account")

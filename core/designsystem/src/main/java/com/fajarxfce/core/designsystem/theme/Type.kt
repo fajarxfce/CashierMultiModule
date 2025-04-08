@@ -1,11 +1,11 @@
-package com.fajarxfce.apps.theme
+package com.fajarxfce.core.designsystem.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.FontFamily
 
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.text.googlefonts.Font
-import com.google.samples.apps.nowinandroid.R
+import com.fajarxfce.core.designsystem.R
 
 val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
