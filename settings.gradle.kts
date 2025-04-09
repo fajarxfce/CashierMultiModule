@@ -26,7 +26,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "nowinandroid"
+rootProject.name = "fajar-tampan"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")

@@ -17,6 +17,7 @@
 package com.fajarxfce.apps
 
 import android.app.Application
+import android.content.pm.ApplicationInfo
 import dagger.hilt.android.HiltAndroidApp
 
 /**
@@ -24,4 +25,15 @@ import dagger.hilt.android.HiltAndroidApp
  */
 @HiltAndroidApp
 class NiaApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+    }
+
+    private fun isDebuggable(): Boolean {
+        return 0 != applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
+    }
+
+
 }
+
+

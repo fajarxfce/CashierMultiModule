@@ -58,6 +58,7 @@ robolectric = "4.14.1"
 roborazzi = "1.39.0"
 room = "2.6.1"
 secrets = "2.0.1"
+timber = "5.0.1"
 truth = "1.4.4"
 turbine = "1.2.0"
 junit = "4.13.2"
@@ -156,6 +157,7 @@ roborazzi-accessibility-check = { group = "io.github.takahirom.roborazzi", name 
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 

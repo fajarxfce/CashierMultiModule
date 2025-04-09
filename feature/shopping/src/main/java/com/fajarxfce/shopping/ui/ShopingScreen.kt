@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -25,45 +26,77 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.fajarxfce.core.designsystem.theme.AppTheme
+import com.fajarxfce.core.designsystem.theme.dark_primaryContainer
+import com.fajarxfce.core.designsystem.theme.dark_surface
 
 @Composable
 fun ShoppingScreen(
     onAddToCart: (String, Int) -> Unit,
+    viewModel: ShoppingViewModel = hiltViewModel()
 ) {
-    val viewModel: ShoppingViewModel = hiltViewModel()
-    val products = viewModel.products.collectAsStateWithLifecycle().value
+    viewModel.shoppingUiState.collectAsState(initial = ShoppingUiState.Loading).value.let {
+        uiState ->
+        when (uiState) {
+            is ShoppingUiState.Loading -> {
+                viewModel.generateDummyProducts()
+            }
+            is ShoppingUiState.Success -> {
+                ShoppingContent(
+                    products = uiState.data,
+                    onAddToCart = onAddToCart
+                )
+            }
+            is ShoppingUiState.Error -> {
+                // Handle error state
+                // You can show a Snackbar or a Text message to inform the user
+                // For example:
+                Text(
+                    text = "Error: Bejir",
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+    }
+}
 
+@Composable
+fun ShoppingContent(
+    modifier: Modifier = Modifier,
+    products: List<Product>,
+    onAddToCart: (String, Int) -> Unit
+) {
+    val listState = rememberLazyGridState()
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         Text(
             text = "Shopping",
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.headlineLarge,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(bottom = 16.dp)
         )
-
         LazyVerticalGrid(
+            state = listState,
             columns = GridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(products) { product ->
+            items(products, key = { it.id }) { product ->
                 ProductCard(
                     product = product,
                     onQuantityChange = { quantity ->
-                        viewModel.updateQuantity(product.id, quantity)
-                        if (quantity > 0) {
-                            onAddToCart(product.id, quantity)
-                        }
+                        onAddToCart(product.id, quantity)
                     }
                 )
             }
         }
     }
+
+
+
+
 }
 
 @Composable
@@ -88,12 +121,13 @@ fun ProductCard(
                     .fillMaxWidth()
                     .height(120.dp)
                     .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .background(dark_primaryContainer)
             )
 
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .background(dark_surface)
                     .padding(12.dp)
             ) {
                 Text(

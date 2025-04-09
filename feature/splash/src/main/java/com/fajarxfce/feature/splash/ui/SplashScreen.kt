@@ -26,6 +26,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -89,6 +90,7 @@ fun SplashScreen(
 
     Box(
         modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
@@ -97,7 +99,7 @@ fun SplashScreen(
         ) {
             Image(
                 painter = painterResource(
-                    R.drawable.splash_logo
+                    com.fajarxfce.core.designsystem.R.drawable.logo
                 ),
                 contentDescription = "App Logo",
                 modifier = Modifier
@@ -118,7 +120,7 @@ fun SplashScreen(
                        )
             ) {
                 Text(
-                    text = "Your App Name",
+                    text = "Grocery App",
                     color = MaterialTheme.colorScheme.primary,
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold

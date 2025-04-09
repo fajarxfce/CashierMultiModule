@@ -17,7 +17,7 @@ dependencies {
     api(libs.androidx.compose.material3.navigationSuite)
     api(libs.androidx.compose.runtime)
     api(libs.androidx.compose.ui.util)
-
+    implementation (libs.timber)
     testImplementation(libs.robolectric)
 
     androidTestImplementation(libs.bundles.androidx.compose.ui.test)

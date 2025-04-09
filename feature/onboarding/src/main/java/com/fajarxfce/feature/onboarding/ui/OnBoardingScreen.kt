@@ -61,6 +61,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.fajarxfce.core.designsystem.R.*
 import com.fajarxfce.feature.onboarding.R
 import kotlinx.coroutines.launch
 
@@ -77,17 +78,17 @@ fun OnBoardingScreen(
 ) {
     val pages = listOf(
         OnboardingPage(
-            imageRes = R.drawable.ic_splash,
+            imageRes = drawable.logo,
             title = "Welcome to Our App",
             description = "Discover amazing features designed to make your life easier",
         ),
         OnboardingPage(
-            imageRes = R.drawable.ic_splash,
+            imageRes = drawable.logo,
             title = "Personalized Experience",
             description = "Content tailored to your preferences and needs",
         ),
         OnboardingPage(
-            imageRes = R.drawable.ic_splash,
+            imageRes = drawable.logo,
             title = "Ready to Start?",
             description = "Join our community and explore everything we have to offer",
         )

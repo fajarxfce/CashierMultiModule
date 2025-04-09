@@ -1,5 +1,6 @@
 package com.fajarxfce.core.designsystem.theme
 
+import android.util.Log
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.serialization.Serializable
 
 private val darkColorScheme = darkColorScheme(
     primary = dark_primary,
@@ -55,8 +57,10 @@ fun AppTheme(
 
     LaunchedEffect(navBackStackEntry) {
         val currentRoute = navBackStackEntry?.destination?.route
+        Log.d("TAG", "AppThemeBjir: ${currentRoute?.substringAfterLast(".")}")
+        val routeName = currentRoute?.substringAfterLast(".")
         val inNavigationBarScreen =
-                currentRoute == "onboarding" || currentRoute == "splash"
+                routeName == "SplashRoute" || routeName == "OnBoardingRoute" || routeName == "MainRoute"
 
         val gestureBarColor = if (inNavigationBarScreen) {
             darkColorScheme.primaryContainer
@@ -78,3 +82,6 @@ fun AppTheme(
     )
 }
 
+@Serializable data object SplashBaseRoute
+@Serializable data object OnboardingBaseRoute
+@Serializable data object MainBaseRoute

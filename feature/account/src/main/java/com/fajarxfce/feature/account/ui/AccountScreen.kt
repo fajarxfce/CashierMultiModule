@@ -23,6 +23,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Logout
@@ -33,6 +34,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -134,7 +136,7 @@ fun AccountScreen(
 
                 AccountOption(
                     title = "Sign Out",
-                    icon = Icons.Default.Logout,
+                    icon = Icons.AutoMirrored.Filled.Logout,
                     onClick = onSignOut
                 )
 
@@ -305,7 +307,7 @@ private fun AccountOption(
         }
     }
 
-    Divider(
+    HorizontalDivider(
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
         modifier = Modifier.padding(horizontal = 16.dp)
     )
