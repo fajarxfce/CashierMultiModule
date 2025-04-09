@@ -9,7 +9,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.designsystem)
     implementation(projects.core.common)
     implementation (libs.timber)
     api(libs.androidx.compose.foundation)
