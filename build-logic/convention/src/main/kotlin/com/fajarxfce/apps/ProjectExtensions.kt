@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The Android Open Source Project
+ * Copyright 2023 The Android Open Source Project
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
  *   limitations under the License.
  */
 
-package com.google.samples.apps.nowinandroid
+package com.fajarxfce.apps
 
-/**
- * This is shared between :app and :benchmarks module to provide configurations type safety.
- */
-enum class NiaBuildType(val applicationIdSuffix: String? = null) {
-    DEBUG(".debug"),
-    RELEASE,
-}
+import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalog
+import org.gradle.api.artifacts.VersionCatalogsExtension
+import org.gradle.kotlin.dsl.getByType
+
+val Project.libs
+    get(): VersionCatalog = extensions.getByType<VersionCatalogsExtension>().named("libs")

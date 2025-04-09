@@ -29,10 +29,6 @@ dependencyResolutionManagement {
 rootProject.name = "fajar-tampan"
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-include(":app")
-include(":core")
-include(":feature")
-//include(":feature:product")
 
 check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
     """
@@ -41,6 +37,8 @@ check(JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_17)) {
     https://developer.android.com/build/jdks#jdk-config-in-studio
     """.trimIndent()
 }
+
+include(":app")
 include(":feature:auth")
 include(":feature:splash")
 include(":feature:onboarding")
@@ -54,4 +52,3 @@ include(":feature:account")
 include(":core:model")
 include(":core:datastore")
 include(":core:network")
-include(":core:datastore-proto")

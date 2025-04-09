@@ -16,12 +16,12 @@
 
 import com.android.build.api.variant.LibraryAndroidComponentsExtension
 import com.android.build.gradle.LibraryExtension
-import com.google.samples.apps.nowinandroid.configureFlavors
-import com.google.samples.apps.nowinandroid.configureGradleManagedDevices
-import com.google.samples.apps.nowinandroid.configureKotlinAndroid
-import com.google.samples.apps.nowinandroid.configurePrintApksTask
-import com.google.samples.apps.nowinandroid.disableUnnecessaryAndroidTests
-import com.google.samples.apps.nowinandroid.libs
+import com.fajarxfce.apps.configureFlavors
+import com.fajarxfce.apps.configureGradleManagedDevices
+import com.fajarxfce.apps.configureKotlinAndroid
+import com.fajarxfce.apps.configurePrintApksTask
+import com.fajarxfce.apps.disableUnnecessaryAndroidTests
+import com.fajarxfce.apps.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply

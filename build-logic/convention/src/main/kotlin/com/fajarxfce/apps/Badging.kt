@@ -14,7 +14,7 @@
  *   limitations under the License.
  */
 
-package com.google.samples.apps.nowinandroid
+package com.fajarxfce.apps
 
 import com.android.SdkConstants
 import com.android.build.api.artifact.SingleArtifact
@@ -38,6 +38,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.register
 import org.gradle.language.base.plugins.LifecycleBasePlugin
+import org.gradle.process.BaseExecSpec
 import org.gradle.process.ExecOperations
 import javax.inject.Inject
 

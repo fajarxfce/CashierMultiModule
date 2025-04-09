@@ -1,5 +1,4 @@
 plugins {
-    alias(libs.plugins.nowinandroid.android.feature)
     alias(libs.plugins.nowinandroid.android.library)
     alias(libs.plugins.nowinandroid.android.library.compose)
     alias(libs.plugins.nowinandroid.android.library.jacoco)
@@ -20,6 +19,8 @@ dependencies {
     api(libs.androidx.compose.material3.navigationSuite)
     api(libs.androidx.compose.runtime)
     api(libs.androidx.compose.ui.util)
+    api(libs.androidx.navigation.compose)
+    api(libs.kotlinx.serialization.json)
 
     implementation(libs.coil.kt.compose)
 

@@ -1,3 +1,5 @@
+import com.fajarxfce.apps.NiaBuildType
+
 /*
  * Copyright 2022 The Android Open Source Project
  *
@@ -13,7 +15,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.google.samples.apps.nowinandroid.NiaBuildType
 
 plugins {
     alias(libs.plugins.nowinandroid.android.application)
