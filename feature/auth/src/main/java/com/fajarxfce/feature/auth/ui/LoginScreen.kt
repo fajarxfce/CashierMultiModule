@@ -49,6 +49,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.fajarxfce.core.designsystem.component.NiaLoadingWheel
 import com.fajarxfce.core.designsystem.theme.AppTheme
 
 @Composable
