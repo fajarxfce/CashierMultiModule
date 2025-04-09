@@ -20,7 +20,12 @@ fun MainNavHost(
         navController = navController,
         startDestination = ShoppingBaseRoute,
     ) {
-        accountSection()
+        accountSection(
+            onNavigateToStoreManagement = {},
+            onNavigateToTransactionHistory = {},
+            onNavigateToSettings = {},
+            onSignOut = {}
+        )
         shoppingSection()
     }
 }

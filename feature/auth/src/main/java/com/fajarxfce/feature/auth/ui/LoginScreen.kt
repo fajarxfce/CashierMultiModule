@@ -53,7 +53,7 @@ import com.fajarxfce.core.designsystem.theme.AppTheme
 
 @Composable
 fun LoginScreen(
-    onLoginClick: (String, String) -> Unit = { _, _ -> },
+    onLoginClick: () -> Unit = {},
     onForgotPasswordClick: () -> Unit = {},
     onSignUpClick: () -> Unit = {}
 ) {
@@ -165,7 +165,12 @@ fun LoginScreen(
                         keyboardActions = KeyboardActions(
                             onDone = {
                                 focusManager.clearFocus()
-                                validateAndLogin(username, password, onLoginClick, { showError = true })
+                                validateAndLogin(
+                                    username = username,
+                                    password = password,
+                                    onLoginClick = onLoginClick,
+                                    onError = { showError = true }
+                                )
                             }
                         ),
                         isError = showError && password.isBlank()
@@ -251,13 +256,13 @@ fun LoginScreen(
 private fun validateAndLogin(
     username: String,
     password: String,
-    onLoginClick: (String, String) -> Unit,
+    onLoginClick: () -> Unit,
     onError: () -> Unit
 ) {
     if (username.isBlank() || password.isBlank()) {
         onError()
     } else {
-        onLoginClick(username, password)
+        onLoginClick()
     }
 }
 

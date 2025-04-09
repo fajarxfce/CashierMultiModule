@@ -9,11 +9,7 @@ import kotlinx.serialization.Serializable
 @Serializable data object MainRoute
 
 fun NavController.navigateToMain() {
-    navigate(MainRoute) {
-        popUpTo(MainRoute) {
-            inclusive = true
-        }
-    }
+    navigate(MainRoute)
 }
 
 fun NavGraphBuilder.mainSection(
