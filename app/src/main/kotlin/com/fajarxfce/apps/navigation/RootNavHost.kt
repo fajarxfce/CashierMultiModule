@@ -3,6 +3,8 @@ package com.fajarxfce.apps.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.fajarxfce.feature.auth.navigation.AuthBaseRoute
+import com.fajarxfce.feature.auth.navigation.authSection
 import com.fajarxfce.feature.main.navigation.MainRoute
 import com.fajarxfce.feature.main.navigation.mainSection
 import com.fajarxfce.feature.onboarding.navigation.OnBoardingRoute
@@ -33,7 +35,19 @@ fun RootNavHost(
         onBoardingSection(
             onFinished = {
                 with(navController) {
-                    navigate(MainRoute){
+                    navigate(AuthBaseRoute){
+                        popUpTo(OnBoardingRoute) {
+                            inclusive = true
+                        }
+                    }
+                }
+            }
+        )
+
+        authSection(
+            onLoginSuccess = {
+                with(navController) {
+                    navigate(MainRoute) {
                         popUpTo(OnBoardingRoute) {
                             inclusive = true
                         }
