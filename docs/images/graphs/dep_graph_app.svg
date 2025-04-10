@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="260pt" viewBox="0 0 585.45 260">
+    <g class="graph">
+        <path fill="#fff" d="M0 260V0h585.45v260z"/>
+        <g class="node" transform="translate(4 256)">
+            <ellipse cx="125.05" cy="-234" fill="none" stroke="#000" rx="27" ry="18"/>
+            <text x="125.05" y="-228.95" font-family="Times,serif" font-size="14" text-anchor="middle">:app</text>
+        </g>
+        <g class="node" transform="translate(4 256)">
+            <ellipse cx="79.05" cy="-90" fill="none" stroke="#000" rx="57.49" ry="18"/>
+            <text x="79.05" y="-84.95" font-family="Times,serif" font-size="14" text-anchor="middle">:feature:auth</text>
+        </g>
+        <g stroke="#000" class="edge">
+            <path fill="none" d="M106.36 32.23C88.8 40.73 65.74 55.2 55.05 76c-10.26 19.97-1.21 44.39 9.25 62.6"/>
+            <path d="m67.21 136.64 2.31 10.34-8.26-6.64z"/>
+        </g>
+        <g class="node" transform="translate(4 256)">
+            <ellipse cx="125.05" cy="-162" fill="none" stroke="#000" rx="64.66" ry="18"/>
+            <text x="125.05" y="-156.95" font-family="Times,serif" font-size="14" text-anchor="middle">:feature:splash</text>
+        </g>
+        <g stroke="#000" class="edge">
+            <path fill="none" d="M129.05 40.3v24.16"/>
+            <path d="m132.55 64.38-3.5 10-3.5-10z"/>
+        </g>
+        <g class="node" transform="translate(4 256)">
+            <ellipse cx="291.05" cy="-162" fill="none" stroke="#000" rx="83.6" ry="18"/>
+            <text x="291.05" y="-156.95" font-family="Times,serif" font-size="14" text-anchor="middle">:feature:onboarding</text>
+        </g>
+        <g stroke="#000" class="edge">
+            <path fill="none" d="m151.43 32.44 96.33 40.62"/>
+            <path d="m248.87 69.73 7.85 7.11-10.57-.66z"/>
+        </g>
+        <g class="node" transform="translate(4 256)">
+            <ellipse cx="453.05" cy="-162" fill="none" stroke="#000" rx="60.56" ry="18"/>
+            <text x="453.05" y="-156.95" font-family="Times,serif" font-size="14" text-anchor="middle">:feature:main</text>
+        </g>
+        <g stroke="red" stroke-width="2" class="edge">
+            <path fill="none" d="M154.85 27.93c46.67 8.99 148.13 28.89 233.2 48.07 4.21.95 8.56 1.96 12.93 2.99"/>
+            <path fill="red" d="m399.97 75.15 8.91 5.73-10.54 1.08z"/>
+        </g>
+        <g class="node" transform="translate(4 256)">
+            <ellipse cx="202.05" cy="-18" fill="none" stroke="#000" rx="82.06" ry="18"/>
+            <text x="202.05" y="-12.95" font-family="Times,serif" font-size="14" text-anchor="middle">:core:designsystem</text>
+        </g>
+        <g stroke="#000" class="edge">
+            <path fill="none" d="M106.9 32.7C88.7 41.64 63.35 56.49 47.05 76c-31.94 38.23-60.1 68.3-30 108 13.88 18.31 65.6 32.04 111.43 40.93"/>
+            <path d="m129 221.47 9.19 5.28-10.48 1.6z"/>
+        </g>
+        <g stroke="#000" class="edge">
+            <path fill="none" d="M110.04 182.36c16.83 9.58 38.75 22.05 57.4 32.67"/>
+            <path d="m169.13 211.96 6.96 7.99-10.42-1.9z"/>
+        </g>
+        <g stroke="#000" class="edge">
+            <path fill="none" d="m138.34 112.13 53.06 97.86"/>
+            <path d="m194.31 208.02 1.7 10.46-7.85-7.12z"/>
+        </g>
+        <g stroke="#000" class="edge">
+            <path fill="none" d="M267.88 111.34c-13.2 9.23-28.25 21.88-37.83 36.66-11.78 18.18-17.82 42.01-20.89 60.44"/>
+            <path d="m212.65 208.76-4.89 9.4-2.03-10.4z"/>
+        </g>
+        <g stroke="#000" class="edge">
+            <path fill="none" d="M411.97 106.45c-55.38 14.18-142.8 37.05-148.92 41.55-21.21 15.59-36.54 41.65-45.93 61.55"/>
+            <path d="m220.4 210.78-7.27 7.71.88-10.56z"/>
+        </g>
+        <g class="node" transform="translate(4 256)">
+            <ellipse cx="338.05" cy="-90" fill="none" stroke="#000" rx="70.29" ry="18"/>
+            <text x="338.05" y="-84.95" font-family="Times,serif" font-size="14" text-anchor="middle">:feature:account</text>
+        </g>
+        <g stroke="red" stroke-width="2" class="edge">
+            <path fill="none" d="M431.24 110.71c-15.61 9.5-35.75 21.76-52.95 32.23"/>
+            <path fill="red" d="m381.51 145.07-10.36 2.21 6.73-8.19z"/>
+        </g>
+        <g class="node" transform="translate(4 256)">
+            <ellipse cx="502.05" cy="-90" fill="none" stroke="#000" rx="75.41" ry="18"/>
+            <text x="502.05" y="-84.95" font-family="Times,serif" font-size="14" text-anchor="middle">:feature:shopping</text>
+        </g>
+        <g stroke="#000" class="edge">
+            <path fill="none" d="M468.91 111.95c5.66 8.08 12.55 17.93 18.86 26.94"/>
+            <path d="m490.56 136.77 2.87 10.2-8.6-6.18z"/>
+        </g>
+        <g stroke="red" stroke-width="2" class="edge">
+            <path fill="none" d="M311.86 182.54c-19.01 9.78-43.8 22.54-64.61 33.25"/>
+            <path fill="red" d="m250.27 218.17-10.49 1.47 7.29-7.69z"/>
+        </g>
+        <g stroke="#000" class="edge">
+            <path fill="none" d="M453.45 179.27c-50.55 11.8-127.08 29.66-181.63 42.38"/>
+            <path d="m272.88 225-10.53-1.14 8.94-5.68z"/>
+        </g>
+        <g class="node" transform="translate(4 256)">
+            <ellipse cx="502.05" cy="-18" fill="none" stroke="#000" rx="65.17" ry="18"/>
+            <text x="502.05" y="-12.95" font-family="Times,serif" font-size="14" text-anchor="middle">:core:common</text>
+        </g>
+        <g stroke="#000" class="edge">
+            <path fill="none" d="M506.05 184.3v24.16"/>
+            <path d="m509.55 208.38-3.5 10-3.5-10z"/>
+        </g>
+    </g>
+</svg>
