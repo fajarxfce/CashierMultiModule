@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.google.samples.apps.nowinandroid.core.result
+package com.fajarxfce.core.result
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
