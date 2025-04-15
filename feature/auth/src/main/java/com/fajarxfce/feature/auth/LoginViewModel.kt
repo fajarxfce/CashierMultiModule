@@ -29,7 +29,7 @@ class LoginViewModel @Inject constructor(
                     _loginState.value = LoginUiState.Error(exception.message ?: "Unknown error occurred")
                 }
                 .collect { result ->
-                    Log.d("TAG", "login: ${result.name}")
+                    _loginState.value = LoginUiState.Success(result)
                 }
         }
     }

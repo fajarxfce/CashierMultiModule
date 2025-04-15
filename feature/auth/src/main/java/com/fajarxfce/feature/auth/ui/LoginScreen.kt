@@ -1,6 +1,7 @@
 package com.fajarxfce.feature.auth.ui
 
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,6 +57,7 @@ import com.fajarxfce.core.designsystem.component.NiaLoadingWheel
 import com.fajarxfce.core.designsystem.theme.AppTheme
 import com.fajarxfce.feature.auth.LoginUiState
 import com.fajarxfce.feature.auth.LoginViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun LoginScreen(
@@ -79,7 +81,8 @@ fun LoginScreen(
         when (loginState) {
             is LoginUiState.Success -> onLoginSuccess()
             is LoginUiState.Error -> showError = true
-            else -> {}
+            is LoginUiState.Loading -> {}
+            is LoginUiState.Initial -> {}
         }
     }
 

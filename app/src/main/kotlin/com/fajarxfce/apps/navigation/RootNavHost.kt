@@ -3,6 +3,7 @@ package com.fajarxfce.apps.navigation
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.fajarxfce.core.designsystem.theme.MainBaseRoute
 import com.fajarxfce.feature.auth.navigation.AuthBaseRoute
 import com.fajarxfce.feature.auth.navigation.authSection
 import com.fajarxfce.feature.auth.navigation.navigateToRegister
