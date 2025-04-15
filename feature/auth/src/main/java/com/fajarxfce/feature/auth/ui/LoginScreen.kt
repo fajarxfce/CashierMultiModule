@@ -68,8 +68,8 @@ fun LoginScreen(
 ) {
     val loginState by viewModel.loginState.collectAsState()
 
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("admin@admin.com") }
+    var password by remember { mutableStateOf("password") }
     var passwordVisible by remember { mutableStateOf(false) }
     var rememberMe by remember { mutableStateOf(false) }
     var showError by remember { mutableStateOf(false) }

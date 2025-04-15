@@ -1,6 +1,7 @@
 package com.fajarxfce.core.network.di
 
-import com.google.gson.Gson
+import com.fajarxfce.core.network.AuthApiService
+import com.fajarxfce.core.network.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,10 +39,18 @@ internal object NetworkModule {
         okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://api.example.com")
+            .baseUrl(BuildConfig.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideApiService(
+        retrofit: Retrofit
+    ): AuthApiService {
+        return retrofit.create(AuthApiService::class.java)
     }
 
 }

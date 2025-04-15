@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.nowinandroid.android.library)
     alias(libs.plugins.nowinandroid.android.library.jacoco)
     alias(libs.plugins.nowinandroid.hilt)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("kotlinx-serialization")
 }
 
@@ -15,6 +16,10 @@ android {
             isIncludeAndroidResources = true
         }
     }
+}
+
+secrets {
+    defaultPropertiesFileName = "app.properties"
 }
 
 dependencies {
