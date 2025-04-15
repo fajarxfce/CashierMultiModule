@@ -17,6 +17,7 @@
 package com.fajarxfce.core.network.di
 
 import com.fajarxfce.core.network.Dispatcher
+import com.fajarxfce.core.network.NiaDispatchers
 import com.fajarxfce.core.network.NiaDispatchers.Default
 import com.fajarxfce.core.network.NiaDispatchers.IO
 import dagger.Module
@@ -36,4 +37,8 @@ object DispatchersModule {
     @Provides
     @Dispatcher(Default)
     fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+
+    @Provides
+    @Dispatcher(NiaDispatchers.MAIN)
+    fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
 }

@@ -26,4 +26,5 @@ annotation class Dispatcher(val niaDispatcher: NiaDispatchers)
 enum class NiaDispatchers {
     Default,
     IO,
+    MAIN,
 }

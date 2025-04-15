@@ -43,7 +43,7 @@ fun NavGraphBuilder.authSection(
     ) {
         composable<LoginRoute> {
             LoginScreen(
-                onLoginClick = onLoginSuccess,
+                onLoginSuccess = onLoginSuccess,
                 onSignUpClick = onNavigateToRegister,
                 onForgotPasswordClick = {}
             )

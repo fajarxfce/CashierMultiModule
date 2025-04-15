@@ -32,6 +32,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,15 +51,21 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.fajarxfce.core.designsystem.component.NiaLoadingWheel
 import com.fajarxfce.core.designsystem.theme.AppTheme
+import com.fajarxfce.feature.auth.LoginUiState
+import com.fajarxfce.feature.auth.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    onLoginClick: () -> Unit = {},
+    onLoginSuccess: () -> Unit = {},
     onForgotPasswordClick: () -> Unit = {},
-    onSignUpClick: () -> Unit = {}
+    onSignUpClick: () -> Unit = {},
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
+    val loginState by viewModel.loginState.collectAsState()
+
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
@@ -65,6 +73,15 @@ fun LoginScreen(
     var showError by remember { mutableStateOf(false) }
 
     val focusManager = LocalFocusManager.current
+
+    // Handle login state changes
+    LaunchedEffect(loginState) {
+        when (loginState) {
+            is LoginUiState.Success -> onLoginSuccess()
+            is LoginUiState.Error -> showError = true
+            else -> {}
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -167,10 +184,10 @@ fun LoginScreen(
                             onDone = {
                                 focusManager.clearFocus()
                                 validateAndLogin(
-                                    username = username,
-                                    password = password,
-                                    onLoginClick = onLoginClick,
-                                    onError = { showError = true }
+                                    username,
+                                    password,
+                                    viewModel,
+                                    { showError = true }
                                 )
                             }
                         ),
@@ -207,9 +224,12 @@ fun LoginScreen(
 
                     AnimatedVisibility(visible = showError) {
                         Text(
-                            text = "Please fill all required fields",
+                            text = if (loginState is LoginUiState.Error)
+                                (loginState as LoginUiState.Error).message
+                            else "Please fill all required fields",
                             color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall
+                            style = MaterialTheme.typography.bodySmall,
+                            textAlign = TextAlign.Center
                         )
                     }
 
@@ -217,16 +237,24 @@ fun LoginScreen(
 
                     Button(
                         onClick = {
-                            validateAndLogin(username, password, onLoginClick, { showError = true })
+                            validateAndLogin(username, password, viewModel, { showError = true })
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
+                        enabled = loginState !is LoginUiState.Loading
                     ) {
-                        Text(
-                            text = "Sign In",
-                            modifier = Modifier.padding(vertical = 4.dp),
-                            style = MaterialTheme.typography.bodyLarge
-                        )
+                        if (loginState is LoginUiState.Loading) {
+                            NiaLoadingWheel(
+                                contentDesc = "Loading",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        } else {
+                            Text(
+                                text = "Sign In",
+                                modifier = Modifier.padding(vertical = 4.dp),
+                                style = MaterialTheme.typography.bodyLarge
+                            )
+                        }
                     }
 
                     Row(
@@ -250,6 +278,20 @@ fun LoginScreen(
                     }
                 }
             }
+
+            // Overlay loading indicator
+            if (loginState is LoginUiState.Loading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    NiaLoadingWheel(
+                        contentDesc = "Signing in",
+                        modifier = Modifier.size(48.dp)
+                    )
+                }
+            }
         }
     }
 }
@@ -257,13 +299,13 @@ fun LoginScreen(
 private fun validateAndLogin(
     username: String,
     password: String,
-    onLoginClick: () -> Unit,
+    viewModel: LoginViewModel,
     onError: () -> Unit
 ) {
     if (username.isBlank() || password.isBlank()) {
         onError()
     } else {
-        onLoginClick()
+        viewModel.login(username, password)
     }
 }
 
