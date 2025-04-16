@@ -1,4 +1,4 @@
-package com.fajarxfce.core.data.domain.usecase
+package com.fajarxfce.core.data.domain.usecase.auth
 
 import com.fajarxfce.core.model.data.auth.User
 import com.fajarxfce.core.result.Result

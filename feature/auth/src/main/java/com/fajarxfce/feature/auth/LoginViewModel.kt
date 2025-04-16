@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope
-import com.fajarxfce.core.data.domain.usecase.AuthUseCase
+import com.fajarxfce.core.data.domain.usecase.auth.AuthUseCase
 import com.fajarxfce.core.result.Result.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

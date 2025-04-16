@@ -1,6 +1,8 @@
 package com.fajarxfce.core.data
 
 import com.fajarxfce.core.data.domain.repository.IAuthRepository
+import com.fajarxfce.core.data.source.remote.auth.AuthDataSource
+import com.fajarxfce.core.data.util.NetworkResource
 import com.fajarxfce.core.model.data.auth.User
 import com.fajarxfce.core.model.data.auth.request.LoginRequest
 import com.fajarxfce.core.network.AuthApiService
@@ -13,20 +15,21 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthRepository @Inject constructor(
-    private val authApiService: AuthApiService
+    private val authDataSource: AuthDataSource
 ) : IAuthRepository {
     override fun login(
         username: String,
         password: String,
-    ): Flow<Result<User>> = flow {
-        emit(Result.Loading)
-        try {
-            val request = LoginRequest(username, password)
-            val response = authApiService.login(request)
-            emit(Result.Success(response.toUser()))
-        } catch (e: Exception) {
-            emit(Result.Error(e))
+    ): Flow<Result<User>> = object : NetworkResource<User>() {
+        override suspend fun createCall(): User {
+            val request = LoginRequest(
+                email = username,
+                password = password
+            )
+            val response = authDataSource.login(request)
+            return response.toUser()
         }
-    }
+
+    }.asFlow()
 
 }
