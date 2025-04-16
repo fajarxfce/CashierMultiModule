@@ -9,11 +9,14 @@ abstract class NetworkResource<T> {
         emit(Result.Loading)
         try {
             val apiResponse = createCall()
+            saveCallResult(apiResponse)
             emit(Result.Success(apiResponse))
         } catch (e: Exception) {
             emit(Result.Error(e))
         }
     }
+
+    protected abstract suspend fun saveCallResult(data: T)
 
     protected abstract suspend fun createCall(): T
 }

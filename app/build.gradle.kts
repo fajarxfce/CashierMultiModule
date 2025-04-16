@@ -86,7 +86,7 @@ dependencies {
 //    implementation(projects.core.model)
 //    implementation(projects.core.analytics)
 //    implementation(projects.sync.work)
-
+    implementation(libs.timber)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material3.adaptive)

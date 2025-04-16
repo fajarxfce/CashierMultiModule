@@ -19,6 +19,7 @@ package com.fajarxfce.apps
 import android.app.Application
 import android.content.pm.ApplicationInfo
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 
 /**
  * [Application] class for NiA
@@ -27,6 +28,9 @@ import dagger.hilt.android.HiltAndroidApp
 class NiaApplication : Application() {
     override fun onCreate() {
         super.onCreate()
+        if (isDebuggable()){
+            Timber.plant(Timber.DebugTree())
+        }
     }
 
     private fun isDebuggable(): Boolean {

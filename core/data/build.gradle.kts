@@ -33,7 +33,7 @@ dependencies {
     api(projects.core.common)
     api(projects.core.datastore)
     api(projects.core.network)
-
+    implementation(libs.timber)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.kotlinx.serialization.json)
 }
