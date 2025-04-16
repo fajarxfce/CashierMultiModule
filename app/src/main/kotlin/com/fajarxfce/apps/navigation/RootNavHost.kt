@@ -1,9 +1,12 @@
 package com.fajarxfce.apps.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.fajarxfce.core.datastore.NiaPreferencesDataSource
 import com.fajarxfce.core.designsystem.theme.MainBaseRoute
+import com.fajarxfce.core.model.data.UserData
 import com.fajarxfce.feature.auth.navigation.AuthBaseRoute
 import com.fajarxfce.feature.auth.navigation.authSection
 import com.fajarxfce.feature.auth.navigation.navigateToRegister
@@ -24,7 +27,7 @@ fun RootNavHost(
         startDestination = SplashBaseRoute,
     ) {
         splashSection(
-            onSplashFinished = {
+            onNavigateToOnboarding = {
                 with(navController) {
                     navigate(OnBoardingRoute) {
                         popUpTo(SplashBaseRoute) {
@@ -32,24 +35,33 @@ fun RootNavHost(
                         }
                     }
                 }
-            }
+            },
+            onNavigateToMain = {
+                with(navController) {
+                    navigate(MainRoute) {
+                        popUpTo(SplashBaseRoute) {
+                            inclusive = true
+                        }
+                    }
+                }
+            },
         )
 
         onBoardingSection(
             onFinished = {
                 with(navController) {
-                    navigate(AuthBaseRoute){
+                    navigate(AuthBaseRoute) {
                         popUpTo(OnBoardingRoute) {
                             inclusive = true
                         }
                     }
                 }
-            }
+            },
         )
 
         authSection(
             onLoginSuccess = {
-                with(navController){
+                with(navController) {
                     navigate(MainRoute) {
                         popUpTo(AuthBaseRoute) {
                             inclusive = true

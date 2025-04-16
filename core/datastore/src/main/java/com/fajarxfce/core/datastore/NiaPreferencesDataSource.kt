@@ -59,6 +59,7 @@ class NiaPreferencesDataSource @Inject constructor(
                 },
                 useDynamicColor = it.useDynamicColor,
                 shouldHideOnboarding = it.shouldHideOnboarding,
+                isLoggedIn = it.isLoggedIn
             )
         }
 
@@ -192,6 +193,23 @@ class NiaPreferencesDataSource @Inject constructor(
     suspend fun setShouldHideOnboarding(shouldHideOnboarding: Boolean) {
         userPreferences.updateData {
             it.copy { this.shouldHideOnboarding = shouldHideOnboarding }
+        }
+    }
+
+    // Add method to set login state
+    suspend fun setLoginState(isLoggedIn: Boolean) {
+        try {
+            userPreferences.updateData {
+                it.copy {
+                    this.isLoggedIn = isLoggedIn
+                    // When user logs in, we might want to auto-hide onboarding too
+                    if (isLoggedIn) {
+                        shouldHideOnboarding = true
+                    }
+                }
+            }
+        } catch (ioException: IOException) {
+            Log.e("NiaPreferences", "Failed to update login state", ioException)
         }
     }
 }

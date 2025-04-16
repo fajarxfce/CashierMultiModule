@@ -37,6 +37,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,12 +51,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.fajarxfce.feature.splash.R
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
-    onSplashFinished: () -> Unit
+    onNavigateToMain: () -> Unit,
+    onNavigateToOnboarding: () -> Unit,
+    viewModel: SplashViewModel = hiltViewModel()
 ) {
     // Animation states
     var startLogoAnimation by remember { mutableStateOf(false) }
@@ -79,13 +83,21 @@ fun SplashScreen(
         MutableTransitionState(false)
     }
 
-    // Control animations and navigation
+    // Collect user data state
+    val userData by viewModel.userDataState.collectAsState()
+
     LaunchedEffect(key1 = true) {
         startLogoAnimation = true
         delay(1200)
         titleVisibilityState.targetState = true
         delay(1800)
-        onSplashFinished()
+
+        // Navigate based on login state
+        if (userData.isLoggedIn) {
+            onNavigateToMain()
+        } else {
+            onNavigateToOnboarding()
+        }
     }
 
     Box(
@@ -134,6 +146,7 @@ fun SplashScreen(
 @Composable
 private fun SplashScreenPreview() {
     SplashScreen(
-        onSplashFinished = {}
+        onNavigateToMain = {},
+        onNavigateToOnboarding = {}
     )
 }

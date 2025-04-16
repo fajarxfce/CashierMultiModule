@@ -50,4 +50,5 @@ message UserPreferences {
     bool use_dynamic_color = 19;
 
     // NEXT AVAILABLE ID: 21
+    bool is_logged_in = 21;
 }
