@@ -29,7 +29,8 @@ class SplashViewModel @Inject constructor(
                 darkThemeConfig = DarkThemeConfig.FOLLOW_SYSTEM,
                 useDynamicColor = false,
                 shouldHideOnboarding = false,
-                isLoggedIn = false
+                isLoggedIn = false,
+                token = ""
             )
         )
 }

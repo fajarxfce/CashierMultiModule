@@ -76,6 +76,7 @@ dependencies {
     implementation(projects.feature.main)
     implementation(projects.feature.auth)
     implementation(projects.core.designsystem)
+    implementation(projects.core.common)
 //    implementation(projects.feature.search)
 //    implementation(projects.feature.settings)
 //

@@ -1,8 +1,10 @@
 package com.fajarxfce.core.network.di
 
 import com.fajarxfce.core.network.AuthApiService
+import com.fajarxfce.core.network.AuthInterceptor
 import com.fajarxfce.core.network.BuildConfig
 import com.fajarxfce.core.network.ProductApiService
+import com.fajarxfce.core.network.UnauthorizedInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,10 +29,14 @@ internal object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClientWithLoggingInterceptor(
-        loggingInterceptor: HttpLoggingInterceptor
+        loggingInterceptor: HttpLoggingInterceptor,
+        authInterceptor: AuthInterceptor,
+        unauthorizedInterceptor: UnauthorizedInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
+//            .addInterceptor(authInterceptor)
+//            .addInterceptor(unauthorizedInterceptor)
             .build()
     }
 

@@ -1,5 +1,6 @@
 package com.fajarxfce.core.data
 
+import com.fajarxfce.core.AuthEventBus
 import com.fajarxfce.core.data.domain.repository.IAuthRepository
 import com.fajarxfce.core.data.source.remote.auth.AuthDataSource
 import com.fajarxfce.core.data.util.NetworkResource
@@ -18,7 +19,7 @@ import javax.inject.Singleton
 @Singleton
 class AuthRepository @Inject constructor(
     private val authDataSource: AuthDataSource,
-    private val niaPreferencesDataSource: NiaPreferencesDataSource
+    private val niaPreferencesDataSource: NiaPreferencesDataSource,
 ) : IAuthRepository {
     override fun login(
         username: String,
@@ -26,7 +27,9 @@ class AuthRepository @Inject constructor(
     ): Flow<Result<User>> = object : NetworkResource<User>() {
         override suspend fun saveCallResult(data: User) {
             Timber.d("saveCallResult: $data")
+            niaPreferencesDataSource.setAuthToken(data.token ?: "")
             niaPreferencesDataSource.setShouldHideOnboarding(true)
+
         }
 
         override suspend fun createCall(): User {

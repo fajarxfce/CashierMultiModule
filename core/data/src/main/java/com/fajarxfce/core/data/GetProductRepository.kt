@@ -1,5 +1,6 @@
 package com.fajarxfce.core.data
 
+import com.fajarxfce.core.AuthEventBus
 import com.fajarxfce.core.data.domain.repository.IGetProductRepository
 import com.fajarxfce.core.data.source.remote.product.GetProductDataSource
 import com.fajarxfce.core.data.util.NetworkResource

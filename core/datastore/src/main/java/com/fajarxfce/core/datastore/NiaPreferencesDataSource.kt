@@ -59,7 +59,8 @@ class NiaPreferencesDataSource @Inject constructor(
                 },
                 useDynamicColor = it.useDynamicColor,
                 shouldHideOnboarding = it.shouldHideOnboarding,
-                isLoggedIn = it.isLoggedIn
+                isLoggedIn = it.isLoggedIn,
+                token = it.token
             )
         }
 
@@ -211,6 +212,38 @@ class NiaPreferencesDataSource @Inject constructor(
         } catch (ioException: IOException) {
             Log.e("NiaPreferences", "Failed to update login state", ioException)
         }
+    }
+    suspend fun setAuthToken(token: String) {
+        try {
+            userPreferences.updateData {
+                it.copy {
+//                    this.authToken = token
+                    // When saving token, we're logged in
+                    this.isLoggedIn = true
+                }
+            }
+        } catch (ioException: IOException) {
+            Log.e("NiaPreferences", "Failed to update auth token", ioException)
+        }
+    }
+
+    suspend fun clearAuthToken() {
+        try {
+            userPreferences.updateData {
+                it.copy {
+                    this.token = ""
+                    this.isLoggedIn = false
+                }
+            }
+        } catch (ioException: IOException) {
+            Log.e("NiaPreferences", "Failed to clear auth token", ioException)
+        }
+    }
+
+    suspend fun getAuthToken(): String? {
+        return userPreferences.data
+            .map { it.token }
+            .firstOrNull()
     }
 }
 

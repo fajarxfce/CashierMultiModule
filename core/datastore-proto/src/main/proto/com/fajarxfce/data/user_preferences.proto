@@ -51,4 +51,5 @@ message UserPreferences {
 
     // NEXT AVAILABLE ID: 21
     bool is_logged_in = 21;
+    string token = 22;
 }

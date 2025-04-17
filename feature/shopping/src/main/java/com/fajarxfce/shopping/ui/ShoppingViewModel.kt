@@ -34,7 +34,7 @@ class ShoppingViewModel @Inject constructor(
                     }
 
                     is Result.Success -> {
-                        _shoppingUiState.update { ShoppingUiState.Success(result.data ?: emptyList()) }
+                        _shoppingUiState.update { ShoppingUiState.Success(result.data) }
                     }
 
                     is Result.Error -> {

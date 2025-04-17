@@ -19,10 +19,17 @@ package com.fajarxfce.apps
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.fajarxfce.apps.navigation.RootNavHost
+import com.fajarxfce.core.AuthEventBus
+import com.fajarxfce.core.datastore.NiaPreferencesDataSource
 import com.fajarxfce.core.designsystem.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
