@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+
 @HiltViewModel
 class ShoppingViewModel @Inject constructor(
     private val getProductUseCase: GetProductUseCase
@@ -22,26 +23,25 @@ class ShoppingViewModel @Inject constructor(
 
     private val _shoppingUiState = MutableStateFlow<ShoppingUiState<List<Product>>>(ShoppingUiState.Loading)
     val shoppingUiState: StateFlow<ShoppingUiState<List<Product>>>
-        get() = _shoppingUiState
+        get() = _shoppingUiState.asStateFlow()  // Use asStateFlow for better encapsulation
 
-    fun getProducts() {
+    init {
+        getProducts()  // Call getProducts() once on initialization
+    }
+
+    private fun getProducts() {
         viewModelScope.launch {
             getProductUseCase.getAllProduct().collect { result ->
-                Timber.d("getProducts: $result")
                 when (result) {
-                    is Result.Loading -> {
-                        _shoppingUiState.update { ShoppingUiState.Loading }
-                    }
-
-                    is Result.Success -> {
-                        _shoppingUiState.update { ShoppingUiState.Success(result.data) }
-                    }
-
-                    is Result.Error -> {
-                        _shoppingUiState.update { ShoppingUiState.Error(result.exception) }
-                    }
+                    is Result.Loading -> _shoppingUiState.update { ShoppingUiState.Loading }
+                    is Result.Success -> _shoppingUiState.update { ShoppingUiState.Success(result.data) }
+                    is Result.Error -> _shoppingUiState.update { ShoppingUiState.Error(result.exception) }
                 }
             }
         }
+    }
+
+    fun refreshProducts() {  // New function to trigger refresh
+        getProducts()
     }
 }

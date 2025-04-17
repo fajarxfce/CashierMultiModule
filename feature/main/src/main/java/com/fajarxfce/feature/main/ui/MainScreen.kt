@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.rememberNavController
 import com.fajarxfce.core.designsystem.theme.AppTheme
 import com.fajarxfce.feature.account.navigation.AccountBaseRoute
@@ -76,7 +77,13 @@ fun MainScreen(modifier: Modifier = Modifier) {
                     selected = it == currentDestination,
                     onClick = {
                         currentDestination = it
-                        navController.navigate(it.route)
+                        navController.navigate(it.route){
+                            popUpTo(navController.graph.findStartDestination().id){
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     },
                     colors = myNavigationSuiteItemColors
                 )

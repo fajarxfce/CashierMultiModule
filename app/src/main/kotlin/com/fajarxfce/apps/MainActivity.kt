@@ -45,15 +45,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        setContent {
-//            val navController = rememberNavController()
-//            AppTheme(navController = navController) {
-//                RootNavHost(
-//                    navController = navController,
-//                )
-//            }
-//        }
-
         setContent {
             val navController = rememberNavController()
             AppTheme(navController = navController) {
