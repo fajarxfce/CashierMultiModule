@@ -27,6 +27,7 @@ import coil.compose.AsyncImage
 import com.fajarxfce.core.designsystem.theme.AppTheme
 import com.fajarxfce.core.designsystem.theme.dark_primaryContainer
 import com.fajarxfce.core.designsystem.theme.dark_surface
+import com.fajarxfce.core.exception.UnauthorizedException
 import com.fajarxfce.core.model.data.product.Product
 
 @Composable
@@ -56,7 +57,18 @@ fun ShoppingScreen(
 
         is ShoppingUiState.Error -> {
             // Handle error state
-            Text(text = "Error: ${(shoppingUiState as ShoppingUiState.Error).exception.message}")
+            when(val exception = (shoppingUiState as ShoppingUiState.Error).exception) {
+                is UnauthorizedException -> {
+                    // Handle unauthorized error
+                    Text(text = "Unauthorized: ${exception.message}")
+                }
+
+                else -> {
+                    // Handle other errors
+                    Text(text = "Error: ${exception.message}")
+                }
+            }
+//            Text(text = "Error: ${(shoppingUiState as ShoppingUiState.Error).exception.message}")
         }
     }
 }

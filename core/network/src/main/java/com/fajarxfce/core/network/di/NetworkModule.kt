@@ -34,8 +34,8 @@ internal object NetworkModule {
         unauthorizedInterceptor: UnauthorizedInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
             .addInterceptor(loggingInterceptor)
-//            .addInterceptor(authInterceptor)
 //            .addInterceptor(unauthorizedInterceptor)
             .build()
     }

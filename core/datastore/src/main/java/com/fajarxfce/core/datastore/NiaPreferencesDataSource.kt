@@ -219,7 +219,7 @@ class NiaPreferencesDataSource @Inject constructor(
                 it.copy {
 //                    this.authToken = token
                     // When saving token, we're logged in
-                    this.isLoggedIn = true
+                    this.token = token
                 }
             }
         } catch (ioException: IOException) {

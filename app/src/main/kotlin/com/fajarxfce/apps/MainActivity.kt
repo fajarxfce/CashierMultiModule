@@ -30,12 +30,20 @@ import com.fajarxfce.core.designsystem.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    @Inject
+    lateinit var niaPreferencesDataSource: NiaPreferencesDataSource
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            Timber.d("NiaPreferencesDataSource: ${niaPreferencesDataSource.getAuthToken()}")
+        }
 
         setContent {
             val navController = rememberNavController()

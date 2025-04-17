@@ -28,5 +28,5 @@ data class UserData(
     val useDynamicColor: Boolean,
     val shouldHideOnboarding: Boolean,
     val isLoggedIn: Boolean,
-    val token: String,
+    val token: String?,
 )
