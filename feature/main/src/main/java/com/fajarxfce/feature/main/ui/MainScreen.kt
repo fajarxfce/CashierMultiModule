@@ -104,8 +104,8 @@ enum class AppDestinations(
     val route: Any,
 ) {
     SHOP(R.string.shop, Icons.Default.Shop, R.string.shop, ShoppingBaseRoute),
-    CART(R.string.cart, Icons.Default.ShoppingCart, R.string.cart, AccountBaseRoute),
-    FAVORITE(R.string.favorite, Icons.Default.FavoriteBorder, R.string.favorite, AccountBaseRoute),
+//    CART(R.string.cart, Icons.Default.ShoppingCart, R.string.cart, AccountBaseRoute),
+//    FAVORITE(R.string.favorite, Icons.Default.FavoriteBorder, R.string.favorite, AccountBaseRoute),
     ACCOUNT(R.string.account, Icons.Default.AccountCircle, R.string.account, AccountBaseRoute),
 }
 
