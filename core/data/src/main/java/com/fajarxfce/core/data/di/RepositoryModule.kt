@@ -1,7 +1,9 @@
 package com.fajarxfce.core.data.di
 
 import com.fajarxfce.core.data.AuthRepository
+import com.fajarxfce.core.data.GetProductRepository
 import com.fajarxfce.core.data.domain.repository.IAuthRepository
+import com.fajarxfce.core.data.domain.repository.IGetProductRepository
 import com.fajarxfce.core.data.source.remote.auth.AuthDataSource
 import com.fajarxfce.core.data.source.remote.auth.AuthDataSourceImpl
 import com.fajarxfce.core.data.source.remote.product.GetProductDataSource
@@ -28,5 +30,5 @@ abstract class RepositoryModule {
     ): GetProductDataSource
 
     @Binds
-    abstract fun provideGetProductRepository(getProductRepository: GetProductDataSourceImpl): GetProductDataSource
+    abstract fun provideGetProductRepository(getProductRepository: GetProductRepository): IGetProductRepository
 }

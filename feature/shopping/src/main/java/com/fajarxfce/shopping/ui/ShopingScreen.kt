@@ -23,38 +23,40 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.fajarxfce.core.designsystem.theme.AppTheme
 import com.fajarxfce.core.designsystem.theme.dark_primaryContainer
 import com.fajarxfce.core.designsystem.theme.dark_surface
+import com.fajarxfce.core.model.data.product.Product
 
 @Composable
 fun ShoppingScreen(
-    onAddToCart: (String, Int) -> Unit,
+    onAddToCart: (Int?, Int) -> Unit,
     viewModel: ShoppingViewModel = hiltViewModel()
 ) {
-    viewModel.shoppingUiState.collectAsState(initial = ShoppingUiState.Loading).value.let {
-        uiState ->
-        when (uiState) {
-            is ShoppingUiState.Loading -> {
-                viewModel.generateDummyProducts()
-            }
-            is ShoppingUiState.Success -> {
-                ShoppingContent(
-                    products = uiState.data,
-                    onAddToCart = onAddToCart
-                )
-            }
-            is ShoppingUiState.Error -> {
-                // Handle error state
-                // You can show a Snackbar or a Text message to inform the user
-                // For example:
-                Text(
-                    text = "Error: Bejir",
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
+    val shoppingUiState by viewModel.shoppingUiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.getProducts()
+    }
+
+    when (shoppingUiState) {
+        is ShoppingUiState.Loading -> {
+            // Show loading indicator
+            CircularProgressIndicator(modifier = Modifier.fillMaxSize())
+        }
+
+        is ShoppingUiState.Success -> {
+            val products = (shoppingUiState as ShoppingUiState.Success).data
+            ShoppingContent(
+                products = products,
+                onAddToCart = onAddToCart
+            )
+        }
+
+        is ShoppingUiState.Error -> {
+            // Handle error state
+            Text(text = "Error: ${(shoppingUiState as ShoppingUiState.Error).exception.message}")
         }
     }
 }
@@ -63,7 +65,7 @@ fun ShoppingScreen(
 fun ShoppingContent(
     modifier: Modifier = Modifier,
     products: List<Product>,
-    onAddToCart: (String, Int) -> Unit
+    onAddToCart: (Int?, Int) -> Unit
 ) {
     val listState = rememberLazyGridState()
     Column(
@@ -83,7 +85,7 @@ fun ShoppingContent(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(products, key = { it.id }) { product ->
+            items(products, key = { it.id!! }) { product ->
                 ProductCard(
                     product = product,
                     onQuantityChange = { quantity ->
@@ -114,7 +116,7 @@ fun ProductCard(
     ) {
         Column {
             AsyncImage(
-                model = product.imageUrl,
+                model = product.media?.get(0)?.originalUrl,
                 contentDescription = product.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -131,7 +133,7 @@ fun ProductCard(
                     .padding(12.dp)
             ) {
                 Text(
-                    text = product.name,
+                    text = product.name?: "",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,

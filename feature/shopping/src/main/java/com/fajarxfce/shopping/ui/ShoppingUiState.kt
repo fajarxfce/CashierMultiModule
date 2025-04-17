@@ -7,5 +7,5 @@ sealed class ShoppingUiState<out T: Any?> {
 
     data class Success<out T: Any>(val data: T) : ShoppingUiState<T>()
 
-    data class Error(val errorMessage: String) : ShoppingUiState<Nothing>()
+    data class Error(val exception: Throwable) : ShoppingUiState<Nothing>()
 }

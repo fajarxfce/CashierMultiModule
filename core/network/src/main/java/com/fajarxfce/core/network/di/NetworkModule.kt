@@ -2,6 +2,7 @@ package com.fajarxfce.core.network.di
 
 import com.fajarxfce.core.network.AuthApiService
 import com.fajarxfce.core.network.BuildConfig
+import com.fajarxfce.core.network.ProductApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -51,6 +52,14 @@ internal object NetworkModule {
         retrofit: Retrofit
     ): AuthApiService {
         return retrofit.create(AuthApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProductApiService(
+        retrofit: Retrofit
+    ): ProductApiService {
+        return retrofit.create(ProductApiService::class.java)
     }
 
 }

@@ -1,5 +1,6 @@
 package com.fajarxfce.core.network.response
 
+import com.fajarxfce.core.model.data.product.Product
 import com.google.gson.annotations.SerializedName
 
 data class ProductResponse(
@@ -143,7 +144,7 @@ data class DataProduct(
 data class DataItem(
 
 	@field:SerializedName("merk")
-	val merk: Any? = null,
+	val merk: Merk? = null,
 
 	@field:SerializedName("sub_category")
 	val subCategory: SubCategory? = null,
@@ -170,7 +171,7 @@ data class DataItem(
 	val price: Int? = null,
 
 	@field:SerializedName("product_merk_id")
-	val productMerkId: Any? = null,
+	val productMerkId: Int? = null,
 
 	@field:SerializedName("name")
 	val name: String? = null,
@@ -189,6 +190,28 @@ data class DataItem(
 
 	@field:SerializedName("status")
 	val status: Int? = null
+)
+
+
+data class Merk(
+
+    @field:SerializedName("updated_at")
+    val updatedAt: String? = null,
+
+    @field:SerializedName("name")
+    val name: String? = null,
+
+    @field:SerializedName("description")
+    val description: String? = null,
+
+    @field:SerializedName("created_at")
+    val createdAt: String? = null,
+
+    @field:SerializedName("id")
+    val id: Int? = null,
+
+    @field:SerializedName("status")
+    val status: Int? = null
 )
 
 data class SubCategory(
@@ -226,3 +249,59 @@ data class LinksItem(
 	@field:SerializedName("url")
 	val url: Any? = null
 )
+
+
+fun ProductResponse.toProduct(): List<Product> {
+    return data?.data?.map { dataItem ->
+        Product(
+            id = dataItem?.id,
+            name = dataItem?.name,
+            price = dataItem?.price,
+            merk = com.fajarxfce.core.model.data.product.Merk(
+                id = dataItem?.merk?.id,
+                name = dataItem?.merk?.name,
+                description = dataItem?.merk?.description,
+                createdAt = dataItem?.merk?.createdAt,
+                updatedAt = dataItem?.merk?.updatedAt,
+                status = dataItem?.merk?.status
+            ),
+            productMerkId = dataItem?.productMerkId,
+            productCategoryId = dataItem?.productCategoryId,
+            productSubCategoryId = dataItem?.productSubCategoryId,
+            subCategory = com.fajarxfce.core.model.data.product.SubCategory(
+                id = dataItem?.subCategory?.id,
+                name = dataItem?.subCategory?.name,
+                description = dataItem?.subCategory?.description,
+                createdAt = dataItem?.subCategory?.createdAt,
+                updatedAt = dataItem?.subCategory?.updatedAt,
+                productCategoryId = dataItem?.subCategory?.productCategoryId,
+                status = dataItem?.subCategory?.status
+            ),
+            category = com.fajarxfce.core.model.data.product.Category(
+                id = dataItem?.category?.id,
+                name = dataItem?.category?.name,
+                description = dataItem?.category?.description,
+                createdAt = dataItem?.category?.createdAt,
+                updatedAt = dataItem?.category?.updatedAt,
+                status = dataItem?.category?.status
+            ),
+            sku = dataItem?.sku,
+            stock = dataItem?.stock,
+            status = dataItem?.status,
+            media = dataItem?.media?.map { mediaItem ->
+                com.fajarxfce.core.model.data.product.MediaItem(
+                    id = mediaItem?.id,
+                    name = mediaItem?.name,
+                    fileName = mediaItem?.fileName,
+                    mimeType = mediaItem?.mimeType,
+                    size = mediaItem?.size,
+                    disk = mediaItem?.disk,
+                    uuid = mediaItem?.uuid,
+                    originalUrl = mediaItem?.originalUrl,
+                    previewUrl = mediaItem?.previewUrl
+                )
+            } ?: emptyList()
+            
+        )
+    } ?: emptyList()
+}

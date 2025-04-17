@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 data class Product(
 
 	@field:SerializedName("merk")
-	val merk: String? = null,
+	val merk: Merk? = null,
 
 	@field:SerializedName("sub_category")
 	val subCategory: SubCategory? = null,
@@ -52,6 +52,27 @@ data class Product(
 
 	@field:SerializedName("status")
 	val status: Int? = null
+)
+
+data class Merk(
+
+    @field:SerializedName("updated_at")
+    val updatedAt: String? = null,
+
+    @field:SerializedName("name")
+    val name: String? = null,
+
+    @field:SerializedName("description")
+    val description: String? = null,
+
+    @field:SerializedName("created_at")
+    val createdAt: String? = null,
+
+    @field:SerializedName("id")
+    val id: Int? = null,
+
+    @field:SerializedName("status")
+    val status: Int? = null
 )
 
 data class SubCategory(
