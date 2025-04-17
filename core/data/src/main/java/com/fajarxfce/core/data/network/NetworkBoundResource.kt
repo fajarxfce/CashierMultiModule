@@ -1,4 +1,4 @@
-package com.fajarxfce.core.data.util
+package com.fajarxfce.core.data.network
 
 import com.fajarxfce.core.result.Result
 import kotlinx.coroutines.flow.Flow

@@ -3,7 +3,7 @@ package com.fajarxfce.shopping.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.fajarxfce.core.data.domain.usecase.product.GetProductUseCase
+import com.fajarxfce.core.domain.usecase.product.GetAllProductUseCase
 import com.fajarxfce.core.model.data.product.Product
 import com.fajarxfce.core.result.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,7 +18,7 @@ import timber.log.Timber
 
 @HiltViewModel
 class ShoppingViewModel @Inject constructor(
-    private val getProductUseCase: GetProductUseCase
+    private val getAllProductUseCase: GetAllProductUseCase
 ) : ViewModel() {
 
     private val _shoppingUiState = MutableStateFlow<ShoppingUiState<List<Product>>>(ShoppingUiState.Loading)
@@ -31,7 +31,7 @@ class ShoppingViewModel @Inject constructor(
 
     private fun getProducts() {
         viewModelScope.launch {
-            getProductUseCase.getAllProduct().collect { result ->
+            getAllProductUseCase().collect { result ->
                 when (result) {
                     is Result.Loading -> _shoppingUiState.update { ShoppingUiState.Loading }
                     is Result.Success -> _shoppingUiState.update { ShoppingUiState.Success(result.data) }

@@ -1,12 +1,9 @@
-package com.fajarxfce.core.data.util
+package com.fajarxfce.core.data.network
 
-import com.fajarxfce.core.AuthEventBus
 import com.fajarxfce.core.exception.UnauthorizedException
-import com.fajarxfce.core.result.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import timber.log.Timber
-
+import com.fajarxfce.core.result.Result
 
 abstract class NetworkResource<T> {
     fun asFlow() : Flow<Result<T>> = flow {

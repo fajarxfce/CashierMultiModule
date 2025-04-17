@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import androidx.lifecycle.viewModelScope
-import com.fajarxfce.core.data.domain.usecase.auth.AuthUseCase
+import com.fajarxfce.core.domain.usecase.auth.LoginUseCase
 import com.fajarxfce.core.result.Result.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authUseCase: AuthUseCase
+    private val authUseCase: LoginUseCase
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<LoginUiState>(LoginUiState.Initial)
@@ -20,7 +20,7 @@ class LoginViewModel @Inject constructor(
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
-            authUseCase.login(email, password).collect { result ->
+            authUseCase.invoke(email, password).collect { result ->
                 _loginState.value = when (result) {
                     is Loading -> LoginUiState.Loading
                     is Success -> LoginUiState.Success(result.data)
