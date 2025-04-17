@@ -17,6 +17,7 @@ class AuthInterceptor @Inject constructor(
         val originalRequest = chain.request()
 
         val token = runBlocking { niaPreferencesDataSource.getAuthToken() }
+        Log.d("AuthInterceptor", token.toString())
 
         val requestWithHeaders = originalRequest.newBuilder()
             .apply {

@@ -19,16 +19,20 @@ package com.fajarxfce.apps
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.fajarxfce.apps.navigation.RootNavHost
+import com.fajarxfce.core.AuthEvent
 import com.fajarxfce.core.AuthEventBus
 import com.fajarxfce.core.datastore.NiaPreferencesDataSource
 import com.fajarxfce.core.designsystem.theme.AppTheme
+import com.fajarxfce.feature.auth.navigation.AuthBaseRoute
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -41,9 +45,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleScope.launch {
-            Timber.d("NiaPreferencesDataSource: ${niaPreferencesDataSource.getAuthToken()}")
-        }
+//        setContent {
+//            val navController = rememberNavController()
+//            AppTheme(navController = navController) {
+//                RootNavHost(
+//                    navController = navController,
+//                )
+//            }
+//        }
 
         setContent {
             val navController = rememberNavController()
@@ -51,6 +60,22 @@ class MainActivity : ComponentActivity() {
                 RootNavHost(
                     navController = navController,
                 )
+            }
+
+            LaunchedEffect(navController) {
+                AuthEventBus.events.collectLatest { event ->
+                    when (event) {
+                        is AuthEvent.Logout -> {
+                            Timber.d("Navigating to login screen")
+                            navController.navigate(AuthBaseRoute) {
+                                popUpTo(navController.currentBackStackEntry?.destination?.route.toString()) {
+                                    inclusive = true
+                                }
+                                launchSingleTop = true
+                            }
+                        }
+                    }
+                }
             }
         }
     }
