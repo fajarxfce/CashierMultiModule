@@ -12,8 +12,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -29,6 +31,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -56,6 +59,8 @@ import com.fajarxfce.core.designsystem.component.CartSummaryBar
 import com.fajarxfce.core.designsystem.component.DataCard
 import com.fajarxfce.core.designsystem.component.ErrorItem
 import com.fajarxfce.core.designsystem.component.ErrorScreen
+import com.fajarxfce.core.designsystem.component.LoadingScreen
+import com.fajarxfce.core.designsystem.component.NiaLoadingWheel
 import com.fajarxfce.core.designsystem.component.NiaOverlayLoadingWheel
 import com.fajarxfce.core.designsystem.theme.AppTheme
 import com.fajarxfce.core.designsystem.theme.dark_primaryContainer
@@ -104,122 +109,158 @@ fun ShoppingContent(
     onViewCartClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
-        when (uiState) {
-            is ShoppingUiState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    NiaOverlayLoadingWheel(
-                        contentDesc = "Loading products...",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .background(MaterialTheme.colorScheme.background),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Shopping",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+                IconButton(onClick = onViewCartClick) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add to cart",
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+            }
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            when (uiState) {
+                is ShoppingUiState.Loading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        LoadingScreen(
+                            message = "Loading products...",
+                        )
+                    }
+                }
+
+                is ShoppingUiState.Success -> {
+                    val pagingFlow = uiState.data
+                    val pagingItems: LazyPagingItems<Product> = pagingFlow.collectAsLazyPagingItems()
+                    val listState = rememberLazyGridState()
+
+                    LazyVerticalGrid(
+                        state = listState,
+                        columns = GridCells.Fixed(2),
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(
+                            count = pagingItems.itemCount,
+                            key = pagingItems.itemKey { product -> product.id!! }
+                        ) { index ->
+                            val product = pagingItems[index]
+                            if (product != null) {
+                                val quantityInCart = cartItems[product] ?: 0
+                                DataCard(
+                                    title = product.name ?: "",
+                                    subtitle = "$${product.price}",
+                                    imageUrl = product.media?.firstOrNull()?.originalUrl,
+                                    quantity = quantityInCart,
+                                    onIncreaseQuantity = { onAddToCart(product, 1) },
+                                    onDecreaseQuantity = { onRemoveFromCart(product, 1) }
+                                )
+                            }
+                        }
+
+                        when (pagingItems.loadState.refresh) {
+                            is LoadState.Loading -> {
+                                item(span = { GridItemSpan(maxLineSpan) }) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 16.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        LoadingScreen(
+                                            message = "",
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                        )
+                                    }
+                                }
+                            }
+
+                            is LoadState.Error -> {
+                                item {
+                                    ErrorItem(
+                                        message = "Failed to load products",
+                                        onRetry = { pagingItems.refresh() }
+                                    )
+                                }
+                            }
+
+                            else -> {}
+                        }
+
+                        when (pagingItems.loadState.append) {
+                            is LoadState.Loading -> {
+                                item {
+                                    NiaOverlayLoadingWheel(
+                                        contentDesc = "Loading more products...",
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp)
+                                    )
+                                }
+                            }
+
+                            is LoadState.Error -> {
+                                item {
+                                    ErrorItem(
+                                        message = "Failed to load more products",
+                                        onRetry = { pagingItems.retry() }
+                                    )
+                                }
+                            }
+
+                            else -> {}
+                        }
+                    }
+                }
+
+                is ShoppingUiState.Error -> {
+                    val error = uiState.exception
+                    ErrorScreen(
+                        message = error.message ?: "An error occurred",
+                        onRetryClick = {  }
                     )
                 }
             }
 
-            is ShoppingUiState.Success -> {
-                val pagingFlow = uiState.data
-                val pagingItems: LazyPagingItems<Product> = pagingFlow.collectAsLazyPagingItems()
-                val listState = rememberLazyGridState()
-
-                LazyVerticalGrid(
-                    state = listState,
-                    columns = GridCells.Fixed(2),
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(
-                        count = pagingItems.itemCount,
-                        key = pagingItems.itemKey { product -> product.id!! }
-                    ) { index ->
-                        val product = pagingItems[index]
-                        if (product != null) {
-                            val quantityInCart = cartItems[product] ?: 0
-                            DataCard(
-                                title = product.name ?: "",
-                                subtitle = "$${product.price}",
-                                imageUrl = product.media?.firstOrNull()?.originalUrl,
-                                quantity = quantityInCart,
-                                onIncreaseQuantity = { onAddToCart(product, 1) },
-                                onDecreaseQuantity = { onRemoveFromCart(product, 1) }
-                            )
-                        }
-                    }
-
-                    when (pagingItems.loadState.refresh) {
-                        is LoadState.Loading -> {
-                            item {
-                                NiaOverlayLoadingWheel(
-                                    contentDesc = "Loading more products...",
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(16.dp)
-                                )
-                            }
-                        }
-
-                        is LoadState.Error -> {
-                            item {
-                                ErrorItem(
-                                    message = "Failed to load products",
-                                    onRetry = { pagingItems.refresh() }
-                                )
-                            }
-                        }
-
-                        else -> {}
-                    }
-
-                    when (pagingItems.loadState.append) {
-                        is LoadState.Loading -> {
-                            item {
-                                NiaOverlayLoadingWheel(
-                                    contentDesc = "Loading more products...",
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(16.dp)
-                                )
-                            }
-                        }
-
-                        is LoadState.Error -> {
-                            item {
-                                ErrorItem(
-                                    message = "Failed to load more products",
-                                    onRetry = { pagingItems.retry() }
-                                )
-                            }
-                        }
-
-                        else -> {}
-                    }
-                }
+            val itemCount = cartItems.values.sum()
+            val totalPrice = cartItems.entries.sumOf {
+                (it.key.price?.toDouble() ?: 0.0) * it.value.toDouble()
             }
-
-            is ShoppingUiState.Error -> {
-                val error = uiState.exception
-                ErrorScreen(
-                    message = error.message ?: "An error occurred",
-                    onRetryClick = {  }
+            if (itemCount > 0) {
+                CartSummaryBar(
+                    itemCount = itemCount,
+                    totalPrice = totalPrice,
+                    onViewCartClick = onViewCartClick
                 )
             }
-        }
-
-        val itemCount = cartItems.values.sum()
-        val totalPrice = cartItems.entries.sumOf {
-            (it.key.price?.toDouble() ?: 0.0) * it.value.toDouble()
-        }
-        if (itemCount > 0) {
-            CartSummaryBar(
-                itemCount = itemCount,
-                totalPrice = totalPrice,
-                onViewCartClick = onViewCartClick
-            )
         }
     }
 }
@@ -228,6 +269,10 @@ fun ShoppingContent(
 private fun ShoppingScreenContent() {
     AppTheme {
         ShoppingContent(
+//            uiState = ShoppingUiState.Loading,
+//            uiState = ShoppingUiState.Error(
+//                exception = Exception("Failed to load products")
+//            ),
             uiState = ShoppingUiState.Success(
                 data = flowOf(
                     PagingData.from(
