@@ -60,7 +60,8 @@ import kotlin.text.get
 fun ShoppingScreen(
     modifier: Modifier = Modifier,
     viewModel: ShoppingViewModel = hiltViewModel(),
-    onProductClick: (Int) -> Unit = {}
+    onProductClick: (Int) -> Unit = {},
+    onAddToCart: (String, Int) -> Unit = { _, _ -> },
 ) {
     val uiState by viewModel.shoppingUiState.collectAsState()
 
@@ -160,6 +161,27 @@ fun ShoppingScreen(
 }
 
 @Composable
+fun CartSummaryBar(
+    itemCount: Int,
+    totalPrice: Double,
+    onViewCartClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text("$itemCount items: $${String.format("%.2f", totalPrice)}")
+
+        Button(onClick = onViewCartClick) {
+            Text("View Cart")
+        }
+    }
+}
+
+@Composable
 fun LoadingItem(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier.padding(16.dp),
@@ -209,37 +231,6 @@ fun ErrorItem(
         }
     }
 }
-@Composable
-fun ShoppingContent(
-    modifier: Modifier = Modifier,
-    products: List<Product>,
-    onAddToCart: (Int?, Int) -> Unit,
-) {
-    val listState = rememberLazyGridState()
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-    ) {
-        LazyVerticalGrid(
-            state = listState,
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(16.dp),
-        ) {
-            items(products) { product ->
-                ProductCard(
-                    product = product,
-                    onQuantityChange = { quantity ->
-                        onAddToCart(product.id, quantity)
-                    },
-                )
-            }
-        }
-    }
-}
-
 @Composable
 fun ProductCard(
     product: Product,
@@ -335,11 +326,22 @@ fun ProductCard(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ShoppingScreenPreview() {
     AppTheme {
-        ShoppingScreen(
+        ShoppingScreen()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CartSummaryBarPreview() {
+    AppTheme {
+        CartSummaryBar(
+            itemCount = 5,
+            totalPrice = 100.0,
+            onViewCartClick = {}
         )
     }
 }

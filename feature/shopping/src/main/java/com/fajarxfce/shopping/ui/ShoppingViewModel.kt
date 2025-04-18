@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.map
 import com.fajarxfce.core.domain.usecase.product.GetAllProductUseCase
 import com.fajarxfce.core.domain.usecase.product.GetPagingProductUseCase
 import com.fajarxfce.core.model.data.product.Product
@@ -25,6 +26,8 @@ class ShoppingViewModel @Inject constructor(
 
     private val _shoppingUiState = MutableStateFlow<ShoppingUiState<PagingData<Product>>>(ShoppingUiState.Loading)
     val shoppingUiState: StateFlow<ShoppingUiState<PagingData<Product>>> = _shoppingUiState.asStateFlow()
+
+    // products in cart with quantityfirefox
 
     // Keep reference to the current flow for refreshing purposes
     private var currentProductFlow: Flow<PagingData<Product>>? = null
@@ -73,6 +76,12 @@ class ShoppingViewModel @Inject constructor(
     fun sortProducts(orderBy: String, ascending: Boolean) {
         if (orderBy != currentOrderBy || ascending != currentAscending) {
             loadProducts(orderBy, ascending)
+        }
+    }
+
+    fun updateQuantity(productId: Int, quantity: Int){
+        viewModelScope.launch {
+
         }
     }
 }
