@@ -27,6 +27,9 @@ class ShoppingViewModel @Inject constructor(
     private val _shoppingUiState = MutableStateFlow<ShoppingUiState<PagingData<Product>>>(ShoppingUiState.Loading)
     val shoppingUiState: StateFlow<ShoppingUiState<PagingData<Product>>> = _shoppingUiState.asStateFlow()
 
+    private val _cartItems = MutableStateFlow<MutableMap<Product, Int>>(mutableMapOf())
+    val cartItems: StateFlow<Map<Product, Int>> = _cartItems.asStateFlow()
+
     // products in cart with quantityfirefox
 
     // Keep reference to the current flow for refreshing purposes
@@ -79,9 +82,27 @@ class ShoppingViewModel @Inject constructor(
         }
     }
 
-    fun updateQuantity(productId: Int, quantity: Int){
-        viewModelScope.launch {
-
+    fun addToCart(product: Product, quantity: Int) {
+        _cartItems.update { currentCart ->
+            val newCart = currentCart.toMutableMap()
+            newCart[product] = (newCart[product] ?: 0) + quantity
+            newCart
         }
+    }
+
+    fun removeFromCart(product: Product, quantity: Int) {
+        _cartItems.update { currentCart ->
+            val newCart = currentCart.toMutableMap()
+            val currentQuantity = newCart[product] ?: 0
+            if (currentQuantity <= quantity) {
+                newCart.remove(product)
+            } else {
+                newCart[product] = currentQuantity - quantity
+            }
+            newCart
+        }
+    }
+    fun clearCart() {
+        _cartItems.value = mutableMapOf()
     }
 }

@@ -53,6 +53,7 @@ import com.fajarxfce.core.designsystem.theme.AppTheme
 import com.fajarxfce.core.designsystem.theme.dark_primaryContainer
 import com.fajarxfce.core.designsystem.theme.dark_surface
 import com.fajarxfce.core.model.data.product.Product
+import timber.log.Timber
 import kotlin.text.get
 
 
@@ -61,10 +62,14 @@ fun ShoppingScreen(
     modifier: Modifier = Modifier,
     viewModel: ShoppingViewModel = hiltViewModel(),
     onProductClick: (Int) -> Unit = {},
-    onAddToCart: (String, Int) -> Unit = { _, _ -> },
+    onViewCartClick: () -> Unit = {}
 ) {
     val uiState by viewModel.shoppingUiState.collectAsState()
+    val cartItems by viewModel.cartItems.collectAsState()
 
+    cartItems.forEach { (product, quantity) ->
+        Timber.d("Product: ${product.name}, Quantity: $quantity")
+    }
 
     Column(modifier = modifier.fillMaxSize()) {
         // Sort controls could be added here
@@ -101,11 +106,12 @@ fun ShoppingScreen(
                         ) { index ->
                             val product = pagingItems[index]
                             if (product != null) {
+                                val quantityInCart = cartItems[product] ?: 0 // Get quantity from cart
                                 ProductCard(
                                     product = product,
-                                    onQuantityChange = { quantity ->
-                                        // Handle add to cart action
-                                    }
+                                    quantity = quantityInCart,  // Pass quantity
+                                    onAddToCart = { qty -> viewModel.addToCart(product, qty) },
+                                    onRemoveFromCart = { qty -> viewModel.removeFromCart(product, qty) }
                                 )
                             }
                         }
@@ -156,6 +162,18 @@ fun ShoppingScreen(
                     onRetryClick = { viewModel.refreshProducts() }
                 )
             }
+        }
+        // Cart Summary Bar
+        val itemCount = cartItems.values.sum()
+        val totalPrice = cartItems.entries.sumOf {
+            (it.key.price?.toDouble() ?: 0.0) * it.value.toDouble()
+        }
+        if (itemCount > 0) {
+            CartSummaryBar(
+                itemCount = itemCount,
+                totalPrice = totalPrice,
+                onViewCartClick = onViewCartClick
+            )
         }
     }
 }
@@ -234,10 +252,10 @@ fun ErrorItem(
 @Composable
 fun ProductCard(
     product: Product,
-    onQuantityChange: (Int) -> Unit,
+    quantity: Int, // Receive quantity
+    onAddToCart: (Int) -> Unit,
+    onRemoveFromCart: (Int) -> Unit,
 ) {
-    var quantity by remember { mutableIntStateOf(0) }
-
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -288,10 +306,7 @@ fun ProductCard(
                 ) {
                     IconButton(
                         onClick = {
-                            if (quantity > 0) {
-                                quantity--
-                                onQuantityChange(quantity)
-                            }
+                            onRemoveFromCart(1)
                         },
                         enabled = quantity > 0,
                     ) {
@@ -310,8 +325,7 @@ fun ProductCard(
 
                     IconButton(
                         onClick = {
-                            quantity++
-                            onQuantityChange(quantity)
+                            onAddToCart(1)
                         },
                     ) {
                         Icon(
