@@ -17,11 +17,12 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -63,6 +64,7 @@ fun ShoppingScreen(
 ) {
     val uiState by viewModel.shoppingUiState.collectAsState()
 
+
     Column(modifier = modifier.fillMaxSize()) {
         // Sort controls could be added here
 
@@ -79,14 +81,18 @@ fun ShoppingScreen(
             is ShoppingUiState.Success -> {
                 // Extract the paging flow from viewModel for LazyPagingItems
                 val pagingFlow = viewModel.getProductPagingFlow()
+                val listState = rememberLazyGridState()
 
                 pagingFlow?.let {
                     val pagingItems = it.collectAsLazyPagingItems()
 
-                    LazyColumn(
+                    LazyVerticalGrid (
+                        state = listState,
+                        columns = GridCells.Fixed(2),
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         items(
                             count = pagingItems.itemCount,
@@ -107,7 +113,7 @@ fun ShoppingScreen(
                         when (pagingItems.loadState.refresh) {
                             is LoadState.Loading -> {
                                 item {
-                                    LoadingItem(Modifier.fillParentMaxSize())
+                                    LoadingItem(Modifier.fillMaxWidth())
                                 }
                             }
                             is LoadState.Error -> {
@@ -177,7 +183,7 @@ fun ErrorScreen(
     ) {
         Text(text = message)
         Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = onRetryClick) {
+        androidx.compose.material3.Button(onClick = onRetryClick) {
             Text("Retry")
         }
     }

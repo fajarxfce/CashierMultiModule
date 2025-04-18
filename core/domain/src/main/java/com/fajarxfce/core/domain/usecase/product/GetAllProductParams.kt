@@ -4,7 +4,7 @@ data class GetAllProductParams(
     val order: OrderOption = OrderOption(),
     val orderBy: String = "products.id",
     val page: Int = 1,
-    val paginate: Int = 10,
+    val paginate: Int = 5,
 )
 
 data class OrderOption(
