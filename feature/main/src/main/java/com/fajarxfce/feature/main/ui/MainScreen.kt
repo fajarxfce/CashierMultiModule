@@ -20,21 +20,29 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteColors
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteScaffold
+import androidx.compose.material3.adaptive.navigationsuite.rememberNavigationSuiteScaffoldState
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.fajarxfce.core.designsystem.theme.AppTheme
 import com.fajarxfce.feature.account.navigation.AccountBaseRoute
@@ -42,21 +50,46 @@ import com.fajarxfce.feature.main.R
 import com.fajarxfce.feature.main.navigation.AccountRoute
 import com.fajarxfce.feature.main.navigation.MainNavHost
 import com.fajarxfce.shopping.navigation.ShoppingBaseRoute
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
-    val navController = rememberNavController()
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
+) {
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.SHOP) }
+// Remember the navigation suite state
+    val navigationSuiteState = rememberNavigationSuiteScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
 
+    // Create a nested scroll connection to detect scroll direction
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                // Hide when scrolling down, show when scrolling up
+                if (available.y < 0) {
+                    coroutineScope.launch {
+                        navigationSuiteState.hide()
+                    }
+                } else if (available.y > 0) {
+                    coroutineScope.launch {
+                        navigationSuiteState.show()
+                    }
+                }
+                return Offset.Zero
+            }
+        }
+    }
     val myNavigationSuiteItemColors = NavigationSuiteDefaults.itemColors(
         navigationBarItemColors = NavigationBarItemDefaults.colors(
             indicatorColor = MaterialTheme.colorScheme.background,
-            selectedIconColor = MaterialTheme.colorScheme.primary
+            selectedIconColor = MaterialTheme.colorScheme.primary,
         ),
     )
 
     NavigationSuiteScaffold(
+        state = navigationSuiteState,
         navigationSuiteColors = NavigationSuiteDefaults.colors(
             navigationBarContainerColor = MaterialTheme.colorScheme.surface,
         ),
@@ -77,22 +110,25 @@ fun MainScreen(modifier: Modifier = Modifier) {
                     selected = it == currentDestination,
                     onClick = {
                         currentDestination = it
-                        navController.navigate(it.route){
-                            popUpTo(navController.graph.findStartDestination().id){
+                        navController.navigate(it.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }
                             launchSingleTop = true
                             restoreState = true
                         }
                     },
-                    colors = myNavigationSuiteItemColors
+                    colors = myNavigationSuiteItemColors,
                 )
             }
         },
         content = {
-            MainNavHost(
-                navController = navController,
-            )
+            Box(
+                modifier = Modifier
+                    .nestedScroll(nestedScrollConnection)  // Connect the scroll events
+            ) {
+                MainNavHost(navController = navController)
+            }
         },
     )
 }
@@ -113,7 +149,7 @@ enum class AppDestinations(
 @Composable
 private fun MainScreenPreview() {
     AppTheme {
-        MainScreen(
-        )
+        val navController = rememberNavController()
+        MainScreen(navController = navController)
     }
 }
