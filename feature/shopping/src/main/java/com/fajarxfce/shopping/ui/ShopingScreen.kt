@@ -79,13 +79,15 @@ fun ShoppingScreen(
     modifier: Modifier = Modifier,
     viewModel: ShoppingViewModel = hiltViewModel(),
     onProductClick: (Int) -> Unit = {},
-    onViewCartClick: () -> Unit = {}
+    onViewCartClick: () -> Unit = {},
 ) {
     val uiState by viewModel.shoppingUiState.collectAsState()
     val cartItems by viewModel.cartItems.collectAsState()
 
     cartItems.forEach {
         Timber.d("Cart Item: ${it.key.name} - Quantity: ${it.value}")
+        Timber.d("Cart Item: ${cartItems.values.sum()}")
+
     }
 
     ShoppingContent(
@@ -95,7 +97,7 @@ fun ShoppingScreen(
         onAddToCart = { product, quantity -> viewModel.addToCart(product, quantity) },
         onRemoveFromCart = { product, quantity -> viewModel.removeFromCart(product, quantity) },
         onViewCartClick = onViewCartClick,
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -118,35 +120,48 @@ fun ShoppingContent(
                     .padding(16.dp)
                     .background(MaterialTheme.colorScheme.background),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     text = "Shopping",
                     style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
                 IconButton(onClick = onViewCartClick) {
                     Icon(
                         imageVector = Icons.Default.Add,
                         contentDescription = "Add to cart",
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
             }
-        }
+        },
+        bottomBar = {
+            val itemCount = cartItems.values.sum()
+            val totalPrice = cartItems.entries.sumOf {
+                (it.key.price?.toDouble() ?: 0.0) * it.value.toDouble()
+            }
+            if (itemCount > 0) {
+                CartSummaryBar(
+                    itemCount = itemCount,
+                    totalPrice = totalPrice,
+                    onViewCartClick = onViewCartClick,
+                )
+            }
+        },
     ) { paddingValues ->
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             when (uiState) {
                 is ShoppingUiState.Loading -> {
                     Box(
                         modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                        contentAlignment = Alignment.Center,
                     ) {
                         LoadingScreen(
                             message = "Loading products...",
@@ -156,7 +171,8 @@ fun ShoppingContent(
 
                 is ShoppingUiState.Success -> {
                     val pagingFlow = uiState.data
-                    val pagingItems: LazyPagingItems<Product> = pagingFlow.collectAsLazyPagingItems()
+                    val pagingItems: LazyPagingItems<Product> =
+                        pagingFlow.collectAsLazyPagingItems()
                     val listState = rememberLazyGridState()
 
                     LazyVerticalGrid(
@@ -165,11 +181,11 @@ fun ShoppingContent(
                         modifier = Modifier.fillMaxSize(),
                         contentPadding = PaddingValues(16.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         items(
                             count = pagingItems.itemCount,
-                            key = pagingItems.itemKey { product -> product.id!! }
+                            key = pagingItems.itemKey { product -> product.id!! },
                         ) { index ->
                             val product = pagingItems[index]
                             if (product != null) {
@@ -180,7 +196,7 @@ fun ShoppingContent(
                                     imageUrl = product.media?.firstOrNull()?.originalUrl,
                                     quantity = quantityInCart,
                                     onIncreaseQuantity = { onAddToCart(product, 1) },
-                                    onDecreaseQuantity = { onRemoveFromCart(product, 1) }
+                                    onDecreaseQuantity = { onRemoveFromCart(product, 1) },
                                 )
                             }
                         }
@@ -192,12 +208,12 @@ fun ShoppingContent(
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(vertical = 16.dp),
-                                        contentAlignment = Alignment.Center
+                                        contentAlignment = Alignment.Center,
                                     ) {
                                         LoadingScreen(
                                             message = "",
                                             modifier = Modifier
-                                                .fillMaxWidth()
+                                                .fillMaxWidth(),
                                         )
                                     }
                                 }
@@ -207,7 +223,7 @@ fun ShoppingContent(
                                 item {
                                     ErrorItem(
                                         message = "Failed to load products",
-                                        onRetry = { pagingItems.refresh() }
+                                        onRetry = { pagingItems.refresh() },
                                     )
                                 }
                             }
@@ -222,7 +238,7 @@ fun ShoppingContent(
                                         contentDesc = "Loading more products...",
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .padding(16.dp)
+                                            .padding(16.dp),
                                     )
                                 }
                             }
@@ -231,7 +247,7 @@ fun ShoppingContent(
                                 item {
                                     ErrorItem(
                                         message = "Failed to load more products",
-                                        onRetry = { pagingItems.retry() }
+                                        onRetry = { pagingItems.retry() },
                                     )
                                 }
                             }
@@ -245,25 +261,14 @@ fun ShoppingContent(
                     val error = uiState.exception
                     ErrorScreen(
                         message = error.message ?: "An error occurred",
-                        onRetryClick = {  }
+                        onRetryClick = { },
                     )
                 }
-            }
-
-            val itemCount = cartItems.values.sum()
-            val totalPrice = cartItems.entries.sumOf {
-                (it.key.price?.toDouble() ?: 0.0) * it.value.toDouble()
-            }
-            if (itemCount > 0) {
-                CartSummaryBar(
-                    itemCount = itemCount,
-                    totalPrice = totalPrice,
-                    onViewCartClick = onViewCartClick
-                )
             }
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 private fun ShoppingScreenContent() {
@@ -281,36 +286,36 @@ private fun ShoppingScreenContent() {
                                 id = 1,
                                 name = "Product 1",
                                 price = 100,
-                                media = listOf(MediaItem(originalUrl = "https://example.com/product1.jpg"))
+                                media = listOf(MediaItem(originalUrl = "https://example.com/product1.jpg")),
                             ),
                             Product(
                                 id = 2,
                                 name = "Product 1",
                                 price = 100,
-                                media = listOf(MediaItem(originalUrl = "https://example.com/product1.jpg"))
+                                media = listOf(MediaItem(originalUrl = "https://example.com/product1.jpg")),
                             ),
                             Product(
                                 id = 3,
                                 name = "Product 1",
                                 price = 100,
-                                media = listOf(MediaItem(originalUrl = "https://example.com/product1.jpg"))
+                                media = listOf(MediaItem(originalUrl = "https://example.com/product1.jpg")),
                             ),
                             Product(
                                 id = 4,
                                 name = "Product 1",
                                 price = 100,
-                                media = listOf(MediaItem(originalUrl = "https://example.com/product1.jpg"))
+                                media = listOf(MediaItem(originalUrl = "https://example.com/product1.jpg")),
                             ),
 
-                        )
-                    )
-                )
+                            ),
+                    ),
+                ),
             ),
             cartItems = emptyMap(),
             onProductClick = {},
             onAddToCart = { _, _ -> },
             onRemoveFromCart = { _, _ -> },
-            onViewCartClick = {}
+            onViewCartClick = {},
         )
     }
 }
