@@ -24,8 +24,10 @@ class ShoppingViewModel @Inject constructor(
     private val getPagingProductUseCase: GetPagingProductUseCase
 ) : ViewModel() {
 
-    private val _shoppingUiState = MutableStateFlow<ShoppingUiState<PagingData<Product>>>(ShoppingUiState.Loading)
-    val shoppingUiState: StateFlow<ShoppingUiState<PagingData<Product>>> = _shoppingUiState.asStateFlow()
+    private val _shoppingUiState = MutableStateFlow<ShoppingUiState<Flow<PagingData<Product>>>>( // Updated type
+        ShoppingUiState.Loading
+    )
+    val shoppingUiState: StateFlow<ShoppingUiState<Flow<PagingData<Product>>>> = _shoppingUiState.asStateFlow() // Updated type
 
     private val _cartItems = MutableStateFlow<MutableMap<Product, Int>>(mutableMapOf())
     val cartItems: StateFlow<Map<Product, Int>> = _cartItems.asStateFlow()
@@ -48,20 +50,14 @@ class ShoppingViewModel @Inject constructor(
                 currentOrderBy = orderBy
                 currentAscending = ascending
 
-                // Create and cache the paging flow
-                val pagingFlow = getPagingProductUseCase(orderBy, ascending)
+                val pagingFlow: Flow<PagingData<Product>> = getPagingProductUseCase(orderBy, ascending)
                     .cachedIn(viewModelScope)
 
                 currentProductFlow = pagingFlow
 
-                // Emit success with the initial empty PagingData
-                // The UI will collect the actual paging data from the flow
-                _shoppingUiState.update { ShoppingUiState.Success(PagingData.empty()) }
+                // Wrap the PagingData in a Flow using flowOf
+                _shoppingUiState.update { ShoppingUiState.Success(pagingFlow) }
 
-                // Collect the first value to update the state with actual data
-                pagingFlow.collect { pagingData ->
-                    _shoppingUiState.update { ShoppingUiState.Success(pagingData) }
-                }
             } catch (e: Exception) {
                 _shoppingUiState.update { ShoppingUiState.Error(e) }
             }

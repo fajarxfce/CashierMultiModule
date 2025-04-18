@@ -31,6 +31,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -46,16 +47,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
+import androidx.paging.PagingData
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
+import com.fajarxfce.core.designsystem.component.CartSummaryBar
+import com.fajarxfce.core.designsystem.component.DataCard
+import com.fajarxfce.core.designsystem.component.ErrorItem
+import com.fajarxfce.core.designsystem.component.ErrorScreen
+import com.fajarxfce.core.designsystem.component.NiaOverlayLoadingWheel
 import com.fajarxfce.core.designsystem.theme.AppTheme
 import com.fajarxfce.core.designsystem.theme.dark_primaryContainer
 import com.fajarxfce.core.designsystem.theme.dark_surface
 import com.fajarxfce.core.model.data.product.Product
+import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
+import kotlin.text.append
+import kotlin.text.firstOrNull
 import kotlin.text.get
-
 
 @Composable
 fun ShoppingScreen(
@@ -67,32 +77,54 @@ fun ShoppingScreen(
     val uiState by viewModel.shoppingUiState.collectAsState()
     val cartItems by viewModel.cartItems.collectAsState()
 
-    cartItems.forEach { (product, quantity) ->
-        Timber.d("Product: ${product.name}, Quantity: $quantity")
+    cartItems.forEach {
+        Timber.d("Cart Item: ${it.key.name} - Quantity: ${it.value}")
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
-        // Sort controls could be added here
+    ShoppingContent(
+        uiState = uiState,
+        cartItems = cartItems,
+        onProductClick = onProductClick,
+        onAddToCart = { product, quantity -> viewModel.addToCart(product, quantity) },
+        onRemoveFromCart = { product, quantity -> viewModel.removeFromCart(product, quantity) },
+        onViewCartClick = onViewCartClick,
+        modifier = modifier
+    )
+}
 
+@Composable
+fun ShoppingContent(
+    uiState: ShoppingUiState<Flow<PagingData<Product>>>,
+    cartItems: Map<Product, Int>,
+    onProductClick: (Int) -> Unit,
+    onAddToCart: (Product, Int) -> Unit,
+    onRemoveFromCart: (Product, Int) -> Unit,
+    onViewCartClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier.fillMaxSize()) {
         when (uiState) {
             is ShoppingUiState.Loading -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator()
+                    NiaOverlayLoadingWheel(
+                        contentDesc = "Loading products...",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    )
                 }
             }
 
             is ShoppingUiState.Success -> {
-                // Extract the paging flow from viewModel for LazyPagingItems
-                val pagingFlow = viewModel.getProductPagingFlow()
-                val listState = rememberLazyGridState()
+                val pagingFlow = uiState.data
+                if (pagingFlow != null) {
+                    val pagingItems: LazyPagingItems<Product> = pagingFlow.collectAsLazyPagingItems()
+                    val listState = rememberLazyGridState()
 
-                pagingFlow?.let {
-                    val pagingItems = it.collectAsLazyPagingItems()
-
-                    LazyVerticalGrid (
+                    LazyVerticalGrid(
                         state = listState,
                         columns = GridCells.Fixed(2),
                         modifier = Modifier.fillMaxSize(),
@@ -106,23 +138,30 @@ fun ShoppingScreen(
                         ) { index ->
                             val product = pagingItems[index]
                             if (product != null) {
-                                val quantityInCart = cartItems[product] ?: 0 // Get quantity from cart
-                                ProductCard(
-                                    product = product,
-                                    quantity = quantityInCart,  // Pass quantity
-                                    onAddToCart = { qty -> viewModel.addToCart(product, qty) },
-                                    onRemoveFromCart = { qty -> viewModel.removeFromCart(product, qty) }
+                                val quantityInCart = cartItems[product] ?: 0
+                                DataCard(
+                                    title = product.name ?: "",
+                                    subtitle = "$${product.price}",
+                                    imageUrl = product.media?.firstOrNull()?.originalUrl,
+                                    quantity = quantityInCart,
+                                    onIncreaseQuantity = { onAddToCart(product, 1) },
+                                    onDecreaseQuantity = { onRemoveFromCart(product, 1) }
                                 )
                             }
                         }
 
-                        // Handle loading states
                         when (pagingItems.loadState.refresh) {
                             is LoadState.Loading -> {
                                 item {
-                                    LoadingItem(Modifier.fillMaxWidth())
+                                    NiaOverlayLoadingWheel(
+                                        contentDesc = "Loading more products...",
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp)
+                                    )
                                 }
                             }
+
                             is LoadState.Error -> {
                                 item {
                                     ErrorItem(
@@ -131,16 +170,22 @@ fun ShoppingScreen(
                                     )
                                 }
                             }
+
                             else -> {}
                         }
 
-                        // Append loading state (pagination)
                         when (pagingItems.loadState.append) {
                             is LoadState.Loading -> {
                                 item {
-                                    LoadingItem(Modifier.fillMaxWidth())
+                                    NiaOverlayLoadingWheel(
+                                        contentDesc = "Loading more products...",
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(16.dp)
+                                    )
                                 }
                             }
+
                             is LoadState.Error -> {
                                 item {
                                     ErrorItem(
@@ -149,9 +194,12 @@ fun ShoppingScreen(
                                     )
                                 }
                             }
+
                             else -> {}
                         }
                     }
+                } else {
+                    Box(modifier = Modifier.fillMaxSize())
                 }
             }
 
@@ -159,11 +207,11 @@ fun ShoppingScreen(
                 val error = (uiState as ShoppingUiState.Error).exception
                 ErrorScreen(
                     message = error.message ?: "An error occurred",
-                    onRetryClick = { viewModel.refreshProducts() }
+                    onRetryClick = {  }
                 )
             }
         }
-        // Cart Summary Bar
+
         val itemCount = cartItems.values.sum()
         val totalPrice = cartItems.entries.sumOf {
             (it.key.price?.toDouble() ?: 0.0) * it.value.toDouble()
@@ -177,184 +225,16 @@ fun ShoppingScreen(
         }
     }
 }
-
-@Composable
-fun CartSummaryBar(
-    itemCount: Int,
-    totalPrice: Double,
-    onViewCartClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text("$itemCount items: $${String.format("%.2f", totalPrice)}")
-
-        Button(onClick = onViewCartClick) {
-            Text("View Cart")
-        }
-    }
-}
-
-@Composable
-fun LoadingItem(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier.padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator()
-    }
-}
-@Composable
-fun ErrorScreen(
-    message: String,
-    onRetryClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = message)
-        Spacer(modifier = Modifier.height(8.dp))
-        androidx.compose.material3.Button(onClick = onRetryClick) {
-            Text("Retry")
-        }
-    }
-}
-
-@Composable
-fun ErrorItem(
-    message: String,
-    onRetry: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = message)
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = onRetry) {
-            Text("Retry")
-        }
-    }
-}
-@Composable
-fun ProductCard(
-    product: Product,
-    quantity: Int, // Receive quantity
-    onAddToCart: (Int) -> Unit,
-    onRemoveFromCart: (Int) -> Unit,
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-    ) {
-        Column {
-            AsyncImage(
-                model = product.media?.firstOrNull()?.originalUrl,
-                contentDescription = product.name,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .clip(RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp))
-                    .background(dark_primaryContainer),
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(dark_surface)
-                    .padding(12.dp),
-            ) {
-                Text(
-                    text = product.name ?: "",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = "$${product.price}",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold,
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    IconButton(
-                        onClick = {
-                            onRemoveFromCart(1)
-                        },
-                        enabled = quantity > 0,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Remove,
-                            contentDescription = "Decrease",
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-
-                    Text(
-                        text = quantity.toString(),
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold,
-                    )
-
-                    IconButton(
-                        onClick = {
-                            onAddToCart(1)
-                        },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Increase",
-                            tint = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-                }
-            }
-        }
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun ShoppingScreenPreview() {
     AppTheme {
-        ShoppingScreen()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun CartSummaryBarPreview() {
-    AppTheme {
-        CartSummaryBar(
-            itemCount = 5,
-            totalPrice = 100.0,
+        ShoppingContent(
+            uiState = ShoppingUiState.Loading,
+            cartItems = emptyMap(),
+            onProductClick = {},
+            onAddToCart = { _, _ -> },
+            onRemoveFromCart = { _, _ -> },
             onViewCartClick = {}
         )
     }
