@@ -1,6 +1,5 @@
 package com.fajarxfce.shopping.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fajarxfce.core.domain.usecase.product.GetAllProductUseCase
@@ -13,7 +12,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 
 @HiltViewModel
@@ -23,13 +21,13 @@ class ShoppingViewModel @Inject constructor(
 
     private val _shoppingUiState = MutableStateFlow<ShoppingUiState<List<Product>>>(ShoppingUiState.Loading)
     val shoppingUiState: StateFlow<ShoppingUiState<List<Product>>>
-        get() = _shoppingUiState.asStateFlow()  // Use asStateFlow for better encapsulation
+        get() = _shoppingUiState.asStateFlow()
 
     init {
-        getProducts()  // Call getProducts() once on initialization
+        loadProducts()
     }
 
-    private fun getProducts() {
+    private fun loadProducts() {
         viewModelScope.launch {
             getAllProductUseCase().collect { result ->
                 when (result) {
@@ -42,6 +40,6 @@ class ShoppingViewModel @Inject constructor(
     }
 
     fun refreshProducts() {  // New function to trigger refresh
-        getProducts()
+        loadProducts()
     }
 }

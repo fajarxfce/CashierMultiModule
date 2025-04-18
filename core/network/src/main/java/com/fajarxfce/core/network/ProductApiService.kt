@@ -12,6 +12,5 @@ interface ProductApiService {
         @Query("order") order: String = "asc",
         @Query("paginate") paginate: Int = 100,
         @Query("page") page: Int = 1,
-        @Query("filter") filter: String? = null
     ): ProductResponse
 }
