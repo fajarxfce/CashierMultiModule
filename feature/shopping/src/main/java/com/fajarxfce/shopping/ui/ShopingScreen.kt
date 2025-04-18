@@ -5,41 +5,34 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Button
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,97 +44,165 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import com.fajarxfce.core.designsystem.theme.AppTheme
 import com.fajarxfce.core.designsystem.theme.dark_primaryContainer
 import com.fajarxfce.core.designsystem.theme.dark_surface
 import com.fajarxfce.core.model.data.product.Product
+import kotlin.text.get
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+
 @Composable
 fun ShoppingScreen(
-    onAddToCart: (Int?, Int) -> Unit,
+    modifier: Modifier = Modifier,
     viewModel: ShoppingViewModel = hiltViewModel(),
+    onProductClick: (Int) -> Unit = {}
 ) {
+    val uiState by viewModel.shoppingUiState.collectAsState()
 
-    val shoppingUiState by viewModel.shoppingUiState.collectAsStateWithLifecycle()
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    Column(modifier = modifier.fillMaxSize()) {
+        // Sort controls could be added here
 
-    // Swipe-to-refresh implementation
-    var refreshing by remember { mutableStateOf(false) }
-
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = refreshing,
-        onRefresh = {
-            refreshing = true
-            viewModel.refreshProducts()
-        },
-    )
-
-    LaunchedEffect(shoppingUiState) {
-        if (shoppingUiState is ShoppingUiState.Success || shoppingUiState is ShoppingUiState.Error) {
-            refreshing = false
-        }
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text(
-                        text = "Shopping",
-                        style = MaterialTheme.typography.headlineLarge,
-                    )
-                },
-                actions = {
-                    IconButton(onClick = { /* TODO: Open cart */ }) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add to cart",
-                        )
-                    }
-                },
-                scrollBehavior = scrollBehavior
-            )
-        },
-    ) { paddingValues ->
-        Box(
-            Modifier
-                .padding(paddingValues)
-                .pullRefresh(pullRefreshState),
-        ) {
-            when (shoppingUiState) {
-                is ShoppingUiState.Loading -> {
-                    if (!refreshing) {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-                }
-                is ShoppingUiState.Success -> {
-                    val products = (shoppingUiState as ShoppingUiState.Success).data
-                    ShoppingContent(
-                        products = products,
-                        onAddToCart = onAddToCart,
-                    )
-                }
-                is ShoppingUiState.Error -> {
-                    val exception = (shoppingUiState as ShoppingUiState.Error).exception
-                    Text(
-                        text = "Error: ${exception.message}",
-                        modifier = Modifier.align(Alignment.Center),
-                    )
+        when (uiState) {
+            is ShoppingUiState.Loading -> {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
                 }
             }
-            PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
+
+            is ShoppingUiState.Success -> {
+                // Extract the paging flow from viewModel for LazyPagingItems
+                val pagingFlow = viewModel.getProductPagingFlow()
+
+                pagingFlow?.let {
+                    val pagingItems = it.collectAsLazyPagingItems()
+
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(
+                            count = pagingItems.itemCount,
+                            key = pagingItems.itemKey { product -> product.id!! }
+                        ) { index ->
+                            val product = pagingItems[index]
+                            if (product != null) {
+                                ProductCard(
+                                    product = product,
+                                    onQuantityChange = { quantity ->
+                                        // Handle add to cart action
+                                    }
+                                )
+                            }
+                        }
+
+                        // Handle loading states
+                        when (pagingItems.loadState.refresh) {
+                            is LoadState.Loading -> {
+                                item {
+                                    LoadingItem(Modifier.fillParentMaxSize())
+                                }
+                            }
+                            is LoadState.Error -> {
+                                item {
+                                    ErrorItem(
+                                        message = "Failed to load products",
+                                        onRetry = { pagingItems.refresh() }
+                                    )
+                                }
+                            }
+                            else -> {}
+                        }
+
+                        // Append loading state (pagination)
+                        when (pagingItems.loadState.append) {
+                            is LoadState.Loading -> {
+                                item {
+                                    LoadingItem(Modifier.fillMaxWidth())
+                                }
+                            }
+                            is LoadState.Error -> {
+                                item {
+                                    ErrorItem(
+                                        message = "Failed to load more products",
+                                        onRetry = { pagingItems.retry() }
+                                    )
+                                }
+                            }
+                            else -> {}
+                        }
+                    }
+                }
+            }
+
+            is ShoppingUiState.Error -> {
+                val error = (uiState as ShoppingUiState.Error).exception
+                ErrorScreen(
+                    message = error.message ?: "An error occurred",
+                    onRetryClick = { viewModel.refreshProducts() }
+                )
+            }
         }
     }
 }
 
+@Composable
+fun LoadingItem(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier.padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator()
+    }
+}
+@Composable
+fun ErrorScreen(
+    message: String,
+    onRetryClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = message)
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(onClick = onRetryClick) {
+            Text("Retry")
+        }
+    }
+}
 
+@Composable
+fun ErrorItem(
+    message: String,
+    onRetry: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = message)
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(onClick = onRetry) {
+            Text("Retry")
+        }
+    }
+}
 @Composable
 fun ShoppingContent(
     modifier: Modifier = Modifier,
@@ -154,19 +215,14 @@ fun ShoppingContent(
             .fillMaxSize()
             .padding(16.dp),
     ) {
-//        Text(
-//            text = "Shopping",
-//            style = MaterialTheme.typography.headlineLarge,
-//            fontWeight = FontWeight.Bold,
-//            modifier = Modifier.padding(bottom = 16.dp),
-//        )
         LazyVerticalGrid(
             state = listState,
             columns = GridCells.Fixed(2),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(16.dp),
         ) {
-            items(products, key = { it.id!! }) { product ->
+            items(products) { product ->
                 ProductCard(
                     product = product,
                     onQuantityChange = { quantity ->
@@ -176,10 +232,6 @@ fun ShoppingContent(
             }
         }
     }
-
-
-
-
 }
 
 @Composable
@@ -282,7 +334,6 @@ fun ProductCard(
 private fun ShoppingScreenPreview() {
     AppTheme {
         ShoppingScreen(
-            onAddToCart = { _, _ -> },
         )
     }
 }

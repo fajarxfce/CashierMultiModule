@@ -23,9 +23,6 @@ fun NavGraphBuilder.shoppingSection(
     ) {
         composable<ShoppingRoute> {
             ShoppingScreen(
-                onAddToCart = { productId, qty ->
-
-                },
             )
         }
     }

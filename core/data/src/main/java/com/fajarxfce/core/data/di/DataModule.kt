@@ -1,7 +1,7 @@
 package com.fajarxfce.core.data.di
 
 import com.fajarxfce.core.data.repository.DefaultAuthRepository
-import com.fajarxfce.core.data.repository.DefaultProductRepository
+import com.fajarxfce.core.data.repository.DefaultProductRepositoryPaging
 import com.fajarxfce.core.domain.repository.AuthRepository
 import com.fajarxfce.core.domain.repository.ProductRepository
 import dagger.Binds
@@ -19,6 +19,6 @@ abstract class DataModule {
 
     @Binds
     abstract fun bindGetAllProductRepository(
-        defaultGetAllProductRepository: DefaultProductRepository
+        defaultGetAllProductRepository: DefaultProductRepositoryPaging
     ): ProductRepository
 }
