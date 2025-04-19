@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -15,7 +17,13 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Remove
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -28,9 +36,11 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -42,18 +52,22 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import coil.compose.AsyncImage
 import com.fajarxfce.core.designsystem.component.CartSummaryBar
 import com.fajarxfce.core.designsystem.component.DataCard
 import com.fajarxfce.core.designsystem.component.ErrorItem
 import com.fajarxfce.core.designsystem.component.ErrorScreen
 import com.fajarxfce.core.designsystem.component.LoadingScreen
 import com.fajarxfce.core.designsystem.component.NiaOverlayLoadingWheel
+import com.fajarxfce.core.designsystem.component.ShoppingTopBar
 import com.fajarxfce.core.designsystem.theme.AppTheme
 import com.fajarxfce.core.model.data.product.MediaItem
 import com.fajarxfce.core.model.data.product.Product
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.text.toDouble
 
 @Composable
 fun ShoppingScreen(
@@ -80,7 +94,7 @@ fun ShoppingScreen(
         onViewCartClick = onViewCartClick,
         modifier = modifier,
         isRefreshing = uiState is ShoppingUiState.Loading,
-        onRefresh = { viewModel.refreshProducts() }
+        onRefresh = { viewModel.refreshProducts() },
     )
 }
 
@@ -100,49 +114,40 @@ fun ShoppingContent(
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     val stateRefresh = rememberPullToRefreshState()
 
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.background,
-                    scrolledContainerColor = MaterialTheme.colorScheme.background
-                ),
-                title = {
-                    Text(
-                        text = "Shopping",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    )
-                },
-                actions = {
-                    IconButton(onClick = onViewCartClick) {
-                        Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = "Add to cart",
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                        )
+    // Bottom sheet configuration
+    val bottomSheetState = rememberBottomSheetScaffoldState()
+    val coroutineScope = rememberCoroutineScope()
+
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetState,
+        sheetContent = {
+            CartSheetContent(
+                cartItems = cartItems,
+                onAddToCart = onAddToCart,
+                onRemoveFromCart = onRemoveFromCart,
+                onCheckout = {
+                    onViewCartClick()
+                    coroutineScope.launch {
+                        bottomSheetState.bottomSheetState.partialExpand()
                     }
                 },
-                scrollBehavior = scrollBehavior
             )
         },
-        bottomBar = {
-            val itemCount = cartItems.values.sum()
-            val totalPrice = cartItems.entries.sumOf {
-                (it.key.price?.toDouble() ?: 0.0) * it.value.toDouble()
-            }
-            if (itemCount > 0) {
-                CartSummaryBar(
-                    itemCount = itemCount,
-                    totalPrice = totalPrice,
-                    onViewCartClick = onViewCartClick,
-                )
-            }
+        sheetPeekHeight = if (cartItems.isEmpty()) 0.dp else 72.dp,
+        sheetDragHandle = null, // We'll handle this with our custom summary bar
+        contentColor = MaterialTheme.colorScheme.background,
+        containerColor = MaterialTheme.colorScheme.background,
+        sheetContainerColor = MaterialTheme.colorScheme.background,
+        sheetContentColor = MaterialTheme.colorScheme.background,
+        topBar = {
+            ShoppingTopBar(
+                modifier = Modifier,
+                scrollBehavior= scrollBehavior,
+                onViewCartClick = onViewCartClick,
+            )
         },
     ) { paddingValues ->
-
+        // Main content as before
         PullToRefreshBox(
             isRefreshing = isRefreshing,
             onRefresh = onRefresh,
@@ -154,7 +159,7 @@ fun ShoppingContent(
                     isRefreshing = isRefreshing,
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    state = stateRefresh
+                    state = stateRefresh,
                 )
             },
         ) {
@@ -274,6 +279,82 @@ fun ShoppingContent(
                         )
                     }
                 }
+            }
+        }
+    }
+
+}
+
+@Composable
+private fun CartSheetContent(
+    cartItems: Map<Product, Int>,
+    onAddToCart: (Product, Int) -> Unit,
+    onRemoveFromCart: (Product, Int) -> Unit,
+    onCheckout: () -> Unit,
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        // Custom cart summary header that's always visible
+        val itemCount = cartItems.values.sum()
+        val totalPrice = cartItems.entries.sumOf {
+            (it.key.price?.toDouble() ?: 0.0) * it.value.toDouble()
+        }
+
+        CartSummaryBar(
+            itemCount = itemCount,
+            totalPrice = totalPrice,
+            onViewCartClick = onCheckout,
+        )
+
+        // Scrollable list of cart items
+        if (itemCount > 0) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f, fill = false)
+                    .padding(horizontal = 16.dp),
+                contentPadding = PaddingValues(vertical = 8.dp),
+            ) {
+                items(
+                    count = cartItems.size,
+                    key = { index -> cartItems.keys.elementAt(index).id ?: index },
+                ) { index ->
+                    val product = cartItems.keys.elementAt(index)
+                    val quantity = cartItems[product] ?: 0
+
+                    ListItem(
+                        headlineContent = { Text(product.name ?: "Product") },
+                        supportingContent = { Text("$${product.price}") },
+                        leadingContent = {
+                            AsyncImage(
+                                model = product.media?.firstOrNull()?.originalUrl,
+                                contentDescription = null,
+                                modifier = Modifier.size(56.dp),
+                            )
+                        },
+                        trailingContent = {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                IconButton(onClick = { onRemoveFromCart(product, 1) }) {
+                                    Icon(Icons.Default.Remove, "Decrease")
+                                }
+                                Text(text = quantity.toString())
+                                IconButton(onClick = { onAddToCart(product, 1) }) {
+                                    Icon(Icons.Default.Add, "Increase")
+                                }
+                            }
+                        },
+                    )
+                    HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
+                }
+            }
+
+            // Checkout button
+            Button(
+                onClick = onCheckout,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+            ) {
+                Text("Checkout")
             }
         }
     }
