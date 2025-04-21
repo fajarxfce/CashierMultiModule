@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -126,9 +127,8 @@ fun ShoppingContent(
                 onAddToCart = onAddToCart,
                 onRemoveFromCart = onRemoveFromCart,
                 onCheckout = {
-                    onViewCartClick()
                     coroutineScope.launch {
-                        bottomSheetState.bottomSheetState.partialExpand()
+
                     }
                 },
             )
@@ -293,7 +293,7 @@ private fun CartSheetContent(
     onCheckout: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        // Custom cart summary header that's always visible
+        // Cart summary header
         val itemCount = cartItems.values.sum()
         val totalPrice = cartItems.entries.sumOf {
             (it.key.price?.toDouble() ?: 0.0) * it.value.toDouble()
@@ -305,45 +305,50 @@ private fun CartSheetContent(
             onViewCartClick = onCheckout,
         )
 
-        // Scrollable list of cart items
+        // Fix scrolling issue with cart items
         if (itemCount > 0) {
-            LazyColumn(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f, fill = false)
-                    .padding(horizontal = 16.dp),
-                contentPadding = PaddingValues(vertical = 8.dp),
+                    .height(300.dp) // Fixed height for scrollable area
             ) {
-                items(
-                    count = cartItems.size,
-                    key = { index -> cartItems.keys.elementAt(index).id ?: index },
-                ) { index ->
-                    val product = cartItems.keys.elementAt(index)
-                    val quantity = cartItems[product] ?: 0
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    contentPadding = PaddingValues(vertical = 8.dp),
+                ) {
+                    items(
+                        count = cartItems.size,
+                        key = { index -> cartItems.keys.elementAt(index).id ?: index },
+                    ) { index ->
+                        val product = cartItems.keys.elementAt(index)
+                        val quantity = cartItems[product] ?: 0
 
-                    ListItem(
-                        headlineContent = { Text(product.name ?: "Product") },
-                        supportingContent = { Text("$${product.price}") },
-                        leadingContent = {
-                            AsyncImage(
-                                model = product.media?.firstOrNull()?.originalUrl,
-                                contentDescription = null,
-                                modifier = Modifier.size(56.dp),
-                            )
-                        },
-                        trailingContent = {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                IconButton(onClick = { onRemoveFromCart(product, 1) }) {
-                                    Icon(Icons.Default.Remove, "Decrease")
+                        ListItem(
+                            headlineContent = { Text(product.name ?: "Product") },
+                            supportingContent = { Text("$${product.price}") },
+                            leadingContent = {
+                                AsyncImage(
+                                    model = product.media?.firstOrNull()?.originalUrl,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(56.dp),
+                                )
+                            },
+                            trailingContent = {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    IconButton(onClick = { onRemoveFromCart(product, 1) }) {
+                                        Icon(Icons.Default.Remove, "Decrease")
+                                    }
+                                    Text(text = quantity.toString())
+                                    IconButton(onClick = { onAddToCart(product, 1) }) {
+                                        Icon(Icons.Default.Add, "Increase")
+                                    }
                                 }
-                                Text(text = quantity.toString())
-                                IconButton(onClick = { onAddToCart(product, 1) }) {
-                                    Icon(Icons.Default.Add, "Increase")
-                                }
-                            }
-                        },
-                    )
-                    HorizontalDivider(Modifier, DividerDefaults.Thickness, DividerDefaults.color)
+                            },
+                        )
+                        HorizontalDivider()
+                    }
                 }
             }
 

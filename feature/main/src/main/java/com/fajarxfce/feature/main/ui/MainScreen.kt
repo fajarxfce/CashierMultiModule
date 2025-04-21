@@ -59,28 +59,7 @@ fun MainScreen(
     navController: NavHostController = rememberNavController()
 ) {
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.SHOP) }
-// Remember the navigation suite state
-    val navigationSuiteState = rememberNavigationSuiteScaffoldState()
-    val coroutineScope = rememberCoroutineScope()
 
-    // Create a nested scroll connection to detect scroll direction
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                // Hide when scrolling down, show when scrolling up
-                if (available.y < 0) {
-                    coroutineScope.launch {
-                        navigationSuiteState.hide()
-                    }
-                } else if (available.y > 0) {
-                    coroutineScope.launch {
-                        navigationSuiteState.show()
-                    }
-                }
-                return Offset.Zero
-            }
-        }
-    }
     val myNavigationSuiteItemColors = NavigationSuiteDefaults.itemColors(
         navigationBarItemColors = NavigationBarItemDefaults.colors(
             indicatorColor = MaterialTheme.colorScheme.background,
@@ -89,7 +68,6 @@ fun MainScreen(
     )
 
     NavigationSuiteScaffold(
-        state = navigationSuiteState,
         navigationSuiteColors = NavigationSuiteDefaults.colors(
             navigationBarContainerColor = MaterialTheme.colorScheme.surface,
         ),
@@ -123,10 +101,7 @@ fun MainScreen(
             }
         },
         content = {
-            Box(
-                modifier = Modifier
-                    .nestedScroll(nestedScrollConnection)  // Connect the scroll events
-            ) {
+            Box{
                 MainNavHost(navController = navController)
             }
         },
