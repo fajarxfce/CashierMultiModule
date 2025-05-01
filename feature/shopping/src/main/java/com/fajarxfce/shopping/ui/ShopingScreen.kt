@@ -77,7 +77,7 @@ fun ShoppingScreen(
     onProductClick: (Int) -> Unit = {},
     onViewCartClick: () -> Unit = {},
 ) {
-    val uiState by viewModel.shoppingUiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
     val cartItems by viewModel.cartItems.collectAsState()
 
     cartItems.forEach {
@@ -87,7 +87,7 @@ fun ShoppingScreen(
     }
 
     ShoppingContent(
-        uiState = uiState,
+        uiState = uiState.productsState,
         cartItems = cartItems,
         onProductClick = onProductClick,
         onAddToCart = { product, quantity -> viewModel.addToCart(product, quantity) },

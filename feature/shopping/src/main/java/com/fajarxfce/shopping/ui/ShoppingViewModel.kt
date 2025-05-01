@@ -4,76 +4,82 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.map
-import com.fajarxfce.core.domain.usecase.product.GetAllProductUseCase
 import com.fajarxfce.core.domain.usecase.product.GetPagingProductUseCase
 import com.fajarxfce.core.model.data.product.Product
-import com.fajarxfce.core.result.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+data class ShoppingScreenState(
+    val productsState: ShoppingUiState<Flow<PagingData<Product>>> = ShoppingUiState.Loading,
+    val cartItems: Map<Product, Int> = emptyMap(),
+    val orderBy: String = "products.id",
+    val ascending: Boolean = true
+)
 
 @HiltViewModel
 class ShoppingViewModel @Inject constructor(
     private val getPagingProductUseCase: GetPagingProductUseCase
 ) : ViewModel() {
 
-    private val _shoppingUiState = MutableStateFlow<ShoppingUiState<Flow<PagingData<Product>>>>( // Updated type
-        ShoppingUiState.Loading
-    )
-    val shoppingUiState: StateFlow<ShoppingUiState<Flow<PagingData<Product>>>> = _shoppingUiState.asStateFlow() // Updated type
-
+    // Private mutable state
+    private val _screenState = MutableStateFlow(ShoppingScreenState())
     private val _cartItems = MutableStateFlow<MutableMap<Product, Int>>(mutableMapOf())
-    val cartItems: StateFlow<Map<Product, Int>> = _cartItems.asStateFlow()
 
-    // products in cart with quantityfirefox
+    // Public immutable state
+    val uiState = _screenState
+        .onStart {
+            loadProducts(_screenState.value.orderBy, _screenState.value.ascending)
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000L),
+            initialValue = _screenState.value
+        )
 
-    // Keep reference to the current flow for refreshing purposes
-    private var currentProductFlow: Flow<PagingData<Product>>? = null
-    private var currentOrderBy: String = "products.id"
-    private var currentAscending: Boolean = true
+    val cartItems: StateFlow<Map<Product, Int>> = _cartItems
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(stopTimeoutMillis = 5000L),
+            initialValue = emptyMap()
+        )
 
-    init {
-        loadProducts()
-    }
-    private fun loadProducts(orderBy: String = currentOrderBy, ascending: Boolean = currentAscending) {
+    private fun loadProducts(orderBy: String = "products.id", ascending: Boolean = true) {
         viewModelScope.launch {
-            _shoppingUiState.update { ShoppingUiState.Loading }
+            _screenState.update { it.copy(productsState = ShoppingUiState.Loading) }
 
             try {
-                currentOrderBy = orderBy
-                currentAscending = ascending
-
-                val pagingFlow: Flow<PagingData<Product>> = getPagingProductUseCase(orderBy, ascending)
+                val pagingFlow = getPagingProductUseCase(orderBy, ascending)
                     .cachedIn(viewModelScope)
 
-                currentProductFlow = pagingFlow
-
-                // Wrap the PagingData in a Flow using flowOf
-                _shoppingUiState.update { ShoppingUiState.Success(pagingFlow) }
-
+                _screenState.update {
+                    it.copy(
+                        productsState = ShoppingUiState.Success(pagingFlow),
+                        orderBy = orderBy,
+                        ascending = ascending
+                    )
+                }
             } catch (e: Exception) {
-                _shoppingUiState.update { ShoppingUiState.Error(e) }
+                _screenState.update { it.copy(productsState = ShoppingUiState.Error(e)) }
             }
         }
     }
 
-    fun getProductPagingFlow(): Flow<PagingData<Product>>? {
-        return currentProductFlow
-    }
-
     fun refreshProducts() {
-        loadProducts()
+        loadProducts(_screenState.value.orderBy, _screenState.value.ascending)
     }
 
     fun sortProducts(orderBy: String, ascending: Boolean) {
-        if (orderBy != currentOrderBy || ascending != currentAscending) {
+        val currentState = _screenState.value
+        if (orderBy != currentState.orderBy || ascending != currentState.ascending) {
             loadProducts(orderBy, ascending)
         }
     }
@@ -98,6 +104,7 @@ class ShoppingViewModel @Inject constructor(
             newCart
         }
     }
+
     fun clearCart() {
         _cartItems.value = mutableMapOf()
     }
