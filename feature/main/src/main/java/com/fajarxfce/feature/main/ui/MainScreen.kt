@@ -77,7 +77,7 @@ fun MainScreen(
             NavigationBar(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(70.dp),
+                    .height(60.dp),
                 containerColor = MaterialTheme.colorScheme.surface,
                 tonalElevation = 8.dp,
             ) {

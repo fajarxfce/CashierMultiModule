@@ -4,8 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.fajarxfce.core.datastore.NiaPreferencesDataSource
-import com.fajarxfce.core.designsystem.theme.MainBaseRoute
 import com.fajarxfce.core.model.data.UserData
 import com.fajarxfce.feature.auth.navigation.AuthBaseRoute
 import com.fajarxfce.feature.auth.navigation.authSection
