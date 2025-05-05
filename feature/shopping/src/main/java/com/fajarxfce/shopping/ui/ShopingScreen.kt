@@ -80,12 +80,6 @@ fun ShoppingScreen(
     val uiState by viewModel.uiState.collectAsState()
     val cartItems by viewModel.cartItems.collectAsState()
 
-    cartItems.forEach {
-        Timber.d("Cart Item: ${it.key.name} - Quantity: ${it.value}")
-        Timber.d("Cart Item: ${cartItems.values.sum()}")
-
-    }
-
     ShoppingContent(
         uiState = uiState.productsState,
         cartItems = cartItems,
@@ -166,8 +160,7 @@ fun ShoppingContent(
             Column(
                 modifier = modifier
                     .fillMaxSize()
-                    .nestedScroll(scrollBehavior.nestedScrollConnection)
-                    .padding(paddingValues),
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {

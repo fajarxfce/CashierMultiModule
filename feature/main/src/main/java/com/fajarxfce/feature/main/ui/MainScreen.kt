@@ -1,6 +1,7 @@
 package com.fajarxfce.feature.main.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.interaction.Interaction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -14,7 +15,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shop
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -63,6 +68,8 @@ import com.fajarxfce.feature.main.R
 import com.fajarxfce.feature.main.navigation.AccountRoute
 import com.fajarxfce.feature.main.navigation.MainNavHost
 import com.fajarxfce.shopping.navigation.ShoppingBaseRoute
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,8 +86,9 @@ fun MainScreen(
         bottomBar = {
             NavigationBar(
                 modifier = Modifier
-                    .fillMaxWidth(),
-                containerColor = MaterialTheme.colorScheme.surface,
+                    .fillMaxWidth()
+                    .height(110.dp),
+                containerColor = Color.White,
                 tonalElevation = 8.dp,
             ) {
                 AppDestinations.entries.forEach { destination ->
@@ -89,14 +97,8 @@ fun MainScreen(
                             Icon(
                                 modifier = Modifier
                                     .size(25.dp),
-                                imageVector = ImageVector.vectorResource(destination.icon),
+                                imageVector = destination.icon,
                                 contentDescription = stringResource(destination.contentDescription)
-                            )
-                        },
-                        label = {
-                            Text(
-                                text = stringResource(destination.label),
-                                style = MaterialTheme.typography.labelSmall // Smaller text to reduce height
                             )
                         },
                         selected = destination == currentDestination,
@@ -110,11 +112,16 @@ fun MainScreen(
                                 restoreState = true
                             }
                         },
-                        colors = NavigationBarItemDefaults.colors(
+                        colors = NavigationBarItemColors(
                             selectedIconColor = MaterialTheme.colorScheme.primary,
-                            selectedTextColor = MaterialTheme.colorScheme.primary,
-                            indicatorColor = MaterialTheme.colorScheme.background
+                            unselectedIconColor = Color.Gray,
+                            selectedTextColor = Color.Transparent,
+                            selectedIndicatorColor = Color.Transparent,
+                            unselectedTextColor = Color.Transparent,
+                            disabledIconColor = Color.Transparent,
+                            disabledTextColor = Color.Transparent
                         ),
+                        interactionSource = NoRippleInteractionSource,
                     )
                 }
             }
@@ -123,7 +130,7 @@ fun MainScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(bottom = innerPadding.calculateBottomPadding()),
         ) {
             MainNavHost(navController = navController)
         }
@@ -132,13 +139,23 @@ fun MainScreen(
 
 enum class AppDestinations(
     @StringRes val label: Int,
-    val icon: Int,
+    val icon: ImageVector,
     @StringRes val contentDescription: Int,
     val route: Any,
 ) {
-    SHOP(R.string.shop, R.drawable.shop_svgrepo_com, R.string.shop, ShoppingBaseRoute),
-    HISTORY(R.string.history, R.drawable.transaction_history, R.string.history, AccountBaseRoute),
-    ACCOUNT(R.string.account, R.drawable.account_avatar_man_svgrepo_com, R.string.account, AccountBaseRoute),
+    SHOP(R.string.shop, Icons.Filled.Shop, R.string.shop, ShoppingBaseRoute),
+    HISTORY(R.string.history, Icons.Filled.History, R.string.history, AccountBaseRoute),
+    ACCOUNT(R.string.account, Icons.Filled.Person, R.string.account, AccountBaseRoute),
+    SETTINGS(R.string.account, Icons.Filled.Settings, R.string.account, AccountBaseRoute),
+}
+
+private object NoRippleInteractionSource : MutableInteractionSource {
+
+    override val interactions: Flow<Interaction> = emptyFlow()
+
+    override suspend fun emit(interaction: Interaction) {}
+
+    override fun tryEmit(interaction: Interaction) = true
 }
 
 @Preview
