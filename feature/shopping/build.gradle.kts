@@ -26,9 +26,6 @@ dependencies {
     implementation(libs.coil.kt.compose)
     implementation(libs.coil.kt.svg)
 
-//    implementation(libs.androidx.paging.runtime)
-//    implementation(libs.androidx.paging.compose)
-
     testImplementation(libs.robolectric)
 
     androidTestImplementation(libs.bundles.androidx.compose.ui.test)

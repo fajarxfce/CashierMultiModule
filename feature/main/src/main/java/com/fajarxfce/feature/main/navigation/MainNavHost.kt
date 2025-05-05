@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.fajar.transactionhistory.navigation.transactionHistorySection
 import com.fajarxfce.feature.account.navigation.accountSection
 import com.fajarxfce.shopping.navigation.ShoppingBaseRoute
 import com.fajarxfce.shopping.navigation.ShoppingRoute
@@ -32,5 +33,9 @@ fun MainNavHost(
             onSignOut = {}
         )
         shoppingSection()
+        transactionHistorySection(
+            onNavigateToTransactionDetail = {},
+            onNavigateToTransactionHistory = {},
+        )
     }
 }

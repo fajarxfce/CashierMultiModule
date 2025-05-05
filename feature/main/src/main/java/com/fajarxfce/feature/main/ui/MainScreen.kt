@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shop
+import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -61,6 +62,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.fajar.transactionhistory.navigation.TransactionHistoryBaseRoute
+import com.fajar.transactionhistory.navigation.TransactionHistoryRoute
 import com.fajarxfce.core.designsystem.component.CustomBottomNavigationBar
 import com.fajarxfce.core.designsystem.theme.AppTheme
 import com.fajarxfce.feature.account.navigation.AccountBaseRoute
@@ -114,10 +117,10 @@ fun MainScreen(
                         },
                         colors = NavigationBarItemColors(
                             selectedIconColor = MaterialTheme.colorScheme.primary,
-                            unselectedIconColor = Color.Gray,
-                            selectedTextColor = Color.Transparent,
+                            unselectedIconColor = Color.LightGray,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
                             selectedIndicatorColor = Color.Transparent,
-                            unselectedTextColor = Color.Transparent,
+                            unselectedTextColor = Color.LightGray,
                             disabledIconColor = Color.Transparent,
                             disabledTextColor = Color.Transparent
                         ),
@@ -143,8 +146,8 @@ enum class AppDestinations(
     @StringRes val contentDescription: Int,
     val route: Any,
 ) {
-    SHOP(R.string.shop, Icons.Filled.Shop, R.string.shop, ShoppingBaseRoute),
-    HISTORY(R.string.history, Icons.Filled.History, R.string.history, AccountBaseRoute),
+    SHOP(R.string.shop, Icons.Filled.ShoppingBag, R.string.shop, ShoppingBaseRoute),
+    HISTORY(R.string.history, Icons.Filled.History, R.string.history, TransactionHistoryRoute),
     ACCOUNT(R.string.account, Icons.Filled.Person, R.string.account, AccountBaseRoute),
     SETTINGS(R.string.account, Icons.Filled.Settings, R.string.account, AccountBaseRoute),
 }
