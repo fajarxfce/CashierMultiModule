@@ -3,11 +3,13 @@ package com.fajarxfce.feature.main.ui
 import androidx.annotation.StringRes
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeGestures
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -72,12 +74,12 @@ fun MainScreen(
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.SHOP) }
 
     Scaffold(
+        contentWindowInsets = WindowInsets.safeGestures,
         modifier = modifier,
         bottomBar = {
             NavigationBar(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(60.dp),
+                    .fillMaxWidth(),
                 containerColor = MaterialTheme.colorScheme.surface,
                 tonalElevation = 8.dp,
             ) {

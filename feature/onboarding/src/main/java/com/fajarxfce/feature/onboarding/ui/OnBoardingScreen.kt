@@ -16,6 +16,7 @@
 
 package com.fajarxfce.feature.onboarding.ui
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
@@ -31,11 +32,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeGestures
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
@@ -45,6 +48,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,9 +72,10 @@ import kotlinx.coroutines.launch
 data class OnboardingPage(
     val imageRes: Int,
     val title: String,
-    val description: String
+    val description: String,
 )
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun OnBoardingScreen(
@@ -91,7 +96,7 @@ fun OnBoardingScreen(
             imageRes = drawable.logo,
             title = "Ready to Start?",
             description = "Join our community and explore everything we have to offer",
-        )
+        ),
     )
 
     val pagerState = rememberPagerState(pageCount = { pages.size })
@@ -100,18 +105,20 @@ fun OnBoardingScreen(
         derivedStateOf { pagerState.currentPage == pages.size - 1 }
     }
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
+    Scaffold(
+        contentWindowInsets = WindowInsets.safeGestures,
+    ) { innerPadding ->
+
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding),
         ) {
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) { page ->
                 OnboardingPageScreen(page = pages[page])
             }
@@ -121,20 +128,20 @@ fun OnBoardingScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp, vertical = 20.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // Page Indicator
                 PageIndicator(
                     pageCount = pages.size,
                     currentPage = pagerState.currentPage,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
                 )
 
                 // Buttons
                 AnimatedVisibility(
                     visible = !isLastPage,
                     enter = fadeIn(),
-                    exit = fadeOut()
+                    exit = fadeOut(),
                 ) {
                     Button(
                         onClick = {
@@ -143,8 +150,8 @@ fun OnBoardingScreen(
                             }
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        )
+                            containerColor = MaterialTheme.colorScheme.primary,
+                        ),
                     ) {
                         Text("Next")
                     }
@@ -153,13 +160,13 @@ fun OnBoardingScreen(
                 AnimatedVisibility(
                     visible = isLastPage,
                     enter = fadeIn(),
-                    exit = fadeOut()
+                    exit = fadeOut(),
                 ) {
                     Button(
                         onClick = onBoardingCompleted,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary
-                        )
+                            containerColor = MaterialTheme.colorScheme.primary,
+                        ),
                     ) {
                         Text("Get Started")
                     }
@@ -176,37 +183,37 @@ fun OnboardingPageScreen(page: OnboardingPage) {
             .fillMaxSize()
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Image(
             painter = painterResource(id = page.imageRes),
             contentDescription = null,
             modifier = Modifier
                 .size(300.dp)
-                .padding(bottom = 32.dp)
+                .padding(bottom = 32.dp),
         )
 
         AnimatedVisibility(
             visible = true,
-            enter = fadeIn() + slideInVertically()
+            enter = fadeIn() + slideInVertically(),
         ) {
             Text(
                 text = page.title,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(bottom = 16.dp),
             )
         }
 
         AnimatedVisibility(
             visible = true,
-            enter = fadeIn(initialAlpha = 0.3f) + slideInVertically(initialOffsetY = { it / 2 })
+            enter = fadeIn(initialAlpha = 0.3f) + slideInVertically(initialOffsetY = { it / 2 }),
         ) {
             Text(
                 text = page.description,
                 style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
@@ -216,20 +223,20 @@ fun OnboardingPageScreen(page: OnboardingPage) {
 fun PageIndicator(
     pageCount: Int,
     currentPage: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.Center,
     ) {
         repeat(pageCount) { page ->
             val width by animateDpAsState(
                 targetValue = if (page == currentPage) 24.dp else 8.dp,
                 animationSpec = spring(
                     dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessMedium
+                    stiffness = Spring.StiffnessMedium,
                 ),
-                label = "indicator width animation"
+                label = "indicator width animation",
             )
 
             Box(
@@ -240,10 +247,10 @@ fun PageIndicator(
                         if (page == currentPage)
                             MaterialTheme.colorScheme.primary
                         else
-                            MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                     )
                     .height(8.dp)
-                    .width(width)
+                    .width(width),
             )
         }
     }
