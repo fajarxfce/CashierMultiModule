@@ -15,24 +15,26 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun CartSummaryBar(
-    itemCount: Int,
-    totalPrice: Double,
-    onViewCartClick: () -> Unit
+    totalAmount: Double,
+    onCheckoutClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    itemCount: Int = 0
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(horizontal = 8.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "$itemCount items: $${String.format("%.2f", totalPrice)}",
-            color = MaterialTheme.colorScheme.primary,
+            text = "Total: $${String.format("%.2f", totalAmount)}",
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary
         )
 
-        Button(onClick = onViewCartClick) {
-            Text("View Cart")
+        Button(onClick = onCheckoutClick) {
+            Text("Checkout")
         }
     }
 }
@@ -41,8 +43,7 @@ fun CartSummaryBar(
 @Composable
 private fun CartSummaryBarPreview() {
     CartSummaryBar(
-        itemCount = 3,
-        totalPrice = 29.99,
-        onViewCartClick = {}
+        totalAmount = 129.99,
+        onCheckoutClick = {}
     )
 }
