@@ -27,11 +27,11 @@ echo "JAVA_HOME=$JAVA_HOME"
 export ANDROID_HOME="$(cd $DIR/../../../prebuilts/fullsdk/linux && pwd )"
 echo "ANDROID_HOME=$ANDROID_HOME"
 
-echo "Copying google-services.json"
-cp $DIR/../nowinandroid-prebuilts/google-services.json $DIR/app
-
-echo "Copying local.properties"
-cp $DIR/../nowinandroid-prebuilts/local.properties $DIR
+#echo "Copying google-services.json"
+#cp $DIR/../nowinandroid-prebuilts/google-services.json $DIR/app
+#
+#echo "Copying local.properties"
+#cp $DIR/../nowinandroid-prebuilts/local.properties $DIR
 
 cd $DIR
 

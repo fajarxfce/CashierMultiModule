@@ -69,7 +69,7 @@ fun TransactionHistoryScreen(modifier: Modifier = Modifier) {
                 TopAppBar(
                     title = {
                         Text(
-                            text = stringResource(R.string.transaction_history),
+                            text = stringResource(R.string.feature_transaction_history_transaction_history),
                             style = MaterialTheme.typography.headlineSmall.copy(
                                 fontWeight = FontWeight.Bold,
                             ),

@@ -146,10 +146,10 @@ enum class AppDestinations(
     @StringRes val contentDescription: Int,
     val route: Any,
 ) {
-    SHOP(R.string.shop, Icons.Filled.ShoppingBag, R.string.shop, ShoppingBaseRoute),
-    HISTORY(R.string.history, Icons.Filled.History, R.string.history, TransactionHistoryRoute),
-    ACCOUNT(R.string.account, Icons.Filled.Person, R.string.account, AccountBaseRoute),
-    SETTINGS(R.string.account, Icons.Filled.Settings, R.string.account, AccountBaseRoute),
+    SHOP(R.string.feature_main_shop, Icons.Filled.ShoppingBag, R.string.feature_main_shop, ShoppingBaseRoute),
+    HISTORY(R.string.feature_main_history, Icons.Filled.History, R.string.feature_main_history, TransactionHistoryRoute),
+    ACCOUNT(R.string.feature_main_account, Icons.Filled.Person, R.string.feature_main_account, AccountBaseRoute),
+    SETTINGS(R.string.feature_main_account, Icons.Filled.Settings, R.string.feature_main_account, AccountBaseRoute),
 }
 
 private object NoRippleInteractionSource : MutableInteractionSource {

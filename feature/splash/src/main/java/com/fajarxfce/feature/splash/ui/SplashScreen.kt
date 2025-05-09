@@ -16,7 +16,6 @@
 
 package com.fajarxfce.feature.splash.ui
 
-import android.window.SplashScreen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.Spring
@@ -52,7 +51,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.fajarxfce.feature.splash.R
 import kotlinx.coroutines.delay
 
 @Composable
@@ -111,7 +109,7 @@ fun SplashScreen(
         ) {
             Image(
                 painter = painterResource(
-                    com.fajarxfce.core.designsystem.R.drawable.logo
+                    com.fajarxfce.core.designsystem.R.drawable.core_designsystem_logo
                 ),
                 contentDescription = "App Logo",
                 modifier = Modifier

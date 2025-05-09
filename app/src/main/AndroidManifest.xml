@@ -25,9 +25,9 @@
         android:allowBackup="true"
         android:usesCleartextTraffic="true"
         android:enableOnBackInvokedCallback="true"
-        android:icon="@drawable/logo"
+        android:icon="@drawable/core_designsystem_logo"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/logo"
+        android:roundIcon="@drawable/core_designsystem_logo"
         android:supportsRtl="true"
         android:theme="@style/NightAdjusted.Theme.Nia">
         <profileable android:shell="true" tools:targetApi="q" />
