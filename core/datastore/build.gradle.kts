@@ -6,7 +6,7 @@ plugins {
 
 android {
     defaultConfig {
-        consumerProguardFiles("consumer-proguard-rules.pro")
+        consumerProguardFiles("consumer-rules.pro")
     }
     namespace = "com.fajarxfce.core.datastore"
 }
