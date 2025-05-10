@@ -16,6 +16,9 @@ android {
             isIncludeAndroidResources = true
         }
     }
+    defaultConfig {
+        consumerProguardFiles("consumer-rules.pro")
+    }
 }
 
 secrets {

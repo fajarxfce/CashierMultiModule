@@ -1,0 +1,1 @@
+-keep class com.fajarxfce.core.model.data.auth.** { *; }

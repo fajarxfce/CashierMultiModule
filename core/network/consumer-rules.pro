@@ -1,0 +1,1 @@
+-keep class com.fajarxfce.core.network.response.** { *; }
