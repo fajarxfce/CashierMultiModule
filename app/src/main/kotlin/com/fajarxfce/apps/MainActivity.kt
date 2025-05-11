@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         bottomBar = {
-                            AnimatedVisibility(!bottomBarVisibility) {
+                            AnimatedVisibility(bottomBarVisibility) {
                                 Column {
                                     HorizontalDivider(
                                         thickness = 2.dp,

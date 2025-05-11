@@ -6,12 +6,33 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.Flow
+
+
+val <T> Flow<T>.collectWithLifecycle: @Composable (result: (T) -> Unit) -> Unit
+    @Composable get() = { function ->
+        CollectWithLaunchedEffect {
+            function(it)
+        }
+    }
+
+@Composable
+fun <T> Flow<T>.CollectWithLaunchedEffect(
+    result: (T) -> Unit,
+) {
+    LaunchedEffect(Unit) {
+        collect { effect ->
+            result(effect)
+        }
+    }
+}
 
 inline fun Modifier.noRippleClickable(
     crossinline onClick: () -> Unit
