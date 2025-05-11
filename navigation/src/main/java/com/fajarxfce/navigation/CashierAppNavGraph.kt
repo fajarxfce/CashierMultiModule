@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.fajarxfce.feature.splash.ui.navigation.Splash
+import com.fajarxfce.feature.splash.ui.navigation.splashScreen
 
 @Composable
 fun CashierAppNavGraph(
@@ -12,9 +14,12 @@ fun CashierAppNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "",
+        startDestination = Splash,
         modifier = modifier,
     ) {
-
+        splashScreen(
+            onNavigateToHome = { },
+            onNavigateToWelcome = {  }
+        )
     }
 }

@@ -24,4 +24,5 @@ dependencies {
     implementation(projects.core.ui)
 
     implementation(projects.feature.home.ui)
+    implementation(projects.feature.splash.ui)
 }

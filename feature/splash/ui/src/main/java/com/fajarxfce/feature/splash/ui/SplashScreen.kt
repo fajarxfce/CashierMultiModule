@@ -33,13 +33,13 @@ import com.fajarxfce.feature.splash.ui.R
 @Composable
 internal fun SplashScreen(
     uiEffect: Flow<SplashContract.UiEffect>,
-    onNavigateWelcome: () -> Unit,
-    onNavigateHome: () -> Unit,
+    onNavigateToWelcome: () -> Unit,
+    onNavigateToHome: () -> Unit,
 ) {
     uiEffect.collectWithLifecycle { effect ->
         when (effect) {
-            SplashContract.UiEffect.NavigateWelcome -> onNavigateWelcome()
-            SplashContract.UiEffect.NavigateHome -> onNavigateHome()
+            SplashContract.UiEffect.NavigateWelcome -> onNavigateToWelcome()
+            SplashContract.UiEffect.NavigateHome -> onNavigateToHome()
         }
     }
     Box(
@@ -96,7 +96,7 @@ internal fun SplashScreen(
 internal fun SplashScreenPreview() {
     SplashScreen(
         uiEffect = emptyFlow(),
-        onNavigateWelcome = { },
-        onNavigateHome = { }
+        onNavigateToWelcome = { },
+        onNavigateToHome = { }
     )
 }
