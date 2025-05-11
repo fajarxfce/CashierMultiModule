@@ -40,7 +40,7 @@ android {
 
     buildTypes {
         debug {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             applicationIdSuffix = NiaBuildType.DEBUG.applicationIdSuffix
         }
         release {
@@ -71,23 +71,11 @@ android {
 }
 
 dependencies {
-    implementation(projects.feature.auth)
-    implementation(projects.feature.splash)
-    implementation(projects.feature.onboarding)
-    implementation(projects.feature.main)
-    implementation(projects.feature.auth)
-    implementation(projects.core.designsystem)
+    implementation(projects.navigation)
     implementation(projects.core.common)
-//    implementation(projects.feature.search)
-//    implementation(projects.feature.settings)
-//
-//    implementation(projects.core.common)
-//    implementation(projects.core.ui)
-//    implementation(projects.core.designsystem)
     implementation(projects.core.datastore)
-//    implementation(projects.core.model)
-//    implementation(projects.core.analytics)
-//    implementation(projects.sync.work)
+    implementation(projects.core.ui)
+
     implementation(libs.timber)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)

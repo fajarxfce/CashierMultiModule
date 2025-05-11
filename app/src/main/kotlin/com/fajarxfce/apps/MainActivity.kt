@@ -20,35 +20,24 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.safeGestures
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.fajarxfce.apps.navigation.RootNavHost
-import com.fajarxfce.core.AuthEvent
-import com.fajarxfce.core.AuthEventBus
 import com.fajarxfce.core.datastore.NiaPreferencesDataSource
-import com.fajarxfce.core.designsystem.theme.AppTheme
-import com.fajarxfce.feature.auth.navigation.AuthBaseRoute
+import com.fajarxfce.core.ui.theme.AppTheme
+import com.fajarxfce.navigation.CashierBottomBar
+import com.fajarxfce.navigation.NavigationItem
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @AndroidEntryPoint
@@ -62,24 +51,27 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
+            val bottomBarVisibility =
+                navController.currentBackStackEntryAsState().value?.destination?.route in NavigationItem.getNavigationRoutes()
             AppTheme {
-                RootNavHost(
-                    navController = navController,
-                )
-            }
-
-            LaunchedEffect(navController) {
-                AuthEventBus.events.collectLatest { event ->
-                    when (event) {
-                        is AuthEvent.Logout -> {
-                            Timber.d("Navigating to login screen")
-                            navController.navigate(AuthBaseRoute) {
-                                popUpTo(navController.currentBackStackEntry?.destination?.route.toString()) {
-                                    inclusive = true
+                Box {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        bottomBar = {
+                            AnimatedVisibility(!bottomBarVisibility) {
+                                Column {
+                                    HorizontalDivider(
+                                        thickness = 2.dp,
+                                        color = MaterialTheme.colorScheme.onBackground,
+                                    )
+                                    CashierBottomBar(
+                                        navController = navController,
+                                    )
                                 }
-                                launchSingleTop = true
                             }
-                        }
+                        },
+                    ) { innerPadding ->
+
                     }
                 }
             }
