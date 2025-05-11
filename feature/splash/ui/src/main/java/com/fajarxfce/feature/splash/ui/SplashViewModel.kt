@@ -18,6 +18,6 @@ class SplashViewModel @Inject constructor(
     }
     private fun checkLoginUser() = viewModelScope.launch {
         delay(2000)
-        emitUiEffect(SplashContract.UiEffect.NavigateHome)
+        emitUiEffect(SplashContract.UiEffect.NavigateWelcome)
     }
 }
