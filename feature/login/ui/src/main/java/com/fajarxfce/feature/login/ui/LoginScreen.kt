@@ -229,7 +229,7 @@ private fun LoginScreenDialogPreview() {
             isLoading = false,
             dialogState = DialogState(
                 message = "This is a dialog message",
-                isSuccess = false
+                isSuccess = true
             )
             ),
         uiEffect = emptyFlow(),

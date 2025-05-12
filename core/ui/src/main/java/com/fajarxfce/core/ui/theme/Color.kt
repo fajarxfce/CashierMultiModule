@@ -1,19 +1,21 @@
 package com.fajarxfce.core.ui.theme
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
-private val greenMain = Color(0xFF4CAF50)
-private val lightGreenMain = Color(0xFFE8F5E9)
-private val teal = Color(0xFF009688)
-private val lightTeal = Color(0xFFB2DFDB)
-private val amber = Color(0xFFFFC107)
-private val lightAmber = Color(0xFFFFECB3)
+// Palet Warna Baru
+private val red = Color(0xFFF44336) // Merah
+private val redMain = Color(0xFFE57373) // Merah utama
+private val lightRedMain = Color(0xFFFCE4EC)  // Merah muda
+private val lightRed = Color(0xFFFFCDD2) // Merah muda lebih terang
+private val pink = Color(0xFFF06292)
+private val lightPink = Color(0xFFF8BBD0)
+private val orange = Color(0xFFFF7043) // Mengganti amber ke orange
+private val lightOrange = Color(0xFFFFCCBC) // Versi lebih terang dari orange
 
-private val red = Color(0xFFF44336)
-private val lightRed = Color(0xFFFDDEDE)
 
 internal val LocalLightColors = staticCompositionLocalOf { lightColors() }
 internal val LocalDarkColors = staticCompositionLocalOf { darkColors() }
@@ -21,12 +23,12 @@ internal val LocalDarkColors = staticCompositionLocalOf { darkColors() }
 internal fun darkColors(
     onBackground: Color = Color.White,
     background: Color = Color(0xFF121212),
-    blue: Color = greenMain, // Mengganti blue ke greenMain
-    lightBlue: Color = lightGreenMain.copy(alpha = 0.5f), // Mengganti lightBlue ke lightGreenMain
-    yellow: Color = amber, // Mengganti yellow ke amber
-    lightYellow: Color = lightAmber.copy(alpha = 0.5f), // Mengganti lightYellow ke lightAmber
-    green: Color = teal,
-    softGreen: Color = lightTeal.copy(alpha = 0.5f),
+    blue: Color = redMain, // Mengganti blue ke redMain
+    lightBlue: Color = lightRedMain.copy(alpha = 0.5f), // Mengganti lightBlue ke lightRedMain
+    yellow: Color = orange, // Mengganti yellow ke orange
+    lightYellow: Color = lightOrange.copy(alpha = 0.5f), // Mengganti lightYellow ke lightOrange
+    green: Color = pink,
+    softGreen: Color = lightPink.copy(alpha = 0.5f),
     red: Color = com.fajarxfce.core.ui.theme.red,
     softRed: Color = lightRed.copy(alpha = 0.5f),
 ): CashierAppColor = CashierAppColor(
@@ -86,14 +88,14 @@ class CashierAppColor(
 }
 
 internal fun lightColors(
-    background: Color = Color(0xFFF1F8E9), // Light green sangat muda
+    background: Color = Color(0xFFFBE9E7), // Light red sangat muda
     onBackground: Color = Color(0xFF1A1A1A),
-    blue: Color = greenMain,
-    lightBlue: Color = lightGreenMain,
-    yellow: Color = amber,
-    lightYellow: Color = lightAmber,
-    green: Color = teal,
-    softGreen: Color = lightTeal,
+    blue: Color = redMain,
+    lightBlue: Color = lightRedMain,
+    yellow: Color = orange,
+    lightYellow: Color = lightOrange,
+    green: Color = pink,
+    softGreen: Color = lightPink,
     red: Color = com.fajarxfce.core.ui.theme.red,
     softRed: Color = lightRed,
 ): CashierAppColor = CashierAppColor(
