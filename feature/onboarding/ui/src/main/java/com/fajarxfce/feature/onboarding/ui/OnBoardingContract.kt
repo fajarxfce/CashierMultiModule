@@ -17,6 +17,7 @@ internal object OnBoardingContract {
 
     sealed interface UiEffect {
         data object NavigateLogin : UiEffect
+        data object ShowDialog : UiEffect
     }
 
 }

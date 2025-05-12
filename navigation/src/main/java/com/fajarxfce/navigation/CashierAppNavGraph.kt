@@ -23,17 +23,17 @@ fun CashierAppNavGraph(
             onNavigateToHome = { },
             onNavigateToWelcome = {
                 navController.apply {
-                    navigate(OnBoarding)
-                    popBackStack(Splash, inclusive = true)
+                    navigate(OnBoarding) {
+                        popUpTo(Splash) {
+                            inclusive = true
+                        }
+                    }
                 }
             }
         )
         onBoardingScreen(
             onNavigateToLogin = {
-//                navController.apply {
-//                    popBackStack()
-//                    navigate("login")
-//                }
+
             },
         )
     }
