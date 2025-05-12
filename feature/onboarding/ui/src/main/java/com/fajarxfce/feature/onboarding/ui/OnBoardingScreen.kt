@@ -8,6 +8,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -64,228 +65,145 @@ internal fun OnBoardingScreen(
     onAction: (OnBoardingContract.UiAction) -> Unit,
     onNavigateToLogin: () -> Unit,
 ) {
-
-//    uiEffect.collectWithLifecycle { effect ->
-//        when (effect) {
-//            UiEffect.NavigateLogin -> onNavigateToLogin()
-//            UiEffect.ShowDialog -> {}
-//        }
-//    }
-
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background,
+        color = MaterialTheme.colorScheme.background
     ) {
-        OnBoardingContent(
-            onClickNext = { },
-            onClickSkip = { },
-            onClickDone = { },
-        )
-
-        uiState.dialogState?.let { dialogState ->
-            CashierDialog(
-                message = dialogState.message ?: "",
-                isSuccess = dialogState.isSuccess ?: false,
-                onDismissRequest = { },
-            )
-        }
-
-        if (uiState.isLoading) {
-            LoadingIndicator()
-        }
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun OnBoardingContent(
-    onClickNext: () -> Unit,
-    onClickSkip: () -> Unit,
-    onClickDone: () -> Unit,
-) {
-    val pages = listOf(
-        OnBoardingPage(
-            title = "Welcome to Our App",
-            description = "Your all-in-one solution for managing your business efficiently",
-            imageRes = com.fajarxfce.core.ui.R.drawable.core_ui_ic_logo,
-        ),
-        OnBoardingPage(
-            title = "Track Your Sales",
-            description = "Monitor your sales performance with detailed analytics and insights",
-            imageRes = com.fajarxfce.core.ui.R.drawable.core_ui_ic_logo,
-        ),
-        OnBoardingPage(
-            title = "Manage Inventory",
-            description = "Keep track of your inventory in real-time with smart notifications",
-            imageRes = com.fajarxfce.core.ui.R.drawable.core_ui_ic_logo,
-        ),
-    )
-
-    val pagerState = rememberPagerState(pageCount = { pages.size })
-    val coroutineScope = rememberCoroutineScope()
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .fillMaxSize()
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            this@Column.AnimatedVisibility(
-                visible = pagerState.currentPage < pages.size - 1,
-                enter = fadeIn(),
-                exit = fadeOut(),
-                modifier = Modifier.align(Alignment.TopEnd),
+            // Logo
+            Image(
+                painter = painterResource(id = com.fajarxfce.core.ui.R.drawable.core_ui_ic_logo),
+                contentDescription = "App Logo",
+                modifier = Modifier
+                    .size(100.dp)
+                    .padding(top = 46.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // App Name
+            Text(
+                text = "App Name",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // App Jargon/Tagline
+            Text(
+                text = "Your app's jargon or tagline goes here",
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // Google Login Button
+            Button(
+                onClick = { onAction(OnBoardingContract.UiAction.OnLoginWithGoogleClick) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                TextButton(
-                    onClick = onClickSkip,
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(
-                        text = "Skip",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.primary,
+                    Image(
+                        painter = painterResource(id = com.fajarxfce.core.ui.R.drawable.core_ui_ic_google),
+                        contentDescription = "Google Icon",
+                        modifier = Modifier.size(24.dp)
                     )
+                    Text("Login with Google")
                 }
             }
-        }
 
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier.weight(1f),
-        ) { page ->
-            OnBoardingPage(
-                page = pages[page],
-                modifier = Modifier.padding(horizontal = 24.dp),
-            )
-        }
-
-        // Page indicators
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 24.dp),
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            repeat(pages.size) { iteration ->
-                val color = if (pagerState.currentPage == iteration)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
-
+            // OR Divider
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Box(
                     modifier = Modifier
-                        .padding(horizontal = 4.dp)
-                        .size(10.dp)
-                        .clip(CircleShape)
-                        .background(color),
+                        .weight(1f)
+                        .height(1.dp)
+                        .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
+                )
+                Text(
+                    text = "OR",
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(1.dp)
+                        .background(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
                 )
             }
-        }
 
-        // Bottom button area
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 32.dp),
-        ) {
-            // Next button
-            this@Column.AnimatedVisibility(
-                visible = pagerState.currentPage < pages.size - 1,
-                enter = fadeIn(),
-                exit = fadeOut(),
-                modifier = Modifier.align(Alignment.CenterEnd),
+            // Email Login Button
+            OutlinedButton(
+                onClick = { onAction(OnBoardingContract.UiAction.OnLoginWithEmailClick) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                Button(
-                    onClick = {
-                        coroutineScope.launch {
-                            if (pagerState.currentPage < pages.size - 1) {
-                                pagerState.animateScrollToPage(pagerState.currentPage + 1)
-                            }
+                Text("Login with Email")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Sign Up Text
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text("Don't have an account? ")
+                Text(
+                    text = "Sign up",
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .padding(start = 4.dp)
+                        .clickable {
+                            onAction(OnBoardingContract.UiAction.OnSignUpClick)
                         }
-                        onClickNext()
-                    },
-                    shape = RoundedCornerShape(24.dp),
-                ) {
-                    Text(
-                        text = "Next",
-                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
-                    )
-                }
+                )
             }
 
-            // Get Started button
-            this@Column.AnimatedVisibility(
-                visible = pagerState.currentPage == pages.size - 1,
-                enter = fadeIn(),
-                exit = fadeOut(),
-                modifier = Modifier.align(Alignment.Center),
-            ) {
-                Button(
-                    onClick = onClickDone,
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(24.dp),
-                ) {
-                    Text(
-                        text = "Get Started",
-                        modifier = Modifier.padding(vertical = 8.dp),
-                    )
-                }
-            }
-        }
-    }
-}
+            Spacer(modifier = Modifier.weight(1f))
 
-@Composable
-private fun OnBoardingPage(
-    page: OnBoardingPage,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Card(
-            modifier = Modifier
-                .size(280.dp)
-                .padding(bottom = 24.dp),
-            shape = RoundedCornerShape(16.dp),
-            elevation = CardDefaults.cardElevation(4.dp),
-        ) {
-            Image(
-                painter = painterResource(id = page.imageRes),
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
+            // Terms and Conditions
+            Text(
+                text = "By continuing, you agree to our Terms of Service and Privacy Policy",
+                style = MaterialTheme.typography.bodySmall,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 24.dp)
             )
         }
 
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Text(
-            text = page.title,
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = page.description,
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 24.dp),
-        )
+        // Handle navigation effects
+        uiEffect.collectWithLifecycle{ effect ->
+            Log.d("TAG", "OnBoardingScreen: $effect")
+            when (effect) {
+                is UiEffect.NavigateToEmailLogin -> {}
+                is UiEffect.NavigateToSignUp -> {}
+                is UiEffect.NavigateToGoogleLogin -> {}
+                is UiEffect.ShowDialog -> {}
+            }
+        }
     }
 }
-
-data class OnBoardingPage(
-    val title: String,
-    val description: String,
-    val imageRes: Int,
-)
 
 @Preview
 @Composable
@@ -293,7 +211,7 @@ private fun OnBoardingScreenPreview() {
     OnBoardingScreen(
         uiState = OnBoardingContract.UiState(),
         uiEffect = emptyFlow(),
-        onAction = { },
-        onNavigateToLogin = { },
+        onAction = {},
+        onNavigateToLogin = {}
     )
 }

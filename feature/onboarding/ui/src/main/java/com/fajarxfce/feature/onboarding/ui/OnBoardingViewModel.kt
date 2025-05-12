@@ -20,10 +20,10 @@ internal class OnBoardingViewModel @Inject constructor(
             Log.d("TAG", "OnBoardingScreen: $action")
             when (action) {
 
-                OnBoardingContract.UiAction.OnClickNext -> {}
-                OnBoardingContract.UiAction.OnClickSkip -> {}
-                OnBoardingContract.UiAction.OnClickDone -> {}
+                OnBoardingContract.UiAction.OnLoginWithEmailClick -> {}
+                OnBoardingContract.UiAction.OnLoginWithGoogleClick -> {}
                 OnBoardingContract.UiAction.OnClickDialogDismiss -> {}
+                OnBoardingContract.UiAction.OnSignUpClick -> {}
             }
         }
     }

@@ -9,14 +9,16 @@ internal object OnBoardingContract {
     )
 
     sealed interface UiAction {
-        data object OnClickNext : UiAction
-        data object OnClickSkip : UiAction
-        data object OnClickDone : UiAction
+        data object OnLoginWithGoogleClick : UiAction
+        data object OnLoginWithEmailClick : UiAction
+        data object OnSignUpClick : UiAction
         data object OnClickDialogDismiss : UiAction
     }
 
     sealed interface UiEffect {
-        data object NavigateLogin : UiEffect
+        data object NavigateToEmailLogin : UiEffect
+        data object NavigateToSignUp : UiEffect
+        data object NavigateToGoogleLogin : UiEffect
         data object ShowDialog : UiEffect
     }
 
