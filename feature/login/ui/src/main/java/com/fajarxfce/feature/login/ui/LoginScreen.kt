@@ -1,11 +1,15 @@
 package com.fajarxfce.feature.login.ui
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -15,6 +19,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -78,17 +83,18 @@ internal fun LoginScreen(
             )
         },
         containerColor = CashierAppTheme.colors.background,
+        contentWindowInsets = WindowInsets.navigationBars
+
     ) { paddingValues ->
         LoginContent(
-            modifier = modifier
-                .padding(paddingValues)
-                .verticalScroll(scrollState),
             uiState = uiState,
             onEmailChange = { onAction(LoginContract.UiAction.OnEmailChange(it)) },
             onPasswordChange = { onAction(LoginContract.UiAction.OnPasswordChange(it)) },
             onLoginClick = { onAction(LoginContract.UiAction.OnLoginClick) },
             onForgotPasswordClick = { onAction(LoginContract.UiAction.OnForgotPasswordClick) },
-            onRegisterClick = { onAction(LoginContract.UiAction.OnRegisterClick) }
+            onRegisterClick = { onAction(LoginContract.UiAction.OnRegisterClick) },
+            modifier = Modifier
+                .padding(paddingValues)
         )
     }
 
@@ -116,7 +122,7 @@ internal fun LoginScreen(
 
 @Composable
 internal fun LoginContent(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     uiState: LoginContract.UiState,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
@@ -127,7 +133,7 @@ internal fun LoginContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 23.dp),
+            .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CashierAppText(

@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.fajarxfce.feature.home.ui.navigation.Home
+import com.fajarxfce.feature.home.ui.navigation.homeScreen
 import com.fajarxfce.feature.login.ui.navigation.Login
 import com.fajarxfce.feature.login.ui.navigation.loginScreen
 import com.fajarxfce.feature.onboarding.ui.navigation.OnBoarding
@@ -47,11 +49,24 @@ fun CashierAppNavGraph(
             },
         )
         loginScreen(
-            onNavigateToHome = {},
+            onNavigateToHome = {
+                navController.apply {
+                    navigate(Home){
+                        popUpTo(Login){
+                            inclusive = true
+                        }
+                    }
+                }
+            },
             onNavigateBack = {
                 navController.popBackStack()
             },
             onNavigateToRegister = {},
+        )
+        homeScreen(
+            onNavigateDetail = {},
+            onNavigateSearch = {},
+            onNavigateDetailWithArgs = {}
         )
     }
 }

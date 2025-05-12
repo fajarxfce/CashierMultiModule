@@ -58,8 +58,7 @@ internal fun SplashScreen(
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {

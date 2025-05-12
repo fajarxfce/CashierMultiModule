@@ -23,8 +23,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeGestures
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +37,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fajarxfce.core.datastore.NiaPreferencesDataSource
 import com.fajarxfce.core.ui.theme.AppTheme
+import com.fajarxfce.core.ui.theme.CashierAppTheme
 import com.fajarxfce.navigation.CashierAppNavGraph
 import com.fajarxfce.navigation.CashierBottomBar
 import com.fajarxfce.navigation.NavigationItem
@@ -72,10 +75,13 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         },
+                        contentWindowInsets = WindowInsets.safeGestures,
+                        containerColor = CashierAppTheme.colors.background,
                     ) { innerPadding ->
                         CashierAppNavGraph(
                             modifier = Modifier
-                                .fillMaxSize(),
+                                .fillMaxSize()
+                                .padding(bottom = innerPadding.calculateBottomPadding()),
                             navController = navController,
                         )
                     }
