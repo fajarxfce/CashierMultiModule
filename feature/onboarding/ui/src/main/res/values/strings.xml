@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_onboarding_ui_policy">By continuing, you agree to our Terms of Service and Privacy Policy</string>
+    <string name="feature_onboarding_ui_policy_span1">Terms of Service</string>
+    <string name="feature_onboarding_ui_policy_span2">Privacy Policy</string>
+</resources>
