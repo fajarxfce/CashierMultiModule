@@ -75,8 +75,7 @@ class MainActivity : ComponentActivity() {
                     ) { innerPadding ->
                         CashierAppNavGraph(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .padding(innerPadding),
+                                .fillMaxSize(),
                             navController = navController,
                         )
                     }

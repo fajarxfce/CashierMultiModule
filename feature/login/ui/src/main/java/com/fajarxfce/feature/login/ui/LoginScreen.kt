@@ -116,7 +116,7 @@ internal fun LoginScreen(
                     }
                 }
             )
-        }
+        },
     ) { paddingValues ->
         Box(
             modifier = modifier
