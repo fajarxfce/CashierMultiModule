@@ -39,10 +39,10 @@ sealed class NavigationItem(
 
     companion object {
         fun getNavigationRoutes() = listOf(
-            HomeScreen.route.javaClass.canonicalName.orEmpty(),
-            FavoriteScreen.route.javaClass.canonicalName.orEmpty(),
-            LeaderBoardScreen.route.javaClass.canonicalName.orEmpty(),
-            ProfileScreen.route.javaClass.canonicalName.orEmpty(),
+            HomeScreen.route.getRoute(),
+            FavoriteScreen.route.getRoute(),
+            LeaderBoardScreen.route.getRoute(),
+            ProfileScreen.route.getRoute(),
         )
         fun getNavigationItems() = listOf(
             HomeScreen,

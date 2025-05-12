@@ -75,7 +75,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         },
-                        contentWindowInsets = WindowInsets.safeGestures,
+//                        contentWindowInsets = WindowInsets.Zero,
                         containerColor = CashierAppTheme.colors.background,
                     ) { innerPadding ->
                         CashierAppNavGraph(

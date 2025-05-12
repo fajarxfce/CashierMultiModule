@@ -29,6 +29,7 @@ import com.fajarxfce.core.ui.component.CashierAppText
 import com.fajarxfce.core.ui.extension.boldBorder
 import com.fajarxfce.core.ui.extension.conditional
 import com.fajarxfce.core.ui.extension.noRippleClickable
+import com.fajarxfce.core.ui.theme.CashierAppTheme
 
 
 @SuppressLint("RestrictedApi")
@@ -42,17 +43,17 @@ fun CashierBottomBar(
     val currentRoute = navBackStackEntry?.destination?.route
     NavigationBar(
         modifier = Modifier.padding(horizontal = 16.dp),
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = CashierAppTheme.colors.background,
     ) {
         tabList.forEach { navItem ->
-            val isSelected = currentRoute == navItem.route.javaClass.canonicalName.orEmpty()
-            key(navItem.route.javaClass.canonicalName.orEmpty()) {
+            val isSelected = currentRoute == navItem.route.getRoute()
+            key(navItem.route.getRoute()) {
                 Row(
                     modifier = Modifier
                         .wrapContentSize()
                         .weight(if (isSelected) 1f else 0.5f)
                         .background(
-                            color = if (isSelected) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.background,
+                            color = if (isSelected) CashierAppTheme.colors.blue else CashierAppTheme.colors.background,
                             shape = RoundedCornerShape(16.dp)
                         )
                         .conditional(isSelected) { boldBorder() }
@@ -76,16 +77,16 @@ fun CashierBottomBar(
                         imageVector = ImageVector.vectorResource(
                             if (isSelected) navItem.selectedIcon else navItem.unselectedIcon
                         ),
-                        tint = if (isSelected) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.onBackground,
+                        tint = if (isSelected) CashierAppTheme.colors.background else CashierAppTheme.colors.onBackground,
                         contentDescription = null,
                     )
                     AnimatedVisibility(isSelected) {
-                        CashierAppText(
-                            modifier = Modifier.padding(start = 8.dp),
-                            text = stringResource(navItem.title),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.background,
-                        )
+//                        CashierAppText(
+//                            modifier = Modifier.padding(start = 8.dp),
+//                            text = stringResource(navItem.title),
+//                            style = CashierAppTheme.typography.paragraph2,
+//                            color = CashierAppTheme.colors.background,
+//                        )
                     }
                 }
             }
