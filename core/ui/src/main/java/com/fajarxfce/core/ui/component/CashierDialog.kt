@@ -45,7 +45,7 @@ fun CashierDialog(
         false -> Icons.Rounded.Clear
         else -> null
     }
-    val iconBg = if (isSuccess == true) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+    val iconBg = if (isSuccess == true) CashierAppTheme.colors.green else CashierAppTheme.colors.red
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -58,7 +58,7 @@ fun CashierDialog(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
-                    color = MaterialTheme.colorScheme.background,
+                    color = CashierAppTheme.colors.background,
                     shape = RoundedCornerShape(16.dp)
                 )
                 .padding(24.dp),
@@ -79,30 +79,21 @@ fun CashierDialog(
                             .size(64.dp),
                         imageVector = it,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.onPrimary
+                        tint = CashierAppTheme.colors.onBackground
                     )
                 }
             }
             CashierAppText(
                 text = if (message.isNullOrEmpty()) stringResource(R.string.core_ui_success) else message,
-                style = MaterialTheme.typography.bodyLarge,
+                style = CashierAppTheme.typography.subheading2,
                 textAlign = TextAlign.Center,
             )
-            Button(
-                onClick = {
-                    onButtonClick?.invoke()
-                    onDismissRequest()
-                },
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(24.dp),
-            ) {
-                CashierAppText(
-                    text = stringResource(R.string.core_ui_ok),
-                    style = MaterialTheme.typography.bodyLarge,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                )
-            }
+            CashierButton(
+                type = CashierButtonType.PRIMARY,
+                size = CashierButtonSize.MEDIUM,
+                text = stringResource(R.string.core_ui_ok),
+                onClick = onButtonClick ?: { onDismissRequest() },
+            )
         }
     }
 }
@@ -112,8 +103,5 @@ fun CashierDialog(
 private fun CashierDialogPreview() {
     CashierDialog(
         message = "This is a message",
-        isSuccess = true,
-        onDismissRequest = {},
-        onButtonClick = {}
     )
 }

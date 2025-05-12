@@ -25,6 +25,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.fajarxfce.core.ui.component.CashierAppText
 import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -109,7 +110,7 @@ internal fun LoginScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Login") },
+                title = {  },
                 navigationIcon = {
                     IconButton(onClick = { onAction(LoginContract.UiAction.OnBackClick) }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -118,143 +119,48 @@ internal fun LoginScreen(
             )
         },
     ) { paddingValues ->
-        Box(
+        LoginContent(
             modifier = modifier
-                .fillMaxSize()
                 .padding(paddingValues)
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
-                    .padding(horizontal = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                // Logo or app title
-                Text(
-                    text = "Welcome Back",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+                .verticalScroll(scrollState),
+            uiState = uiState,
+            onEmailChange = { onAction(LoginContract.UiAction.OnEmailChange(it)) },
+            onPasswordChange = { onAction(LoginContract.UiAction.OnPasswordChange(it)) },
+            onLoginClick = { onAction(LoginContract.UiAction.OnLoginClick) },
+            onForgotPasswordClick = { onAction(LoginContract.UiAction.OnForgotPasswordClick) },
+            onRegisterClick = { onAction(LoginContract.UiAction.OnRegisterClick) }
+        )
+    }
+}
 
-                Text(
-                    text = "Sign in to continue",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 32.dp)
-                )
+@Composable
+internal fun LoginContent(
+    modifier: Modifier = Modifier,
+    uiState: LoginContract.UiState,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit,
+    onRegisterClick: () -> Unit,
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 23.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        CashierAppText(
+            text = "Welcome",
+            style = MaterialTheme.typography.headlineLarge
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        CashierAppText(
+            text = "It's great to see you again",
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(40.dp))
 
-                // Email field
-                OutlinedTextField(
-                    value = uiState.email,
-                    onValueChange = { onAction(LoginContract.UiAction.OnEmailChange(it)) },
-                    label = { Text("Email") },
-                    leadingIcon = { Icon(Icons.Default.Email, contentDescription = null) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onNext = { focusManager.moveFocus(FocusDirection.Down) }
-                    ),
-                    singleLine = true
-                )
-
-                // Password field
-                OutlinedTextField(
-                    value = uiState.password,
-                    onValueChange = { onAction(LoginContract.UiAction.OnPasswordChange(it)) },
-                    label = { Text("Password") },
-                    leadingIcon = { Icon(Icons.Default.Password, contentDescription = null) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
-                            onAction(LoginContract.UiAction.OnLoginClick)
-                        }
-                    ),
-                    trailingIcon = {
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(
-                                if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                contentDescription = if (passwordVisible) "Hide password" else "Show password"
-                            )
-                        }
-                    },
-                    singleLine = true
-                )
-
-                // Forgot password link
-                TextButton(
-                    onClick = { onAction(LoginContract.UiAction.OnForgotPasswordClick) },
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .padding(bottom = 24.dp)
-                ) {
-                    Text("Forgot Password?")
-                }
-
-                // Login button
-                Button(
-                    onClick = { onAction(LoginContract.UiAction.OnLoginClick) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    shape = MaterialTheme.shapes.medium,
-                ) {
-                    Text("Login")
-                }
-
-                // Register option
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 24.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Don't have an account?",
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    TextButton(onClick = { onAction(LoginContract.UiAction.OnRegisterClick) }) {
-                        Text(
-                            text = "Register",
-                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold)
-                        )
-                    }
-                }
-            }
-
-            // Show loading indicator if needed
-            if (uiState.isLoading) {
-                LoadingIndicator(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                )
-            }
-
-            // Show dialog if needed
-            uiState.dialogState?.let { dialogState ->
-//                InfoDialog(
-//                    dialogState = dialogState,
-//                    onDismiss = { onAction(LoginContract.UiAction.OnDialogDismiss) }
-//                )
-            }
-        }
     }
 }
 

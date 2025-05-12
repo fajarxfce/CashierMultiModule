@@ -13,14 +13,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import com.fajarxfce.core.ui.theme.CashierAppTheme
 
 
 @Composable
 fun CashierAppText(
     modifier: Modifier = Modifier,
     text: String,
-    color: Color = MaterialTheme.colorScheme.onBackground,
-    style: TextStyle = MaterialTheme.typography.titleMedium,
+    color: Color = CashierAppTheme.colors.onBackground,
+    style: TextStyle = CashierAppTheme.typography.paragraph2,
     overflow: TextOverflow = TextOverflow.Clip,
     maxLines: Int = Int.MAX_VALUE,
     textAlign: TextAlign? = null,
@@ -41,8 +42,8 @@ fun CashierAppText(
     modifier: Modifier = Modifier,
     fullText: String,
     spanTexts: List<String>,
-    color: Color = MaterialTheme.colorScheme.onBackground,
-    style: TextStyle = MaterialTheme.typography.titleMedium,
+    color: Color = CashierAppTheme.colors.onBackground,
+    style: TextStyle = CashierAppTheme.typography.paragraph2,
     textAlign: TextAlign? = null,
 ) {
     Text(
@@ -54,7 +55,7 @@ fun CashierAppText(
                     val mEndIndex = mStartIndex.plus(it.length)
                     addStyle(
                         style = SpanStyle(
-                            color = MaterialTheme.colorScheme.primary,
+                            color = CashierAppTheme.colors.blue,
                             fontWeight = FontWeight.Bold,
                         ),
                         start = mStartIndex,

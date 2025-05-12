@@ -1,50 +1,193 @@
 package com.fajarxfce.core.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 
-import androidx.compose.ui.text.googlefonts.GoogleFont
-import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.unit.sp
 import com.fajarxfce.core.ui.R
 
-val provider = GoogleFont.Provider(
-    providerAuthority = "com.google.android.gms.fonts",
-    providerPackage = "com.google.android.gms",
-    certificates = R.array.core_ui_com_google_android_gms_fonts_certs
+internal val LocalTypography = staticCompositionLocalOf { ESimTypography() }
+
+val Poppins = FontFamily(
+    Font(R.font.core_ui_poppins_regular, FontWeight.Normal),
+    Font(R.font.core_ui_poppins_medium, FontWeight.Medium),
+    Font(R.font.core_ui_poppins_semi_bold, FontWeight.SemiBold),
+    Font(R.font.core_ui_poppins_bold, FontWeight.Bold),
 )
 
-val bodyFontFamily = FontFamily(
-    Font(
-        googleFont = GoogleFont("Roboto"),
-        fontProvider = provider,
-    )
-)
-
-val displayFontFamily = FontFamily(
-    Font(
-        googleFont = GoogleFont("Roboto"),
-        fontProvider = provider,
-    )
-)
-
-// Default Material 3 typography values
-val baseline = Typography()
-
-val AppTypography = Typography(
-    displayLarge = baseline.displayLarge.copy(fontFamily = displayFontFamily),
-    displayMedium = baseline.displayMedium.copy(fontFamily = displayFontFamily),
-    displaySmall = baseline.displaySmall.copy(fontFamily = displayFontFamily),
-    headlineLarge = baseline.headlineLarge.copy(fontFamily = displayFontFamily),
-    headlineMedium = baseline.headlineMedium.copy(fontFamily = displayFontFamily),
-    headlineSmall = baseline.headlineSmall.copy(fontFamily = displayFontFamily),
-    titleLarge = baseline.titleLarge.copy(fontFamily = displayFontFamily),
-    titleMedium = baseline.titleMedium.copy(fontFamily = displayFontFamily),
-    titleSmall = baseline.titleSmall.copy(fontFamily = displayFontFamily),
-    bodyLarge = baseline.bodyLarge.copy(fontFamily = bodyFontFamily),
-    bodyMedium = baseline.bodyMedium.copy(fontFamily = bodyFontFamily),
-    bodySmall = baseline.bodySmall.copy(fontFamily = bodyFontFamily),
-    labelLarge = baseline.labelLarge.copy(fontFamily = bodyFontFamily),
-    labelMedium = baseline.labelMedium.copy(fontFamily = bodyFontFamily),
-    labelSmall = baseline.labelSmall.copy(fontFamily = bodyFontFamily),
-)
-
+class ESimTypography {
+    val heading1: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 36.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+    val heading2: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+    val heading3: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+    val heading4: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+    val heading5: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+    val heading6: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+    val heading7: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+    val subheading1: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.SemiBold,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+    val subheading2: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+    val subheading3: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+    val paragraph1: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+    val paragraph2: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+    val paragraph3: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+    val paragraph4: TextStyle
+        @Composable
+        get() = TextStyle(
+            fontFamily = Poppins,
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Normal,
+            lineHeightStyle = LineHeightStyle(
+                alignment = LineHeightStyle.Alignment.Center,
+                trim = LineHeightStyle.Trim.None,
+            ),
+            color = CashierAppTheme.colors.onBackground
+        )
+}
