@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.scaleIn
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,9 +27,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.fajarxfce.core.ui.component.CashierAppText
 import com.fajarxfce.core.ui.extension.boldBorder
 import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import com.fajarxfce.core.ui.theme.CashierAppTheme
@@ -59,14 +63,12 @@ internal fun SplashScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            Icon(
+            Image(
+                painter = painterResource(id = com.fajarxfce.core.ui.R.drawable.core_ui_logo_new),
+                contentDescription = "App Logo",
                 modifier = Modifier
-                    .size(144.dp)
-                    .clip(CircleShape)
-                    .boldBorder(100),
-                imageVector = CashierAppTheme.icons.logo,
-                tint = Color.Unspecified,
-                contentDescription = null,
+                    .size(200.dp)
+                    .padding(top = 46.dp),
             )
             Spacer(modifier = Modifier.height(34.dp))
             AnimatedVisibility(
@@ -74,10 +76,11 @@ internal fun SplashScreen(
                 enter = fadeIn() +
                         scaleIn()
             ) {
-                Text(
-                    text = stringResource(com.fajarxfce.core.ui.R.string.core_ui_app_name),
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                CashierAppText(
+                    text = stringResource(id = com.fajarxfce.core.ui.R.string.core_ui_app_name),
+                    style = CashierAppTheme.typography.heading1,
+                    color = CashierAppTheme.colors.onBackground,
+                    textAlign = TextAlign.Center,
                 )
             }
 
@@ -96,6 +99,13 @@ internal fun SplashScreen(
                     color = CashierAppTheme.colors.blue
                 )
             }
+            Spacer(modifier = Modifier.height(16.dp))
+            CashierAppText(
+                text = stringResource(id = R.string.feature_splash_ui_loading),
+                style = CashierAppTheme.typography.paragraph1,
+                color = CashierAppTheme.colors.onBackground,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }

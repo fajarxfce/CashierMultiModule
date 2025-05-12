@@ -95,10 +95,10 @@ internal fun OnBoardingScreen(
         ) {
             // Logo
             Image(
-                painter = painterResource(id = com.fajarxfce.core.ui.R.drawable.core_ui_ic_logo),
+                painter = painterResource(id = com.fajarxfce.core.ui.R.drawable.core_ui_logo_new),
                 contentDescription = "App Logo",
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(200.dp)
                     .padding(top = 46.dp),
             )
 
