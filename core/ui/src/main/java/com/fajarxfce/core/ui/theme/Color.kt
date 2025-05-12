@@ -1,26 +1,34 @@
 package com.fajarxfce.core.ui.theme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
+private val greenMain = Color(0xFF4CAF50)
+private val lightGreenMain = Color(0xFFE8F5E9)
+private val teal = Color(0xFF009688)
+private val lightTeal = Color(0xFFB2DFDB)
+private val amber = Color(0xFFFFC107)
+private val lightAmber = Color(0xFFFFECB3)
+
+private val red = Color(0xFFF44336)
+private val lightRed = Color(0xFFFDDEDE)
+
 internal val LocalLightColors = staticCompositionLocalOf { lightColors() }
 internal val LocalDarkColors = staticCompositionLocalOf { darkColors() }
 
 internal fun darkColors(
-    onBackground: Color = Color(0xFFfffbf3),
-    background: Color = Color(0xFF111111),
-    blue: Color = Color(0xFF609DED),
-    lightBlue: Color = Color(0xFFBCD9FF).copy(alpha = 0.5f),
-    yellow: Color = Color(0xFFFFCB46),
-    lightYellow: Color = Color(0xFFFFECBC).copy(alpha = 0.5f),
-    green: Color = Color(0xFF2ED22A),
-    softGreen: Color = Color(0xFFC2F8B9).copy(alpha = 0.5f),
-    red: Color = Color(0xFFF45C5C),
-    softRed: Color = Color(0xFFFFD0BC).copy(alpha = 0.5f),
+    onBackground: Color = Color.White,
+    background: Color = Color(0xFF121212),
+    blue: Color = greenMain, // Mengganti blue ke greenMain
+    lightBlue: Color = lightGreenMain.copy(alpha = 0.5f), // Mengganti lightBlue ke lightGreenMain
+    yellow: Color = amber, // Mengganti yellow ke amber
+    lightYellow: Color = lightAmber.copy(alpha = 0.5f), // Mengganti lightYellow ke lightAmber
+    green: Color = teal,
+    softGreen: Color = lightTeal.copy(alpha = 0.5f),
+    red: Color = com.fajarxfce.core.ui.theme.red,
+    softRed: Color = lightRed.copy(alpha = 0.5f),
 ): CashierAppColor = CashierAppColor(
     background = background,
     onBackground = onBackground,
@@ -78,16 +86,16 @@ class CashierAppColor(
 }
 
 internal fun lightColors(
-    background: Color = Color(0xFFfffbf3),
-    onBackground: Color = Color(0xFF111111),
-    blue: Color = Color(0xFF609DED),
-    lightBlue: Color = Color(0xFFBCD9FF),
-    yellow: Color = Color(0xFFFFCB46),
-    lightYellow: Color = Color(0xFFFFECBC),
-    green: Color = Color(0xFF2ED22A),
-    softGreen: Color = Color(0xFFC2F8B9),
-    red: Color = Color(0xFFF45C5C),
-    softRed: Color = Color(0xFFFFD0BC),
+    background: Color = Color(0xFFF1F8E9), // Light green sangat muda
+    onBackground: Color = Color(0xFF1A1A1A),
+    blue: Color = greenMain,
+    lightBlue: Color = lightGreenMain,
+    yellow: Color = amber,
+    lightYellow: Color = lightAmber,
+    green: Color = teal,
+    softGreen: Color = lightTeal,
+    red: Color = com.fajarxfce.core.ui.theme.red,
+    softRed: Color = lightRed,
 ): CashierAppColor = CashierAppColor(
     background = background,
     onBackground = onBackground,
