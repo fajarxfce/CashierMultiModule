@@ -65,6 +65,15 @@ internal fun OnBoardingScreen(
     onAction: (OnBoardingContract.UiAction) -> Unit,
     onNavigateToLogin: () -> Unit,
 ) {
+    uiEffect.collectWithLifecycle{ effect ->
+        when (effect) {
+            is UiEffect.NavigateToEmailLogin -> onNavigateToLogin()
+            is UiEffect.NavigateToSignUp -> {}
+            is UiEffect.NavigateToGoogleLogin -> onNavigateToLogin()
+            is UiEffect.ShowDialog -> {}
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
@@ -190,17 +199,6 @@ internal fun OnBoardingScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(bottom = 24.dp)
             )
-        }
-
-        // Handle navigation effects
-        uiEffect.collectWithLifecycle{ effect ->
-            Log.d("TAG", "OnBoardingScreen: $effect")
-            when (effect) {
-                is UiEffect.NavigateToEmailLogin -> {}
-                is UiEffect.NavigateToSignUp -> {}
-                is UiEffect.NavigateToGoogleLogin -> {}
-                is UiEffect.ShowDialog -> {}
-            }
         }
     }
 }

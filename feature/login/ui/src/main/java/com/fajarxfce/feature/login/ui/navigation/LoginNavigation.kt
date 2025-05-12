@@ -1,4 +1,4 @@
-package com.fajarxfce.feature.onboarding.ui.navigation
+package com.fajarxfce.feature.login.ui.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
@@ -15,17 +15,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
-import com.fajarxfce.core.ui.navigation.Screen
-import com.fajarxfce.feature.onboarding.ui.OnBoardingScreen
-import com.fajarxfce.feature.onboarding.ui.OnBoardingViewModel
+import com.fajarxfce.feature.login.ui.LoginScreen
+import com.fajarxfce.feature.login.ui.LoginViewModel
 import kotlinx.serialization.Serializable
 
-@Serializable data object OnBoarding : Screen
+@Serializable data object Login
 
-fun NavGraphBuilder.onBoardingScreen(
-    onNavigateToLogin: () -> Unit,
+fun NavGraphBuilder.loginScreen(
+    onNavigateToHome: () -> Unit,
+    onNavigateBack: () -> Unit = {},
+    onNavigateToRegister: () -> Unit = {},
 ) {
-    composable<OnBoarding>(
+    composable<Login>(
         enterTransition = {
             slideInHorizontally(
                 initialOffsetX = { it },
@@ -51,14 +52,16 @@ fun NavGraphBuilder.onBoardingScreen(
             ) + fadeOut(animationSpec = tween(300))
         }
     ) {
-        val viewModel = hiltViewModel<OnBoardingViewModel>()
-        val uiEffect = viewModel.uiEffect
+        val viewModel = hiltViewModel<LoginViewModel>()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-        OnBoardingScreen(
+        val uiEffect = viewModel.uiEffect
+        LoginScreen(
             uiState = uiState,
             uiEffect = uiEffect,
             onAction = viewModel::onAction,
-            onNavigateToLogin = onNavigateToLogin,
+            onNavigateToHome = onNavigateToHome,
+            onNavigateBack = onNavigateBack,
+            onNavigateToRegister = onNavigateToRegister,
         )
     }
 }

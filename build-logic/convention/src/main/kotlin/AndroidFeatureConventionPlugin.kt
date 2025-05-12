@@ -46,6 +46,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 "implementation"(libs.findLibrary("kotlinx.serialization.json").get())
                 "implementation"(libs.findLibrary("androidx.paging.compose").get())
                 "implementation"(libs.findLibrary("androidx.paging.runtime").get())
+                "implementation"(libs.findLibrary("timber").get())
                 "testImplementation"(libs.findLibrary("androidx.navigation.testing").get())
                 "androidTestImplementation"(
                     libs.findLibrary("androidx.lifecycle.runtimeTesting").get(),

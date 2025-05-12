@@ -8,6 +8,7 @@ import com.fajarxfce.core.ui.delegate.mvi.mvi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @HiltViewModel
 internal class OnBoardingViewModel @Inject constructor(
@@ -17,11 +18,9 @@ internal class OnBoardingViewModel @Inject constructor(
 {
     override fun onAction(action: OnBoardingContract.UiAction) {
         viewModelScope.launch {
-            Log.d("TAG", "OnBoardingScreen: $action")
             when (action) {
-
-                OnBoardingContract.UiAction.OnLoginWithEmailClick -> {}
-                OnBoardingContract.UiAction.OnLoginWithGoogleClick -> {}
+                OnBoardingContract.UiAction.OnLoginWithEmailClick -> emitUiEffect(OnBoardingContract.UiEffect.NavigateToEmailLogin)
+                OnBoardingContract.UiAction.OnLoginWithGoogleClick -> emitUiEffect(OnBoardingContract.UiEffect.NavigateToGoogleLogin)
                 OnBoardingContract.UiAction.OnClickDialogDismiss -> {}
                 OnBoardingContract.UiAction.OnSignUpClick -> {}
             }
