@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="680" height="188pt" viewBox="0 0 509.51 188">
+<svg xmlns="http://www.w3.org/2000/svg" width="461pt" height="188pt" viewBox="0 0 460.62 188">
     <g class="graph">
-        <path fill="#fff" d="M0 188V0h509.51v188z"/>
+        <path fill="#fff" d="M0 188V0h460.62v188z"/>
         <g class="node" transform="translate(4 184)">
             <ellipse cx="262.45" cy="-162" fill="none" stroke="#000" rx="60.05" ry="18"/>
             <text x="262.45" y="-156.95" font-family="Times,serif" font-size="14" text-anchor="middle">:core:domain</text>
@@ -30,12 +30,12 @@
             <path fill="red" d="m241.56 67.25-8.42 6.43 2.57-10.28z"/>
         </g>
         <g class="node" transform="translate(4 184)">
-            <ellipse cx="419.45" cy="-90" fill="none" stroke="#000" rx="82.06" ry="18"/>
-            <text x="419.45" y="-84.95" font-family="Times,serif" font-size="14" text-anchor="middle">:core:designsystem</text>
+            <ellipse cx="376.45" cy="-90" fill="none" stroke="#000" rx="39.07" ry="18"/>
+            <text x="376.45" y="-84.95" font-family="Times,serif" font-size="14" text-anchor="middle">:core:ui</text>
         </g>
         <g stroke="#000" class="edge">
-            <path fill="none" d="M298.98 37.5c22.79 10.17 53.56 23.89 78.81 35.14"/>
-            <path d="m379.14 69.41 7.7 7.27-10.55-.87z"/>
+            <path fill="none" d="M292.03 38.71c16.62 10.2 38.41 23.59 56.21 34.51"/>
+            <path d="m349.67 70 6.69 8.21-10.35-2.25z"/>
         </g>
         <g stroke="#000" class="edge">
             <path fill="none" d="M186.7 109.67c-24.56 10.68-58 25.22-84.43 36.71"/>

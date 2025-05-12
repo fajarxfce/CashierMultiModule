@@ -78,7 +78,7 @@ fun CashierButton(
                 CashierAppText(
                     text = text,
                     style = textStyle,
-                    color = CashierAppTheme.colors.onBackground
+                    color = CashierAppTheme.colors.background
                 )
             }
         }

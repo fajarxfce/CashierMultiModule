@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="feature_login_ui_don_t_have_an_account_full_text">Don\'t have an account? Sign Up</string>
+    <string name="feature_login_ui_don_t_have_account_span">Sign Up</string>
+    <string name="feature_login_ui_policy">By signing up, you agree to our Terms of Service and Privacy Policy</string>
+    <string name="feature_login_ui_terms_of_service_span">Terms of Service</string>
+    <string name="feature_login_ui_privacy_policy_span">Privacy Policy</string>
+</resources>
