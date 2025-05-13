@@ -56,7 +56,7 @@ fun CashierBottomBar(
                             color = if (isSelected) CashierAppTheme.colors.blue else CashierAppTheme.colors.background,
                             shape = RoundedCornerShape(16.dp)
                         )
-                        .conditional(isSelected) { boldBorder() }
+//                        .conditional(isSelected) { boldBorder() }
                         .noRippleClickable {
                             navController.navigate(navItem.route) {
                                 popUpTo(navController.graph.findStartDestination().id) {
