@@ -4,4 +4,7 @@
     <string name="core_ui_back_icon">Back</string>
     <string name="core_ui_success">Success</string>
     <string name="core_ui_ok">Ok</string>
+    <string name="core_ui_title_password">Password</string>
+    <string name="core_ui_action_search">Search</string>
+    <string name="core_ui_title_phone_number">Phone number</string>
 </resources>

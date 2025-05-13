@@ -32,13 +32,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.fajarxfce.core.ui.component.CashierAppText
+import com.fajarxfce.core.ui.component.CashierText
 import com.fajarxfce.core.ui.extension.boldBorder
 import com.fajarxfce.core.ui.extension.collectWithLifecycle
-import com.fajarxfce.core.ui.theme.CashierAppTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import com.fajarxfce.feature.splash.ui.R
+
 @Composable
 internal fun SplashScreen(
     uiEffect: Flow<SplashContract.UiEffect>,
@@ -53,7 +53,7 @@ internal fun SplashScreen(
     }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = CashierAppTheme.colors.background,
+        containerColor = MaterialTheme.colorScheme.background,
     ) { paddingValues ->
 
         Column(
@@ -75,10 +75,10 @@ internal fun SplashScreen(
                 enter = fadeIn() +
                         scaleIn()
             ) {
-                CashierAppText(
+                CashierText(
                     text = stringResource(id = com.fajarxfce.core.ui.R.string.core_ui_app_name),
-                    style = CashierAppTheme.typography.heading1,
-                    color = CashierAppTheme.colors.onBackground,
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.onBackground,
                     textAlign = TextAlign.Center,
                 )
             }
@@ -94,15 +94,15 @@ internal fun SplashScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(6.dp),
-                    trackColor = CashierAppTheme.colors.lightBlue,
-                    color = CashierAppTheme.colors.blue
+                    trackColor = MaterialTheme.colorScheme.primaryContainer,
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            CashierAppText(
+            CashierText(
                 text = stringResource(id = R.string.feature_splash_ui_loading),
-                style = CashierAppTheme.typography.paragraph1,
-                color = CashierAppTheme.colors.onBackground,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onBackground,
                 textAlign = TextAlign.Center,
             )
         }

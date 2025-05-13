@@ -32,7 +32,7 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
     val heading2: TextStyle
         @Composable
@@ -44,7 +44,7 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
     val heading3: TextStyle
         @Composable
@@ -56,7 +56,7 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
     val heading4: TextStyle
         @Composable
@@ -68,7 +68,7 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
     val heading5: TextStyle
         @Composable
@@ -80,7 +80,7 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
     val heading6: TextStyle
         @Composable
@@ -92,7 +92,7 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
     val heading7: TextStyle
         @Composable
@@ -104,7 +104,7 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
     val subheading1: TextStyle
         @Composable
@@ -116,7 +116,7 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
     val subheading2: TextStyle
         @Composable
@@ -128,7 +128,7 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
     val subheading3: TextStyle
         @Composable
@@ -140,7 +140,7 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
     val paragraph1: TextStyle
         @Composable
@@ -152,7 +152,7 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
     val paragraph2: TextStyle
         @Composable
@@ -164,7 +164,7 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
     val paragraph3: TextStyle
         @Composable
@@ -176,7 +176,7 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
     val paragraph4: TextStyle
         @Composable
@@ -188,6 +188,6 @@ class ESimTypography {
                 alignment = LineHeightStyle.Alignment.Center,
                 trim = LineHeightStyle.Trim.None,
             ),
-            color = CashierAppTheme.colors.onBackground
+            color = CashierBackground
         )
 }

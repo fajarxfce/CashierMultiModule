@@ -1,36 +1,37 @@
 package com.fajarxfce.core.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.graphics.Color
 
-object CashierAppTheme {
-    val colors: CashierAppColor
-        @Composable
-        @ReadOnlyComposable
-        get() = if (isSystemInDarkTheme()) LocalDarkColors.current else LocalLightColors.current
 
-    val icons: CashierAppIcons
-        @Composable
-        @ReadOnlyComposable
-        get() = LocalIcons.current
+private val LightThemeColors = lightColorScheme(
+    primary = CashierBlue,
+    secondary = CashierBlue,
+    surface = Color.White,
+    onSurface = Color.White,
+    onBackground = Color.Black
+)
 
-    val typography: ESimTypography
-        @Composable
-        @ReadOnlyComposable
-        get() = LocalTypography.current
-}
-
+private val DarkThemeColors = darkColorScheme(
+    primary = CashierBlue,
+    secondary = CashierBlue,
+    surface = Color.Black,
+    onSurface = CashierGray,
+    onBackground = Color.White,
+    background = CashierBackground
+)
 @Composable
 fun AppTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit
 ) {
-    CompositionLocalProvider(
-        LocalLightColors provides CashierAppTheme.colors,
-        LocalIcons provides CashierAppTheme.icons,
-        LocalTypography provides CashierAppTheme.typography,
-    ) {
-        content()
-    }
+    MaterialTheme(
+        colorScheme = if (darkTheme) DarkThemeColors else LightThemeColors,
+        shapes = AppShapes,
+        content = content
+    )
 }

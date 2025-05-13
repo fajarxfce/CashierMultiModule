@@ -40,8 +40,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fajarxfce.core.ui.component.CashierSearchBar
-import com.fajarxfce.core.ui.theme.CashierAppTheme
+import com.fajarxfce.core.ui.theme.CashierBackground
+import com.fajarxfce.core.ui.theme.CashierBlue
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -81,7 +81,7 @@ internal fun HomeScreen(
                         Icon(
                             imageVector = Icons.Filled.Menu,
                             contentDescription = "Menu",
-                            tint = CashierAppTheme.colors.onBackground
+                            tint = CashierBackground
                         )
                     }
                 },
@@ -91,74 +91,15 @@ internal fun HomeScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = CashierAppTheme.colors.background,
-                    titleContentColor = CashierAppTheme.colors.onBackground,
+                    containerColor = CashierBlue,
+                    titleContentColor = CashierBackground,
                     navigationIconContentColor = Color.White,
                     actionIconContentColor = Color.White
                 )
             )
         },
-        bottomBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Last Update 30 detik yang lalu",
-                    style = CashierAppTheme.typography.subheading2,
-                    color = Color.Gray
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Icon(
-                    painter = painterResource(id = com.fajarxfce.feature.home.ui.R.drawable.feature_home_ui_refresh), // Ganti dengan ikon refresh kecil Anda
-                    contentDescription = "Refresh",
-                    tint = Color.Gray,
-                    modifier = Modifier.size(16.dp)
-                )
-            }
-        }
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(CashierAppTheme.colors.background.copy(0.75f)), // Warna latar belakang sedikit transparan
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            // Ilustrasi Toko
-            Image(
-                painter = painterResource(id = R.drawable.feature_home_ui_store_illustration), // Ganti dengan resource gambar toko Anda
-                contentDescription = "Ilustrasi Toko",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-                    .padding(horizontal = 32.dp)
-            )
 
-            // Menu Utama
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                FeatureCard(title = "Point of Sale\nPOS", iconId = com.fajarxfce.core.ui.R.drawable.core_ui_ic_logo) // Ganti dengan ikon POS Anda
-                FeatureCard(title = "Kelola\nProduk", iconId = com.fajarxfce.core.ui.R.drawable.core_ui_ic_logo) // Ganti dengan ikon Produk Anda
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                FeatureCard(title = "Laporan\nPenjualan", iconId = com.fajarxfce.core.ui.R.drawable.core_ui_ic_logo) // Ganti dengan ikon Laporan Anda
-                FeatureCard(title = "Riwayat\nTransaksi", iconId = com.fajarxfce.core.ui.R.drawable.core_ui_ic_logo) // Ganti dengan ikon Riwayat Anda
-            }
-        }
     }
 }
 

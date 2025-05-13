@@ -13,7 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fajarxfce.core.ui.component.CashierAppText
+import com.fajarxfce.core.ui.component.CashierText
 import kotlinx.coroutines.delay
 
 @Composable
@@ -34,7 +34,7 @@ internal fun AnimatedLinearProgress() {
         contentAlignment = Alignment.Center,
     ) {
 
-        CashierAppText(
+        CashierText(
             text = "$progressValue%",
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(8.dp)

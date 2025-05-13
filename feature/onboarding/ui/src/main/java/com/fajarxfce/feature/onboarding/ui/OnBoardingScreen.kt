@@ -55,14 +55,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.fajarxfce.core.ui.component.CashierAppText
-import com.fajarxfce.core.ui.component.CashierButton
-import com.fajarxfce.core.ui.component.CashierButtonSize
-import com.fajarxfce.core.ui.component.CashierButtonType
-import com.fajarxfce.core.ui.component.CashierDialog
+import com.fajarxfce.core.ui.component.CashierText
 import com.fajarxfce.core.ui.extension.collectWithLifecycle
-import com.fajarxfce.core.ui.theme.CashierAppTheme
 import com.fajarxfce.feature.onboarding.ui.OnBoardingContract.UiEffect
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
@@ -88,7 +82,7 @@ internal fun OnBoardingScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        containerColor = CashierAppTheme.colors.background,
+        containerColor = MaterialTheme.colorScheme.background,
         contentWindowInsets = WindowInsets.safeGestures,
     ) { paddingValues ->
         Column(
@@ -120,24 +114,29 @@ internal fun OnBoardingScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             // App Jargon/Tagline
-            CashierAppText(
+            CashierText(
                 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                style = CashierAppTheme.typography.paragraph1,
                 textAlign = TextAlign.Center,
             )
 
             Spacer(modifier = Modifier.height(48.dp))
 
             // Google Login Button
-            CashierButton(
+            Button(
                 onClick = { onAction(OnBoardingContract.UiAction.OnLoginWithGoogleClick) },
-                modifier = Modifier.fillMaxWidth(),
-                icon = CashierAppTheme.icons.google,
-                size = CashierButtonSize.MEDIUM,
-                type = CashierButtonType.PRIMARY,
-                isEnabled = true,
-                text = "Login with Google",
-            )
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
+            ) {
+                // You can add Google icon here if available
+                CashierText(
+                    text = "Login with Google",
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
 
             // OR Divider
             Row(
@@ -147,34 +146,35 @@ internal fun OnBoardingScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 HorizontalDivider(
-                    modifier = Modifier
-                        .weight(1f),
+                    modifier = Modifier.weight(1f),
                     thickness = 2.dp,
-                    color = CashierAppTheme.colors.onBackground
+                    color = MaterialTheme.colorScheme.onBackground
                 )
-                CashierAppText(
+                CashierText(
                     text = "OR",
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    color = CashierAppTheme.colors.onBackground,
-                    style = CashierAppTheme.typography.paragraph1,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
                 HorizontalDivider(
-                    modifier = Modifier
-                        .weight(1f),
+                    modifier = Modifier.weight(1f),
                     thickness = 2.dp,
-                    color = CashierAppTheme.colors.onBackground
+                    color = MaterialTheme.colorScheme.onBackground
                 )
             }
 
             // Email Login Button
-            CashierButton(
+            OutlinedButton(
                 onClick = { onAction(OnBoardingContract.UiAction.OnLoginWithGoogleClick) },
-                modifier = Modifier.fillMaxWidth(),
-                size = CashierButtonSize.MEDIUM,
-                type = CashierButtonType.SECONDARY,
-                isEnabled = true,
-                text = "Login with Email",
-            )
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                border = ButtonDefaults.outlinedButtonBorder
+            ) {
+                CashierText(
+                    text = "Login with Email",
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -182,26 +182,27 @@ internal fun OnBoardingScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
             ) {
-                CashierAppText(
-                    fullText = "Don't have an account? Sign Up",
-                    spanTexts = listOf("Sign Up"),
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    CashierText(text = "Don't have an account? ")
+                    TextButton(onClick = {}) {
+                        CashierText(
+                            text = "Sign Up",
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             }
+
             Spacer(modifier = Modifier.weight(1f))
 
-            CashierAppText(
-                fullText = stringResource(R.string.feature_onboarding_ui_policy),
-                spanTexts = listOf(
-                    stringResource(R.string.feature_onboarding_ui_policy_span1),
-                    stringResource(R.string.feature_onboarding_ui_policy_span2),
-                ),
-                style = CashierAppTheme.typography.paragraph3,
+            CashierText(
+                text = stringResource(R.string.feature_onboarding_ui_policy),
                 textAlign = TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
         }
     }
 }
-
 @Preview
 @Composable
 private fun OnBoardingScreenPreview() {
