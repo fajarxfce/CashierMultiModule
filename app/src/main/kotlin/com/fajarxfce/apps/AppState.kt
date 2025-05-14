@@ -23,6 +23,9 @@ class AppState(
     val shouldShowDrawer: Boolean
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination?.route in NavigationItem.getNavigationRoutes()
 
+    val currentDestination: NavDestination?
+        @Composable get() = navController.currentBackStackEntryAsState().value?.destination
+
     fun openDrawer() {
         coroutineScope.launch {
             drawerState.open()

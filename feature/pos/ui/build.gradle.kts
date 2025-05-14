@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.fajarxfce.feature.home.ui"
+    namespace = "com.fajarxfce.feature.pos.ui"
 }
 
 dependencies {
