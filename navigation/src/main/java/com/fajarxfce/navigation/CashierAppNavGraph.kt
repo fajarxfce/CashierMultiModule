@@ -23,6 +23,8 @@ import com.fajarxfce.feature.splash.ui.navigation.splashScreen
 fun CashierAppNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    onOpenDrawer: () -> Unit = {},
+    onCloseDrawer: () -> Unit = {},
 ) {
     NavHost(
         navController = navController,
@@ -66,7 +68,8 @@ fun CashierAppNavGraph(
         homeScreen(
             onNavigateDetail = {},
             onNavigateSearch = {},
-            onNavigateDetailWithArgs = {}
+            onNavigateDetailWithArgs = {},
+            onOpenDrawer = onOpenDrawer,
         )
     }
 }

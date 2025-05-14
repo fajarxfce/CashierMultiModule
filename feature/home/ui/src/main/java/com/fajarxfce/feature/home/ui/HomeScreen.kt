@@ -56,6 +56,7 @@ internal fun HomeScreen(
     uiEffect: Flow<HomeContract.UiEffect>,
     onAction: (HomeContract.UiAction) -> Unit,
     onNavigateDetail: (Int) -> Unit,
+    onOpenDrawer: () -> Unit,
 ) {
     val primaryBlue = Color(0xFF0057CC)
     val lightBlue = Color(0xFFE6EFFD)
@@ -67,7 +68,9 @@ internal fun HomeScreen(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar()
+            TopAppBar(
+                onOpenDrawer = onOpenDrawer,
+            )
         },
     ) { innerPadding ->
         Box(
@@ -111,7 +114,9 @@ internal fun HomeScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBar() {
+fun TopAppBar(
+    onOpenDrawer: () -> Unit,
+) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
@@ -151,7 +156,7 @@ fun TopAppBar() {
             }
         },
         navigationIcon = {
-            IconButton(onClick = { /* do something */ }) {
+            IconButton(onClick = { onOpenDrawer() }) {
                 Icon(
                     imageVector = Icons.Filled.Menu,
                     contentDescription = "Localized description",
@@ -357,6 +362,7 @@ fun PreviewMamaPizzadoHomeScreen() {
             uiEffect = emptyFlow(),
             onAction = {},
             onNavigateDetail = {},
+            onOpenDrawer = {},
         )
     }
 }

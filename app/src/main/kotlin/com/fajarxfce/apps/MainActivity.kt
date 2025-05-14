@@ -33,11 +33,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fajarxfce.core.datastore.NiaPreferencesDataSource
 import com.fajarxfce.core.ui.theme.AppTheme
+import com.fajarxfce.core.ui.theme.CashierBackground
 import com.fajarxfce.core.ui.theme.CashierBlue
 import com.fajarxfce.navigation.CashierAppNavGraph
 import com.fajarxfce.navigation.NavigationItem
@@ -60,26 +62,30 @@ class MainActivity : ComponentActivity() {
             val scope = rememberCoroutineScope()
             val shouldShowDrawer =
                 navController.currentBackStackEntryAsState().value?.destination?.route in NavigationItem.getNavigationRoutes()
+
+            val appState = rememberAppState()
+
             AppTheme {
                 ModalNavigationDrawer(
-                    drawerState = drawerState,
+                    drawerState = appState.drawerState,
                     drawerContent = {
                         Box(
                             modifier = Modifier
-                                .background(CashierBlue)
+                                .background(Color.White)
                                 .width(300.dp)
                                 .fillMaxHeight(),
                         )
                     },
-                    gesturesEnabled = shouldShowDrawer,
+                    gesturesEnabled = appState.shouldShowDrawer,
                 ) {
                     Scaffold(
                     ) { contentPadding ->
-                        // Screen content
                         CashierAppNavGraph(
-                            navController = navController,
+                            navController = appState.navController,
                             modifier = Modifier
                                 .fillMaxSize(),
+                            onOpenDrawer = appState::openDrawer,
+                            onCloseDrawer = appState::closeDrawer,
                         )
                     }
                 }

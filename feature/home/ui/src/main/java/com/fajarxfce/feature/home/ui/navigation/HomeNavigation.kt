@@ -16,6 +16,7 @@ fun NavGraphBuilder.homeScreen(
     onNavigateSearch: () -> Unit,
     onNavigateDetail: (Int) -> Unit,
     onNavigateDetailWithArgs: () -> Unit,
+    onOpenDrawer: () -> Unit,
 ) {
     composable<Home> {
         val viewModel: HomeViewModel = hiltViewModel()
@@ -26,6 +27,7 @@ fun NavGraphBuilder.homeScreen(
             uiEffect = uiEffect,
             onAction = viewModel::onAction,
             onNavigateDetail = onNavigateDetail,
+            onOpenDrawer = onOpenDrawer
         )
     }
 }
