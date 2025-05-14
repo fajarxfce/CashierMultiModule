@@ -1,5 +1,6 @@
 package com.fajarxfce.core.ui.component
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -14,12 +15,14 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.fajarxfce.core.ui.theme.AppTheme
 import com.fajarxfce.core.ui.theme.CashierBlue
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,7 +36,7 @@ fun BaseTopAppBar(
     backButtonAction: () -> Unit
 ) {
     TopAppBar(
-        modifier = modifier,
+        modifier = modifier.shadow(elevation),
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = backgroundColor,
             scrolledContainerColor = backgroundColor,
@@ -53,9 +56,9 @@ fun BaseTopAppBar(
         navigationIcon = {
             TextButton(
                 modifier = Modifier.padding(start = 14.dp),
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = backgroundColor
-                ),
+//                colors = ButtonDefaults.buttonColors(
+//                    contentColor = backgroundColor
+//                ),
                 onClick = backButtonAction
             ) {
                 CashierIcon(
@@ -73,9 +76,11 @@ fun BaseTopAppBar(
 @Preview
 @Composable
 private fun PreviewBaseTopAppBar() {
-    BaseTopAppBar(
-        modifier = Modifier,
-        toolbarTitle = "Menu",
-        backButtonAction = {}
-    )
+    AppTheme {
+        BaseTopAppBar(
+            modifier = Modifier,
+            toolbarTitle = "Menu",
+            backButtonAction = {},
+        )
+    }
 }

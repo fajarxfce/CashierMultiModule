@@ -16,6 +16,8 @@ import com.fajarxfce.feature.login.ui.navigation.Login
 import com.fajarxfce.feature.login.ui.navigation.loginScreen
 import com.fajarxfce.feature.onboarding.ui.navigation.OnBoarding
 import com.fajarxfce.feature.onboarding.ui.navigation.onBoardingScreen
+import com.fajarxfce.feature.pos.ui.navigation.Pos
+import com.fajarxfce.feature.pos.ui.navigation.posScreen
 import com.fajarxfce.feature.splash.ui.navigation.Splash
 import com.fajarxfce.feature.splash.ui.navigation.splashScreen
 
@@ -41,7 +43,7 @@ fun CashierAppNavGraph(
                         }
                     }
                 }
-            }
+            },
         )
         onBoardingScreen(
             onNavigateToLogin = {
@@ -53,8 +55,8 @@ fun CashierAppNavGraph(
         loginScreen(
             onNavigateToHome = {
                 navController.apply {
-                    navigate(Home){
-                        popUpTo(Login){
+                    navigate(Home) {
+                        popUpTo(Login) {
                             inclusive = true
                         }
                     }
@@ -70,6 +72,17 @@ fun CashierAppNavGraph(
             onNavigateSearch = {},
             onNavigateDetailWithArgs = {},
             onOpenDrawer = onOpenDrawer,
+            onNavigateToPos = {
+                navController.apply {
+                    navigate(Pos)
+                }
+            },
+        )
+        posScreen(
+            onNavigateBack = {
+                navController.popBackStack()
+            },
+            onNavigateDetail = {}
         )
     }
 }

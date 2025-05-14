@@ -56,6 +56,7 @@ internal fun HomeScreen(
     uiEffect: Flow<HomeContract.UiEffect>,
     onAction: (HomeContract.UiAction) -> Unit,
     onNavigateDetail: (Int) -> Unit,
+    onNavigateToPos: () -> Unit,
     onOpenDrawer: () -> Unit,
 ) {
     val primaryBlue = Color(0xFF0057CC)
@@ -107,6 +108,10 @@ internal fun HomeScreen(
                         end = 10.dp,
                     )
                     .offset(y = 260.dp),  // Adjust this value to control overlap
+                onNavigateToPos = onNavigateToPos,
+                onNavigateToHistory = { /* TODO */ },
+                onNavigateToReport = { /* TODO */ },
+                onNavigateToProduct = { /* TODO */ },
             )
         }
     }
@@ -237,7 +242,15 @@ fun CashierIllustration() {
 }
 
 @Composable
-fun MenuGrid(accentGreen: Color, accentBlue: Color, modifier: Modifier = Modifier) {
+fun MenuGrid(
+    accentGreen: Color,
+    accentBlue: Color,
+    modifier: Modifier = Modifier,
+    onNavigateToPos: () -> Unit,
+    onNavigateToHistory: () -> Unit,
+    onNavigateToReport: () -> Unit,
+    onNavigateToProduct: () -> Unit,
+) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -258,6 +271,7 @@ fun MenuGrid(accentGreen: Color, accentBlue: Color, modifier: Modifier = Modifie
                 backgroundColor = Color.White,
                 contentColor = Color.Black,
                 modifier = Modifier.weight(1f),
+                onClick = onNavigateToPos,
             )
 
             MenuCard(
@@ -266,6 +280,7 @@ fun MenuGrid(accentGreen: Color, accentBlue: Color, modifier: Modifier = Modifie
                 backgroundColor = Color.White,
                 contentColor = Color.Black,
                 modifier = Modifier.weight(1f),
+                onClick = onNavigateToProduct
             )
         }
 
@@ -281,6 +296,7 @@ fun MenuGrid(accentGreen: Color, accentBlue: Color, modifier: Modifier = Modifie
                 backgroundColor = accentGreen,
                 contentColor = Color.White,
                 modifier = Modifier.weight(1f),
+                onClick = onNavigateToReport,
             )
 
             MenuCard(
@@ -289,6 +305,7 @@ fun MenuGrid(accentGreen: Color, accentBlue: Color, modifier: Modifier = Modifie
                 backgroundColor = accentBlue,
                 contentColor = Color.White,
                 modifier = Modifier.weight(1f),
+                onClick = onNavigateToHistory,
             )
         }
     }
@@ -301,6 +318,7 @@ fun MenuCard(
     backgroundColor: Color,
     contentColor: Color,
     modifier: Modifier = Modifier,
+    onClick : () -> Unit,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -313,7 +331,7 @@ fun MenuCard(
             defaultElevation = 4.dp,
         ),
         interactionSource = interactionSource,
-        onClick = {}
+        onClick = { onClick() },
     ) {
         Column(
             modifier = Modifier
@@ -363,6 +381,7 @@ fun PreviewMamaPizzadoHomeScreen() {
             onAction = {},
             onNavigateDetail = {},
             onOpenDrawer = {},
+            onNavigateToPos = {}
         )
     }
 }

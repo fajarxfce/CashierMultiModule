@@ -27,4 +27,5 @@ dependencies {
     implementation(projects.feature.splash.ui)
     implementation(projects.feature.onboarding.ui)
     implementation(projects.feature.login.ui)
+    implementation(projects.feature.pos.ui)
 }

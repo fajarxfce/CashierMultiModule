@@ -53,7 +53,6 @@ fun CashierSearchTextField(
         colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            focusedTextColor = CashierLightGray
         ),
         placeholder = {
             CashierText(

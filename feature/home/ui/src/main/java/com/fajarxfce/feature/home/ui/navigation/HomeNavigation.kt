@@ -16,6 +16,7 @@ fun NavGraphBuilder.homeScreen(
     onNavigateSearch: () -> Unit,
     onNavigateDetail: (Int) -> Unit,
     onNavigateDetailWithArgs: () -> Unit,
+    onNavigateToPos: () -> Unit,
     onOpenDrawer: () -> Unit,
 ) {
     composable<Home> {
@@ -27,6 +28,7 @@ fun NavGraphBuilder.homeScreen(
             uiEffect = uiEffect,
             onAction = viewModel::onAction,
             onNavigateDetail = onNavigateDetail,
+            onNavigateToPos = onNavigateToPos,
             onOpenDrawer = onOpenDrawer
         )
     }
