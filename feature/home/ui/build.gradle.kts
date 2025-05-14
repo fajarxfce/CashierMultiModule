@@ -9,4 +9,5 @@ android {
 
 dependencies {
     implementation(projects.feature.home.domain)
+    implementation("androidx.compose.material:material:1.9.0-alpha01")
 }
