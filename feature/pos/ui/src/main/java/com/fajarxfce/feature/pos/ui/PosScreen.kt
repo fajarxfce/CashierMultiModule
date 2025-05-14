@@ -1,30 +1,46 @@
 package com.fajarxfce.feature.pos.ui
 
+import android.R
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +55,9 @@ import com.fajarxfce.core.ui.theme.AppTheme
 import com.fajarxfce.core.ui.theme.CashierGray
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PosScreen(
     modifier: Modifier = Modifier,
@@ -49,6 +67,10 @@ internal fun PosScreen(
     onNavigateBack: () -> Unit,
     onNavigateDetail: (Int) -> Unit,
 ) {
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             BaseTopAppBar(
@@ -57,12 +79,169 @@ internal fun PosScreen(
             )
         },
     ) { innerPadding ->
-        PosContent(modifier = Modifier.padding(innerPadding))
+        PosContent(
+            modifier = Modifier.padding(innerPadding),
+            onClick = { showBottomSheet = true },
+        )
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    showBottomSheet = false
+                },
+                sheetState = sheetState,
+                containerColor = Color.White
+            ) {
+                BottomSheetContent(
+                )
+            }
+        }
     }
 }
 
 @Composable
-fun PosContent(modifier: Modifier = Modifier) {
+fun BottomSheetContent(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // Square image with rounded corners
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f) // Make it square
+                .clip(RoundedCornerShape(16.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                modifier = Modifier.fillMaxSize(),
+                painter = painterResource(com.fajarxfce.core.ui.R.drawable.core_ui_ic_launcher_background),
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+        }
+
+        // Product information section
+        Box(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(
+                modifier = Modifier.align(Alignment.TopStart),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                CashierTextBody1(
+                    text = "Indomie Ayam Goreng",
+                    fontSize = 18.sp,
+                )
+
+                Text(
+                    text = "Rp 150.000",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1E88E5)
+                )
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Card(
+                        shape = RoundedCornerShape(8.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color(0xFFE3F2FD)),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+                            text = "Electronics",
+                            fontSize = 12.sp,
+                            color = Color.Gray,
+                        )
+                    }
+
+                    CashierText(
+                        text = "Stock: 25",
+                        fontSize = 12.sp,
+                        color = CashierGray,
+                    )
+                }
+            }
+        }
+
+        // Counter
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            CashierText(text = "Quantity:", fontSize = 16.sp)
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .background(Color.LightGray)
+                        .clickable { /* Decrease quantity */ },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "-",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                CashierText(
+                    text = "1",
+                    fontSize = 16.sp
+                )
+
+                Box(
+                    modifier = Modifier
+                        .size(32.dp)
+                        .clip(CircleShape)
+                        .background(Color(0xFF1E88E5))
+                        .clickable { /* Increase quantity */ },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "+",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
+            }
+        }
+
+        // Button
+        Button(
+            onClick = { /* Add to cart */ },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            CashierText(
+                text = "Add to Cart",
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+fun PosContent(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize(),
@@ -70,13 +249,18 @@ fun PosContent(modifier: Modifier = Modifier) {
         contentPadding = PaddingValues(16.dp),
     ) {
         items(100) {
-            ProductCard()
+            ProductCard(
+                onClick = onClick,
+            )
         }
     }
 }
 
 @Composable
-fun ProductCard(modifier: Modifier = Modifier) {
+fun ProductCard(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
     val interactionSource = remember { MutableInteractionSource() }
 
     Card(
@@ -88,7 +272,7 @@ fun ProductCard(modifier: Modifier = Modifier) {
             defaultElevation = 4.dp,
         ),
         interactionSource = interactionSource,
-        onClick = {  },
+        onClick = { onClick() },
     ) {
         Column(
             modifier = Modifier
@@ -110,7 +294,7 @@ fun ProductCard(modifier: Modifier = Modifier) {
                 ) {
                     // Placeholder for product image
                     Icon(
-                        painter = painterResource(id = android.R.drawable.ic_menu_gallery),
+                        painter = painterResource(id = R.drawable.ic_menu_gallery),
                         contentDescription = "Product Image",
                         modifier = Modifier.size(36.dp),
                         tint = Color.Gray
@@ -179,6 +363,19 @@ private fun PosScreenPreview() {
             onAction = {},
             onNavigateBack = {},
             onNavigateDetail = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun BottomSheetContentPreview() {
+    AppTheme {
+        BottomSheetContent(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .background(Color.White)
         )
     }
 }
