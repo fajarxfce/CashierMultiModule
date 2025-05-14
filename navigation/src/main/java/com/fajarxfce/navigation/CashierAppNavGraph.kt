@@ -26,7 +26,7 @@ fun CashierAppNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Splash,
+        startDestination = Home,
         modifier = modifier,
     ) {
         splashScreen(

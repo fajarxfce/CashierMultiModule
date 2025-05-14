@@ -20,7 +20,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalDrawerSheet
@@ -29,10 +33,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fajarxfce.core.datastore.NiaPreferencesDataSource
 import com.fajarxfce.core.ui.theme.AppTheme
+import com.fajarxfce.core.ui.theme.CashierBlue
 import com.fajarxfce.navigation.CashierAppNavGraph
 import com.fajarxfce.navigation.NavigationItem
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,7 +64,12 @@ class MainActivity : ComponentActivity() {
                 ModalNavigationDrawer(
                     drawerState = drawerState,
                     drawerContent = {
-                        ModalDrawerSheet { /* Drawer content */ }
+                        Box(
+                            modifier = Modifier
+                                .background(CashierBlue)
+                                .width(300.dp)
+                                .fillMaxHeight(),
+                        )
                     },
                     gesturesEnabled = shouldShowDrawer,
                 ) {

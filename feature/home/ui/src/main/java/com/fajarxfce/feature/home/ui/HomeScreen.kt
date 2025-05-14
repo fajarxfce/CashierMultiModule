@@ -2,50 +2,30 @@ package com.fajarxfce.feature.home.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BackdropScaffold
-import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ListItem
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.MenuBook
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForwardIos
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
-import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -53,12 +33,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -66,18 +41,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fajarxfce.core.ui.component.CashierText
 import com.fajarxfce.core.ui.theme.AppTheme
-import com.fajarxfce.core.ui.theme.CashierBackground
 import com.fajarxfce.core.ui.theme.CashierBlue
-import com.fajarxfce.core.ui.theme.CashierGray
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
@@ -97,61 +67,7 @@ internal fun HomeScreen(
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = CashierBlue,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
-                        Column {
-                            Text(
-                                text = "Mama Pizzado",
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                            )
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(
-                                    text = "Outlet 1",
-                                    color = Color.White,
-                                    fontSize = 12.sp,
-                                )
-                                Text(
-                                    text = " > ",
-                                    color = Color.White,
-                                    fontSize = 12.sp,
-                                )
-                                Text(
-                                    text = "Cab.Bandung",
-                                    color = Color.White,
-                                    fontSize = 12.sp,
-                                )
-                            }
-                        }
-                    }
-                },
-                navigationIcon = {
-                    IconButton(onClick = { /* do something */ }) {
-                        Icon(
-                            imageVector = Icons.Filled.Menu,
-                            contentDescription = "Localized description",
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(onClick = { /* do something */ }) {
-                        Icon(
-                            imageVector = Icons.Filled.Refresh,
-                            contentDescription = "Localized description",
-                        )
-                    }
-                },
-                scrollBehavior = scrollBehavior,
-            )
+            TopAppBar()
         },
     ) { innerPadding ->
         Box(
@@ -193,28 +109,20 @@ internal fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopAppBar(primaryBlue: Color) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .background(primaryBlue)
-            .padding(horizontal = 16.dp),
-    ) {
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = { /* Menu Click */ }) {
-                    Icon(
-                        imageVector = Icons.Default.Menu,
-                        contentDescription = "Menu",
-                        tint = Color.White,
-                    )
-                }
+fun TopAppBar() {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    TopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = CashierBlue,
+            titleContentColor = MaterialTheme.colorScheme.primary,
+        ),
+        title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
                 Column {
                     Text(
                         text = "Mama Pizzado",
@@ -241,16 +149,26 @@ fun TopAppBar(primaryBlue: Color) {
                     }
                 }
             }
-
-            IconButton(onClick = { /* Refresh Click */ }) {
+        },
+        navigationIcon = {
+            IconButton(onClick = { /* do something */ }) {
                 Icon(
-                    imageVector = Icons.Outlined.Refresh,
-                    contentDescription = "Refresh",
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Localized description",
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = { /* do something */ }) {
+                Icon(
+                    imageVector = Icons.Filled.Refresh,
+                    contentDescription = "Localized description",
                     tint = Color.White,
                 )
             }
-        }
-    }
+        },
+        scrollBehavior = scrollBehavior,
+    )
 }
 
 @Composable
@@ -379,6 +297,8 @@ fun MenuCard(
     contentColor: Color,
     modifier: Modifier = Modifier,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+
     Card(
         modifier = modifier
             .height(120.dp),
@@ -387,6 +307,8 @@ fun MenuCard(
         elevation = CardDefaults.cardElevation(
             defaultElevation = 4.dp,
         ),
+        interactionSource = interactionSource,
+        onClick = {}
     ) {
         Column(
             modifier = Modifier
