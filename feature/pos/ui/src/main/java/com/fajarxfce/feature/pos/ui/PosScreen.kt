@@ -50,6 +50,7 @@ import com.fajarxfce.core.ui.component.BaseTopAppBar
 import com.fajarxfce.core.ui.component.CashierText
 import com.fajarxfce.core.ui.component.CashierTextBody1
 import com.fajarxfce.core.ui.component.CashierTextH5Text
+import com.fajarxfce.core.ui.component.button.CounterButton
 import com.fajarxfce.core.ui.component.textfield.CashierSearchTextField
 import com.fajarxfce.core.ui.theme.AppTheme
 import com.fajarxfce.core.ui.theme.CashierGray
@@ -91,8 +92,7 @@ internal fun PosScreen(
                 sheetState = sheetState,
                 containerColor = Color.White
             ) {
-                BottomSheetContent(
-                )
+                BottomSheetContent()
             }
         }
     }
@@ -170,56 +170,12 @@ fun BottomSheetContent(modifier: Modifier = Modifier) {
         }
 
         // Counter
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            CashierText(text = "Quantity:", fontSize = 16.sp)
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(Color.LightGray)
-                        .clickable { /* Decrease quantity */ },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "-",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                CashierText(
-                    text = "1",
-                    fontSize = 16.sp
-                )
-
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(Color(0xFF1E88E5))
-                        .clickable { /* Increase quantity */ },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "+",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                }
-            }
-        }
+        CounterButton(
+            modifier = Modifier.align(Alignment.CenterHorizontally).height(70.dp).width(140.dp),
+            count = 1,
+            onIncrement = { /* Increment */ },
+            onDecrement = { /* Decrement */ }
+        )
 
         // Button
         Button(
@@ -367,15 +323,10 @@ private fun PosScreenPreview() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun BottomSheetContentPreview() {
     AppTheme {
-        BottomSheetContent(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .background(Color.White)
-        )
+        BottomSheetContent()
     }
 }
