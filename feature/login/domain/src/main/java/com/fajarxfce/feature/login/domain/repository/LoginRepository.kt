@@ -4,7 +4,7 @@ import com.fajarxfce.core.result.Resource
 
 interface LoginRepository {
     suspend fun login(
-        username: String,
+        email: String,
         password: String
     ): Resource<Unit>
 }

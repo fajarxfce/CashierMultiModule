@@ -11,8 +11,8 @@ class AuthorizationException(message: String) :
 class NotFoundException(message: String) :
     BaseException(message.ifEmpty { "The requested resource could not be found." })
 
-class UnknownException(message: String) :
+class UnknownException(message: String = "") :
     BaseException(message.ifEmpty { "An unknown error occurred, please try again later." })
 
-class NetworkException(message: String) :
+class NetworkException(message: String = "") :
     BaseException(message.ifEmpty { "Please check your internet connection." })
