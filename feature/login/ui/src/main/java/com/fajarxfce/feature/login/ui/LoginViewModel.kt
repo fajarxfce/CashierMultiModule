@@ -38,17 +38,13 @@ internal class LoginViewModel @Inject constructor(
                     // Handle forgot password action
                 }
 
-                is LoginContract.UiAction.OnEmailChange -> {
-                    // Handle email change action
-                }
+                is LoginContract.UiAction.OnEmailChange -> updateUiState{ copy(email = action.email) }
 
                 is LoginContract.UiAction.OnSendPasswordResetEmailClick -> {
                     // Handle password change action
                 }
 
-                is LoginContract.UiAction.OnPasswordChange -> {
-                    // Handle password change action
-                }
+                is LoginContract.UiAction.OnPasswordChange -> updateUiState{ copy(password = action.password) }
             }
         }
     }

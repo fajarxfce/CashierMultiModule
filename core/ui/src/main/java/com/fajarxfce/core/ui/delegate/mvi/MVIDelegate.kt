@@ -23,7 +23,7 @@ class MVIDelegate<UiState, UIAction, UiEffect>(
 
     override fun onAction(action: UIAction) = Unit
 
-    override fun updateState(block: UiState.() -> UiState) =
+    override fun updateUiState(block: UiState.() -> UiState) =
         _uiState.update(block)
 
     override suspend fun emitUiEffect(uiEffect: UiEffect) =

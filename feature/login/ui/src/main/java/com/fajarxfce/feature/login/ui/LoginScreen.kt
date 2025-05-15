@@ -14,6 +14,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Password
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
@@ -157,12 +159,15 @@ internal fun LoginContent(
             onValueChange = { onEmailChange(it) },
             placeholder = "Enter your email",
             icon = Icons.Default.Email,
+            keyboardType = KeyboardType.Email
         )
-        PasswordTextFieldCompose(
-            password = uiState.password,
-            onPasswordChange = onPasswordChange,
-            placeholderText = "Enter your password",
-            onImeAction = onLoginClick,
+        Spacer(modifier = Modifier.height(8.dp))
+        CashierTextField(
+            value = uiState.password,
+            onValueChange = { onPasswordChange(it) },
+            placeholder = "Enter your password",
+            icon = Icons.Default.Lock,
+            isPassword = true
         )
         Spacer(modifier = Modifier.height(8.dp))
         CashierText(
