@@ -17,14 +17,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fajarxfce.core.ui.component.CashierText
-import com.fajarxfce.core.ui.theme.AppTheme
 import com.fajarxfce.core.ui.theme.CashierBlue
 import com.fajarxfce.core.ui.theme.CashierBlueDisabled
 
 @Composable
 fun BigActionButtonCompose(
     buttonText: String,
-    onButtonClick: () -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     isEnabled: Boolean = true
 ) {
@@ -46,7 +45,7 @@ fun BigActionButtonCompose(
         color = MaterialTheme.colorScheme.background
     ) {
         Button(
-            onClick = onButtonClick,
+            onClick = onClick,
             shape = RoundedCornerShape(25.dp),
             colors = ButtonDefaults.buttonColors(
                 contentColor = backgroundColor
@@ -79,7 +78,7 @@ private fun BottomButtonSegmentPreview() {
 //    AppTheme {
         BigActionButtonCompose(
             buttonText = "Test Click",
-            onButtonClick = {}
+            onClick = {}
         )
 //    }
 }

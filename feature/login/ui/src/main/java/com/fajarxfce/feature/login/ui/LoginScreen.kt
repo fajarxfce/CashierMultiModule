@@ -1,52 +1,52 @@
 package com.fajarxfce.feature.login.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Password
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.fajarxfce.core.ui.component.CashierStandardTextField
 import com.fajarxfce.core.ui.component.CashierText
 import com.fajarxfce.core.ui.component.CashierTextH5Text
 import com.fajarxfce.core.ui.component.button.BigActionButtonCompose
-import com.fajarxfce.core.ui.component.button.CashierMediumButton
-import com.fajarxfce.core.ui.component.button.PasswordTextFieldCompose
+import com.fajarxfce.core.ui.component.dialog.CashierDialog
 import com.fajarxfce.core.ui.component.textfield.CashierTextField
 import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import com.fajarxfce.core.ui.extension.noRippleClickable
 import com.fajarxfce.core.ui.theme.AppTheme
+import com.fajarxfce.core.ui.theme.CashierBlue
 import com.fajarxfce.core.ui.theme.CashierGray
-import com.fajarxfce.core.ui.theme.CashierGreySuit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -106,24 +106,35 @@ internal fun LoginScreen(
     }
 
     if (uiState.dialogState != null) {
-//        CashierDialog(
-//            message = uiState.dialogState.message,
-//            isSuccess = uiState.dialogState.isSuccess,
-//            onDismissRequest = {
-//                if (uiState.dialogState.isSuccess == true){
-//                    onAction(LoginContract.UiAction.OnDialogDismiss)
-//                } else {
-//                    onAction(LoginContract.UiAction.OnDialogDismiss)
-//                }
-//            }
-//        )
+        CashierDialog(
+            onDismissRequest = {
+                if (uiState.dialogState.isSuccess == true) {
+                    onAction(LoginContract.UiAction.OnDialogDismiss)
+                } else {
+                    onAction(LoginContract.UiAction.OnDialogDismiss)
+                }
+            },
+            isSuccess = uiState.dialogState.isSuccess,
+            onConfirm = { onAction(LoginContract.UiAction.OnDialogDismiss) },
+        )
     }
 
     if (uiState.isLoading) {
-//        CashierLoading(
-//            modifier = Modifier
-//                .fillMaxSize()
-//        )
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f))
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                ) {},
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator(
+                color = CashierBlue,
+                strokeCap = StrokeCap.Round,
+            )
+        }
     }
 }
 
@@ -159,7 +170,7 @@ internal fun LoginContent(
             onValueChange = { onEmailChange(it) },
             placeholder = "Enter your email",
             icon = Icons.Default.Email,
-            keyboardType = KeyboardType.Email
+            keyboardType = KeyboardType.Email,
         )
         Spacer(modifier = Modifier.height(8.dp))
         CashierTextField(
@@ -167,7 +178,7 @@ internal fun LoginContent(
             onValueChange = { onPasswordChange(it) },
             placeholder = "Enter your password",
             icon = Icons.Default.Lock,
-            isPassword = true
+            isPassword = true,
         )
         Spacer(modifier = Modifier.height(8.dp))
         CashierText(
@@ -180,8 +191,7 @@ internal fun LoginContent(
         Spacer(modifier = Modifier.height(34.dp))
         BigActionButtonCompose(
             buttonText = "Sign In",
-            onButtonClick = onLoginClick,
-            isEnabled = !uiState.isLoading,
+            onClick = onLoginClick,
         )
     }
 }

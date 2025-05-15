@@ -2,9 +2,11 @@ package com.fajarxfce.feature.login.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fajarxfce.core.ui.component.DialogState
 import com.fajarxfce.core.ui.delegate.mvi.MVI
 import com.fajarxfce.core.ui.delegate.mvi.mvi
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,7 +18,7 @@ internal class LoginViewModel @Inject constructor(
     override fun onAction(action: LoginContract.UiAction) {
         viewModelScope.launch {
             when (action) {
-                is LoginContract.UiAction.OnLoginClick -> emitUiEffect(LoginContract.UiEffect.NavigateToHome)
+                is LoginContract.UiAction.OnLoginClick -> login()
 
                 is LoginContract.UiAction.OnRegisterClick -> {
                     // Handle register action
@@ -26,9 +28,7 @@ internal class LoginViewModel @Inject constructor(
                     // Handle navigate back action
                 }
 
-                is LoginContract.UiAction.OnDialogDismiss -> {
-                    // Handle error dismiss action
-                }
+                is LoginContract.UiAction.OnDialogDismiss -> updateUiState { copy(dialogState = null) }
 
                 is LoginContract.UiAction.OnForgotPasswordSheetDismiss -> {
                     // Handle error confirm action
@@ -38,14 +38,30 @@ internal class LoginViewModel @Inject constructor(
                     // Handle forgot password action
                 }
 
-                is LoginContract.UiAction.OnEmailChange -> updateUiState{ copy(email = action.email) }
+                is LoginContract.UiAction.OnEmailChange -> updateUiState { copy(email = action.email) }
 
                 is LoginContract.UiAction.OnSendPasswordResetEmailClick -> {
                     // Handle password change action
                 }
 
-                is LoginContract.UiAction.OnPasswordChange -> updateUiState{ copy(password = action.password) }
+                is LoginContract.UiAction.OnPasswordChange -> updateUiState { copy(password = action.password) }
             }
         }
     }
+
+    private fun login() =
+        viewModelScope.launch {
+            updateUiState { copy(isLoading = true) }
+            delay(3000)
+            updateUiState {
+                copy(
+                    isLoading = false,
+                    dialogState = DialogState(
+                        message = "Login Success",
+                        isSuccess = true,
+                    ),
+                )
+            }
+        }
+
 }
