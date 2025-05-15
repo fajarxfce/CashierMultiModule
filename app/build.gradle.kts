@@ -76,6 +76,8 @@ dependencies {
     implementation(projects.core.datastore)
     implementation(projects.core.ui)
 
+    implementation(projects.feature.login.data)
+
     implementation(libs.timber)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)

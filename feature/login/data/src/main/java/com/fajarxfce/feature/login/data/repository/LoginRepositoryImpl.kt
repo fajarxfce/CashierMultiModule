@@ -9,11 +9,11 @@ import com.fajarxfce.core.result.onSuccess
 import com.fajarxfce.feature.login.data.model.LoginRequest
 import com.fajarxfce.feature.login.data.source.LoginApi
 import com.fajarxfce.feature.login.domain.repository.LoginRepository
-import jakarta.inject.Inject
+import javax.inject.Inject
 
 internal class LoginRepositoryImpl @Inject constructor(
     private val api: LoginApi,
-    private val preferencesDataSource: NiaPreferencesDataSource
+//    private val preferencesDataSource: NiaPreferencesDataSource
 ) : LoginRepository{
     override suspend fun login(
         email: String,
@@ -24,7 +24,7 @@ internal class LoginRepositoryImpl @Inject constructor(
             password = password,
         )
         return safeApiCall { api.login(request) }.onSuccess {
-            preferencesDataSource.setAuthToken(token = it.data?.token.orEmpty())
+//            preferencesDataSource.setAuthToken(token = it.data?.token.orEmpty())
         }.map {
             it.message.orEmpty()
         }

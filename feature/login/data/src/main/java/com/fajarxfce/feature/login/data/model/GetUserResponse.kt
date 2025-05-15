@@ -2,7 +2,7 @@ package com.fajarxfce.feature.login.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class GetUserResponse(
+internal data class GetUserResponse(
 
 	@field:SerializedName("updated_at")
 	val updatedAt: String? = null,

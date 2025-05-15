@@ -2,9 +2,11 @@ package com.fajarxfce.feature.login.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fajarxfce.core.result.fold
 import com.fajarxfce.core.ui.component.DialogState
 import com.fajarxfce.core.ui.delegate.mvi.MVI
 import com.fajarxfce.core.ui.delegate.mvi.mvi
+import com.fajarxfce.feature.login.domain.usecase.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -12,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 internal class LoginViewModel @Inject constructor(
-
+    private val loginUseCase: LoginUseCase
 ) : ViewModel(),
     MVI<LoginContract.UiState, LoginContract.UiAction, LoginContract.UiEffect> by mvi(initialState = LoginContract.UiState()) {
     override fun onAction(action: LoginContract.UiAction) {
@@ -52,16 +54,20 @@ internal class LoginViewModel @Inject constructor(
     private fun login() =
         viewModelScope.launch {
             updateUiState { copy(isLoading = true) }
-            delay(3000)
-            updateUiState {
-                copy(
-                    isLoading = false,
-                    dialogState = DialogState(
-                        message = "Login Success",
-                        isSuccess = true,
-                    ),
-                )
-            }
+            loginUseCase(
+                email = currentUiState.email,
+                password = currentUiState.password,
+            ).fold(
+                onSuccess = { emitUiEffect(LoginContract.UiEffect.NavigateToHome)},
+                onFailure = { updateUiState {
+                    copy(
+                        dialogState = DialogState(
+                            isSuccess = false,
+                            message = it.message ?: "Login failed",
+                        )
+                    )
+                } }
+            )
         }
 
 }

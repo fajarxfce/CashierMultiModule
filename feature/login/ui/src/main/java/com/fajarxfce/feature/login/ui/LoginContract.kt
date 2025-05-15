@@ -5,8 +5,8 @@ import com.fajarxfce.core.ui.component.DialogState
 internal object LoginContract {
     data class UiState(
         val isLoading: Boolean = false,
-        val email: String = "",
-        val password: String = "",
+        val email: String = "admin@admin.com",
+        val password: String = "password",
         val dialogState : DialogState? = null,
         val isForgotPasswordSheetOpen: Boolean = false,
     )
