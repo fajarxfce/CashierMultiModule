@@ -54,6 +54,7 @@ import com.fajarxfce.core.ui.component.button.CounterButton
 import com.fajarxfce.core.ui.component.textfield.CashierSearchTextField
 import com.fajarxfce.core.ui.theme.AppTheme
 import com.fajarxfce.core.ui.theme.CashierGray
+import com.fajarxfce.feature.pos.domain.model.Product
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -83,6 +84,7 @@ internal fun PosScreen(
         PosContent(
             modifier = Modifier.padding(innerPadding),
             onClick = { showBottomSheet = true },
+            uiState = uiState
         )
         if (showBottomSheet) {
             ModalBottomSheet(
@@ -194,9 +196,10 @@ fun BottomSheetContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun PosContent(
+internal fun PosContent(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    uiState: PosContract.UiState,
 ) {
     LazyColumn(
         modifier = modifier
@@ -204,9 +207,10 @@ fun PosContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(16.dp),
     ) {
-        items(100) {
+        items(uiState.products) {
             ProductCard(
                 onClick = onClick,
+                product = it
             )
         }
     }
@@ -216,6 +220,7 @@ fun PosContent(
 fun ProductCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    product: Product
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -269,11 +274,11 @@ fun ProductCard(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         CashierTextBody1(
-                            text = "Indomie Ayam Goreng",
+                            text = product.name,
                             fontSize = 16.sp,
                         )
                         Text(
-                            text = "Rp 150.000",
+                            text = product.price.toString(),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             color = Color(0xFF1E88E5)

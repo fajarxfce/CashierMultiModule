@@ -8,6 +8,6 @@ android {
 }
 
 dependencies {
-    implementation(projects.feature.home.domain)
+    implementation(projects.feature.pos.domain)
     implementation(libs.androidx.material)
 }
