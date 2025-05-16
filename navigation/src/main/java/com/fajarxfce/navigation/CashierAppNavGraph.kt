@@ -1,5 +1,6 @@
 package com.fajarxfce.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -30,8 +31,12 @@ fun CashierAppNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Login,
+        startDestination = Splash,
         modifier = modifier,
+        enterTransition = { slideIntoContainer(
+            towards = AnimatedContentTransitionScope.SlideDirection.Companion.Left,
+            animationSpec = tween(700)
+        ) },
     ) {
         splashScreen(
             onNavigateToHome = { },

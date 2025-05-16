@@ -55,7 +55,7 @@ fun BaseTopAppBar(
         },
         navigationIcon = {
             TextButton(
-                modifier = Modifier.padding(start = 14.dp),
+//                modifier = Modifier.padding(start = 14.dp),
 //                colors = ButtonDefaults.buttonColors(
 //                    contentColor = backgroundColor
 //                ),

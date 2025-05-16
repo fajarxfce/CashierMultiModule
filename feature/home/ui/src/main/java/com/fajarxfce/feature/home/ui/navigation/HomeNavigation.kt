@@ -1,5 +1,12 @@
 package com.fajarxfce.feature.home.ui.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.EaseInOutCubic
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,7 +26,17 @@ fun NavGraphBuilder.homeScreen(
     onNavigateToPos: () -> Unit,
     onOpenDrawer: () -> Unit,
 ) {
-    composable<Home> {
+    composable<Home>(
+        enterTransition = {
+            return@composable fadeIn(tween(1000))
+        }, exitTransition = {
+            return@composable fadeOut(tween(700))
+        }, popEnterTransition = {
+            return@composable slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.End, tween(700)
+            )
+        }
+    ) {
         val viewModel: HomeViewModel = hiltViewModel()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         val uiEffect = viewModel.uiEffect

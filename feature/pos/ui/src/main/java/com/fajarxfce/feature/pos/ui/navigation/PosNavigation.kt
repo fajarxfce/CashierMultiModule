@@ -1,5 +1,12 @@
 package com.fajarxfce.feature.pos.ui.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.EaseInOutCubic
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -15,7 +22,7 @@ fun NavGraphBuilder.posScreen(
     onNavigateBack: () -> Unit,
     onNavigateDetail: (Int) -> Unit,
 ){
-    composable<Pos> {
+    composable<Pos>{
         val viewModel = hiltViewModel<PosViewModel>()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         val uiEffect = viewModel.uiEffect

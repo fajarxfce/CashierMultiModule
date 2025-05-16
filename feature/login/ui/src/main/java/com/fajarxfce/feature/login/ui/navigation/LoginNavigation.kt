@@ -26,32 +26,7 @@ fun NavGraphBuilder.loginScreen(
     onNavigateBack: () -> Unit = {},
     onNavigateToRegister: () -> Unit = {},
 ) {
-    composable<Login>(
-        enterTransition = {
-            slideInHorizontally(
-                initialOffsetX = { it },
-                animationSpec = tween(500, easing = EaseInOutCubic)
-            ) + fadeIn(animationSpec = tween(500))
-        },
-        exitTransition = {
-            slideOutHorizontally(
-                targetOffsetX = { it },
-                animationSpec = tween(500, easing = EaseInOutCubic)
-            ) + fadeOut(animationSpec = tween(300))
-        },
-        popEnterTransition = {
-            slideInHorizontally(
-                initialOffsetX = { it },
-                animationSpec = tween(500, easing = EaseInOutCubic)
-            ) + fadeIn(animationSpec = tween(500))
-        },
-        popExitTransition = {
-            slideOutHorizontally(
-                targetOffsetX = { -it },
-                animationSpec = tween(500, easing = EaseInOutCubic)
-            ) + fadeOut(animationSpec = tween(300))
-        }
-    ) {
+    composable<Login> {
         val viewModel = hiltViewModel<LoginViewModel>()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         val uiEffect = viewModel.uiEffect

@@ -25,32 +25,7 @@ import kotlinx.serialization.Serializable
 fun NavGraphBuilder.onBoardingScreen(
     onNavigateToLogin: () -> Unit,
 ) {
-    composable<OnBoarding>(
-        enterTransition = {
-            slideInHorizontally(
-                initialOffsetX = { it },
-                animationSpec = tween(500, easing = EaseInOutCubic)
-            ) + fadeIn(animationSpec = tween(500))
-        },
-        exitTransition = {
-            slideOutHorizontally(
-                targetOffsetX = { it },
-                animationSpec = tween(500, easing = EaseInOutCubic)
-            ) + fadeOut(animationSpec = tween(300))
-        },
-        popEnterTransition = {
-            slideInHorizontally(
-                initialOffsetX = { it },
-                animationSpec = tween(500, easing = EaseInOutCubic)
-            ) + fadeIn(animationSpec = tween(500))
-        },
-        popExitTransition = {
-            slideOutHorizontally(
-                targetOffsetX = { -it },
-                animationSpec = tween(500, easing = EaseInOutCubic)
-            ) + fadeOut(animationSpec = tween(300))
-        }
-    ) {
+    composable<OnBoarding> {
         val viewModel = hiltViewModel<OnBoardingViewModel>()
         val uiEffect = viewModel.uiEffect
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
