@@ -20,7 +20,7 @@ suspend fun <T : Any> safeApiCall(apiToBeCalled: suspend () -> T): Resource<T> {
             Resource.Success(apiToBeCalled())
         } catch (e: HttpException) {
             val message = Json.parseToJsonElement(
-                e.response()?.errorBody()?.toString().orEmpty()
+                e.response()?.errorBody()?.string().orEmpty()
             ).jsonObject["message"]?.jsonPrimitive?.content.orEmpty().ifEmpty {
                 "An unknown error occurred, please try again later."
             }

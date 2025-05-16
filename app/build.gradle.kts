@@ -77,6 +77,7 @@ dependencies {
     implementation(projects.core.ui)
 
     implementation(projects.feature.login.data)
+    implementation(projects.feature.splash.data)
 
     implementation(libs.timber)
     implementation(libs.androidx.activity.compose)
