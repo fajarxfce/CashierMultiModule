@@ -6,6 +6,9 @@ plugins {
 }
 
 android {
+    defaultConfig {
+        consumerProguardFiles("consumer-rules.pro")
+    }
     namespace = "com.fajarxfce.feature.splash.data"
 }
 

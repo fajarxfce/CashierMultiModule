@@ -17,6 +17,7 @@
 package com.fajarxfce.apps
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -51,6 +52,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.fajarxfce.core.datastore.NiaPreferencesDataSource
@@ -70,13 +72,18 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     @Inject
     lateinit var niaPreferencesDataSource: NiaPreferencesDataSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        lifecycleScope.launch {
+            Log.d("MainActivity", "onCreate: ${niaPreferencesDataSource.userData.collect { 
+                Log.d("MainActivity", "onCreate: $it")
+
+            } ?: "null"}")
+        }
         setContent {
 
             val appState = rememberAppState()
@@ -107,7 +114,12 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier
                                     .background(
                                         color = CashierBlue,
-                                        shape = androidx.compose.foundation.shape.RoundedCornerShape(0.dp, 0.dp, 16.dp, 16.dp)
+                                        shape = androidx.compose.foundation.shape.RoundedCornerShape(
+                                            0.dp,
+                                            0.dp,
+                                            16.dp,
+                                            16.dp
+                                        )
                                     )
                                     .fillMaxWidth()
                                     .height(120.dp)

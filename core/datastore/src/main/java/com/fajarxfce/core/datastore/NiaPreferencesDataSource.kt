@@ -213,13 +213,13 @@ class NiaPreferencesDataSource @Inject constructor(
             Log.e("NiaPreferences", "Failed to update login state", ioException)
         }
     }
-    suspend fun setAuthToken(token: String) {
+    suspend fun setAuthToken(token: String?) {
         try {
             userPreferences.updateData {
                 it.copy {
 //                    this.authToken = token
                     // When saving token, we're logged in
-                    this.token = token
+                    this.token = token.orEmpty()
                 }
             }
         } catch (ioException: IOException) {
