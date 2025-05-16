@@ -39,7 +39,15 @@ fun CashierAppNavGraph(
         ) },
     ) {
         splashScreen(
-            onNavigateToHome = { },
+            onNavigateToHome = {
+                navController.apply {
+                    navigate(Home) {
+                        popUpTo(Splash) {
+                            inclusive = true
+                        }
+                    }
+                }
+            },
             onNavigateToWelcome = {
                 navController.apply {
                     navigate(OnBoarding) {

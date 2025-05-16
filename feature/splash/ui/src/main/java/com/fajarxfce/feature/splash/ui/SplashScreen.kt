@@ -47,6 +47,7 @@ internal fun SplashScreen(
     onNavigateToHome: () -> Unit,
 ) {
     uiEffect.collectWithLifecycle { effect ->
+        Log.d("SplashScreen", "Ui Effect: $effect")
         when (effect) {
             SplashContract.UiEffect.NavigateWelcome -> onNavigateToWelcome()
             SplashContract.UiEffect.NavigateHome -> onNavigateToHome()
