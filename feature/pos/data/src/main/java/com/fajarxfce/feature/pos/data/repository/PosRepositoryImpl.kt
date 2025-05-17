@@ -16,59 +16,17 @@ internal class PosRepositoryImpl @Inject constructor(
     override suspend fun getAllProduct(): Resource<List<Product>> {
         return safeApiCall { api.getProducts(
             token = "Bearer ${niaPreferencesDataSource.getAuthToken()}"
-        ) }.map {
-            listOf(
-                Product(
-                    id = 1,
-                    name = "Product 1",
-                    description = "",
-                    price = 2222.0,
-                    imageUrl = "",
-                ),
-                Product(
-                    id = 2,
-                    name = "Product 2",
-                    description = "",
-                    price = 2222.0,
-                    imageUrl = "",
-                ),
-                Product(
-                    id = 3,
-                    name = "Product 3",
-                    description = "",
-                    price = 2222.0,
-                    imageUrl = "",
-                ),
-                Product(
-                    id = 4,
-                    name = "Product 4",
-                    description = "",
-                    price = 2222.0,
-                    imageUrl = "",
-                ),
-                Product(
-                    id = 5,
-                    name = "Product 5",
-                    description = "",
-                    price = 2222.0,
-                    imageUrl = "",
-                ),
-                Product(
-                    id = 6,
-                    name = "Product 6",
-                    description = "",
-                    price = 2222.0,
-                    imageUrl = "",
-                ),
-                Product(
-                    id = 7,
-                    name = "Product 7",
-                    description = "",
-                    price = 2222.0,
-                    imageUrl = "",
-                )
-            )
-
-        }
+        ) }
+            .map { response ->
+                response.data?.data?.map { product ->
+                    Product(
+                        id = product?.id,
+                        name = product?.name,
+                        price = product?.price,
+                        imageUrl = product?.updatedAt,
+                        description = product?.description
+                    )
+                } ?: (emptyList())
+            }
     }
 }

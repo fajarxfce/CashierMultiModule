@@ -274,7 +274,7 @@ fun ProductCard(
                         verticalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
                         CashierTextBody1(
-                            text = product.name,
+                            text = product.name.orEmpty(),
                             fontSize = 16.sp,
                         )
                         Text(
