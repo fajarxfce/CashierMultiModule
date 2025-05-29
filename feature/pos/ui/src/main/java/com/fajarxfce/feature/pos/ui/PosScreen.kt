@@ -1,6 +1,7 @@
 package com.fajarxfce.feature.pos.ui
 
 
+import androidx.activity.result.launch
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,14 +33,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,11 +71,14 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fajarxfce.core.ui.component.BaseTopAppBar
 import com.fajarxfce.core.ui.component.textfield.CashierSearchTextField
+import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import com.fajarxfce.core.ui.theme.CashierBlue
 import com.fajarxfce.feature.pos.domain.model.Product
+import com.fajarxfce.feature.pos.ui.component.CustomProductDetailBottomSheet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,6 +90,42 @@ internal fun PosScreen(
 ) {
     val pagingItems: LazyPagingItems<Product> = uiState.productsFlow.collectAsLazyPagingItems()
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+    val modalSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    )
+    var showBottomSheet by rememberSaveable { mutableStateOf(false) }
+    var selectedProduct by remember { mutableStateOf<Product?>(null) }
+
+    uiEffect.collectWithLifecycle { effect ->
+        when (effect) {
+            is PosContract.UiEffect.ShowProductDetails -> {
+                selectedProduct = effect.product
+                showBottomSheet = true
+            }
+
+            is PosContract.UiEffect.HideProductDetailsSheet -> {
+                scope.launch {
+                    modalSheetState.hide()
+                }.invokeOnCompletion {
+                    if (!modalSheetState.isVisible) {
+                        showBottomSheet = false
+                        selectedProduct = null
+                    }
+                }
+            }
+
+            is PosContract.UiEffect.ShowSnackbar -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = effect.message,
+                        withDismissAction = true, // Atau sesuaikan
+                        duration = if (effect.isError) SnackbarDuration.Long else SnackbarDuration.Short,
+                    )
+                }
+            }
+        }
+    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -91,19 +140,34 @@ internal fun PosScreen(
             PosContent(
                 modifier = Modifier.padding(paddingValues),
                 pagingItems = pagingItems,
-                onProductClick = { productId ->
-                    onAction(PosContract.UiAction.OnProductClick(productId))
+                onProductClick = { product ->
+                    onAction(PosContract.UiAction.OnProductItemClick(product))
                 },
             )
         },
     )
+
+    if (showBottomSheet && selectedProduct != null) {
+        CustomProductDetailBottomSheet(
+            product = selectedProduct!!,
+            sheetState = modalSheetState,
+            onDismiss = {
+                showBottomSheet = false
+                selectedProduct = null
+            },
+            onAddToCart = { product, quantity ->
+                onAction(PosContract.UiAction.OnAddToCartFromDetail(product, quantity))
+                 showBottomSheet = false
+            },
+        )
+    }
 }
 
 @Composable
 private fun PosContent(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<Product>,
-    onProductClick: (Int) -> Unit,
+    onProductClick: (Product) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -138,7 +202,7 @@ private fun PosContent(
                     if (product != null) {
                         ProductItemCard(
                             product = product,
-                            onClick = { product.id?.let { onProductClick(it) } },
+                            onClick = { product.id?.let { onProductClick(product) } },
                         )
                     } else {
                         Spacer(

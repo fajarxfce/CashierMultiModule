@@ -25,58 +25,54 @@ internal class PosViewModel @Inject constructor(
 ) : ViewModel(),
     MVI<PosContract.UiState, PosContract.UiAction, PosContract.UiEffect> by mvi(
         initialState = PosContract.UiState(
-            // Biarkan kosong atau dengan emptyFlow() di sini
             productsFlow = emptyFlow()
         )
     ) {
 
     private val currentSearchQuery = MutableStateFlow<String?>(null)
 
-    // Flow untuk pencarian (jika ada)
     @OptIn(FlowPreview::class)
     private val productsBasedOnSearch: Flow<PagingData<Product>> = currentSearchQuery
         .debounce(300)
         .distinctUntilChanged()
         .flatMapLatest { query ->
-            getProductPagingUseCase(query = query).cachedIn(viewModelScope) // cache di sini
+            getProductPagingUseCase(query = query).cachedIn(viewModelScope)
         }
-    // Tidak perlu .cachedIn(viewModelScope) lagi di sini jika sudah di flatMapLatest
 
     init {
-        // Aliran utama data produk
-        val initialProductsFlow = getProductPagingUseCase() // Tanpa query awal
-            .cachedIn(viewModelScope) // Panggil cachedIn di sini
+        val initialProductsFlow = getProductPagingUseCase()
+            .cachedIn(viewModelScope)
 
-        // Update UiState dengan flow awal
         initialProductsFlow
             .onEach { pagingData ->
-                Timber.d("PagingData received: $pagingData")
                 updateUiState { copy(productsFlow = flowOf(pagingData)) }
             }
-            .launchIn(viewModelScope) // Atau langsung assign jika UiState.productsFlow adalah Flow<PagingData<Product>>
+            .launchIn(viewModelScope)
 
-        // Jika Anda ingin productsBasedOnSearch juga mengupdate UiState.productsFlow
         productsBasedOnSearch
             .onEach { pagingData ->
-                Timber.d("PagingData received: $pagingData")
                 updateUiState { copy(productsFlow = flowOf(pagingData)) }
             }
             .launchIn(viewModelScope)
     }
 
     override fun onAction(uiAction: PosContract.UiAction) {
-        when (uiAction) {
-            PosContract.UiAction.OnSearchClick -> { /* ... */ }
-            is PosContract.UiAction.OnSearchQueryChanged -> {
-                updateUiState { copy(searchText = uiAction.query) }
-                currentSearchQuery.value = uiAction.query.takeIf { it.isNotBlank() }
+        viewModelScope.launch {
+            when (uiAction) {
+                is PosContract.UiAction.LoadProducts -> {}
+                is PosContract.UiAction.OnProductItemClick -> {
+                    viewModelScope.launch {
+                        emitUiEffect(PosContract.UiEffect.ShowProductDetails(uiAction.product))
+                    }
+                }
+                is PosContract.UiAction.OnAddToCartFromDetail -> {
+                    insertProductToCart(uiAction.product, uiAction.quantity)
+                }
             }
-            PosContract.UiAction.RetryLoad -> { /* ... */ }
-            is PosContract.UiAction.OnProductClick -> insertProductToCart()
         }
     }
 
-    private fun insertProductToCart() = viewModelScope.launch {
-        insertProductToCartUseCase(1,2)
+    private fun insertProductToCart(product: Product, quantity: Int) = viewModelScope.launch {
+        insertProductToCartUseCase(product.id!!,quantity)
     }
 }
