@@ -10,6 +10,6 @@ import com.fajarxfce.core.database.entity.CartEntity
 interface CartDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(cartEntity: CartEntity)
-    @Query("UPDATE carts SET quantity = :quantity WHERE productId = :productId")
-    suspend fun updateQuantity(productId: Int, quantity: Int)
+    @Query("UPDATE carts SET quantity = :quantity + quantity WHERE productId = :productId")
+    suspend fun  increaseQuantity(productId: Int, quantity: Int)
 }

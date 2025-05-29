@@ -20,6 +20,20 @@ class CartRepositoryImpl @Inject constructor(
             Resource.Error(BaseException("Product already in cart"))
         } catch (e: Exception){
             Resource.Error(BaseException(e.message ?: "Unknown error"))
+        }
+    }
+
+    override suspend fun increaseQuantity(
+        productId: Int,
+        quantity: Int,
+    ): Resource<Unit> {
+        return try {
+            cartDao.increaseQuantity(productId, quantity)
+            Resource.Success(Unit)
+        } catch (e: SQLiteConstraintException){
+            Resource.Error(BaseException("Failed to increase quantity"))
+        } catch (e: Exception){
+            Resource.Error(BaseException(e.message ?: "Unknown error"))
 
         }
     }

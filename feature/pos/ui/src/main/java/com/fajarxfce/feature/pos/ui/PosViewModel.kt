@@ -8,6 +8,7 @@ import com.fajarxfce.core.ui.delegate.mvi.MVI
 import com.fajarxfce.core.ui.delegate.mvi.mvi
 import com.fajarxfce.feature.pos.domain.model.Product
 import com.fajarxfce.feature.pos.domain.usecase.GetProductPagingUseCase
+import com.fajarxfce.feature.pos.domain.usecase.IncreaseQuantityUseCase
 import com.fajarxfce.feature.pos.domain.usecase.InsertProductToCartUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,6 +23,7 @@ import javax.inject.Inject
 internal class PosViewModel @Inject constructor(
     private val getProductPagingUseCase: GetProductPagingUseCase,
     private val insertProductToCartUseCase: InsertProductToCartUseCase,
+    private val increaseQuantityUseCase: IncreaseQuantityUseCase,
 ) : ViewModel(),
     MVI<PosContract.UiState, PosContract.UiAction, PosContract.UiEffect> by mvi(
         initialState = PosContract.UiState(
@@ -66,7 +68,7 @@ internal class PosViewModel @Inject constructor(
                     }
                 }
                 is PosContract.UiAction.OnAddToCartFromDetail -> {
-                    insertProductToCart(uiAction.product, uiAction.quantity)
+                    increaseProductQuantity(uiAction.product.id!!, uiAction.quantity)
                 }
             }
         }
@@ -74,5 +76,8 @@ internal class PosViewModel @Inject constructor(
 
     private fun insertProductToCart(product: Product, quantity: Int) = viewModelScope.launch {
         insertProductToCartUseCase(product.id!!,quantity)
+    }
+    private fun increaseProductQuantity(productId: Int, quantity: Int) = viewModelScope.launch {
+        increaseQuantityUseCase(productId, quantity)
     }
 }
