@@ -28,4 +28,5 @@ dependencies {
     implementation(projects.feature.onboarding.ui)
     implementation(projects.feature.login.ui)
     implementation(projects.feature.pos.ui)
+    implementation(projects.feature.transactionHistory.ui)
 }

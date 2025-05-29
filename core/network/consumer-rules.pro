@@ -1,1 +1,2 @@
 -keep class com.fajarxfce.core.network.response.** { *; }
+-keep class com.fajarxfce.core.network.model.** { *; }

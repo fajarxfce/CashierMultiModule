@@ -21,6 +21,7 @@ import com.fajarxfce.feature.pos.ui.navigation.Pos
 import com.fajarxfce.feature.pos.ui.navigation.posScreen
 import com.fajarxfce.feature.splash.ui.navigation.Splash
 import com.fajarxfce.feature.splash.ui.navigation.splashScreen
+import com.fajarxfce.feature.transactionhistory.ui.navigation.transactionHistoryScreen
 
 @Composable
 fun CashierAppNavGraph(
@@ -101,5 +102,7 @@ fun CashierAppNavGraph(
                 }
             }
         )
+
+        transactionHistoryScreen()
     }
 }

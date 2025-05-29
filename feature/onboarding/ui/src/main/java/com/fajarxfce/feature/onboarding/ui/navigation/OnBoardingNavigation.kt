@@ -1,5 +1,6 @@
 package com.fajarxfce.feature.onboarding.ui.navigation
 
+import androidx.annotation.Keep
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -19,7 +20,7 @@ import com.fajarxfce.core.ui.navigation.Screen
 import com.fajarxfce.feature.onboarding.ui.OnBoardingScreen
 import com.fajarxfce.feature.onboarding.ui.OnBoardingViewModel
 import kotlinx.serialization.Serializable
-
+@Keep
 @Serializable data object OnBoarding : Screen
 
 fun NavGraphBuilder.onBoardingScreen(

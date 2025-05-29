@@ -1,5 +1,6 @@
 package com.fajarxfce.feature.home.ui.navigation
 
+import androidx.annotation.Keep
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.tween
@@ -16,7 +17,7 @@ import com.fajarxfce.feature.home.ui.HomeViewModel
 import com.fajarxfce.core.ui.navigation.Screen
 import com.fajarxfce.feature.home.ui.HomeScreen
 import kotlinx.serialization.Serializable
-
+@Keep
 @Serializable data object Home : Screen
 
 fun NavGraphBuilder.homeScreen(

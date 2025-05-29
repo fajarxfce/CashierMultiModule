@@ -1,5 +1,6 @@
 package com.fajarxfce.feature.login.ui.navigation
 
+import androidx.annotation.Keep
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -18,7 +19,7 @@ import androidx.navigation.compose.composable
 import com.fajarxfce.feature.login.ui.LoginScreen
 import com.fajarxfce.feature.login.ui.LoginViewModel
 import kotlinx.serialization.Serializable
-
+@Keep
 @Serializable data object Login
 
 fun NavGraphBuilder.loginScreen(

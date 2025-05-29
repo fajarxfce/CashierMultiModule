@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 internal class LoginRepositoryImpl @Inject constructor(
     private val api: LoginApi,
-    private val preferencesDataSource: NiaPreferencesDataSource
+    private val preferencesDataSource: NiaPreferencesDataSource,
 ) : LoginRepository{
     override suspend fun login(
         email: String,
@@ -26,8 +26,8 @@ internal class LoginRepositoryImpl @Inject constructor(
             password = password,
         )
         return safeApiCall { api.login(request) }.onSuccess {
+            Log.d("LoginRepositoryImpl", "login: ${it}")
             preferencesDataSource.setAuthToken(token = it.data?.token.toString())
-            Log.d("LoginRepositoryImpl", "login: ${preferencesDataSource.getAuthToken()}")
         }.map {
             it.message.orEmpty()
         }

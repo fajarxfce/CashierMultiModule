@@ -1,5 +1,6 @@
 package com.fajarxfce.feature.splash.ui.navigation
 
+import androidx.annotation.Keep
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.tween
@@ -14,7 +15,7 @@ import com.fajarxfce.core.ui.navigation.Screen
 import com.fajarxfce.feature.splash.ui.SplashScreen
 import com.fajarxfce.feature.splash.ui.SplashViewModel
 import kotlinx.serialization.Serializable
-
+@Keep
 @Serializable data object Splash : Screen
 
 fun NavGraphBuilder.splashScreen(
