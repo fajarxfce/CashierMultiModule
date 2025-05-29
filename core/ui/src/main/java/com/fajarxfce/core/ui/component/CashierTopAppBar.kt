@@ -29,7 +29,7 @@ import com.fajarxfce.core.ui.theme.CashierBlue
 @Composable
 fun BaseTopAppBar(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    backgroundColor: Color = Color.White,
     contentColor: Color = contentColorFor(backgroundColor),
     elevation: Dp = 4.dp,
     toolbarTitle: String,

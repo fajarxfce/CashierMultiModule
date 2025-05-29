@@ -1,55 +1,56 @@
 package com.fajarxfce.navigation
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ListAlt
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Inventory2
+import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.People
+import androidx.compose.material.icons.filled.PointOfSale
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.SupportAgent
+import androidx.compose.ui.graphics.vector.ImageVector
 import com.fajarxfce.feature.home.ui.navigation.Home
 import com.fajarxfce.core.ui.navigation.Screen
+import com.fajarxfce.feature.pos.ui.navigation.Pos
 
 sealed class NavigationItem(
     var route: Screen,
-    var title: Int,
-    val selectedIcon: Int,
-    val unselectedIcon: Int,
+    var title: String,
+    val icon : ImageVector
 ) {
     data object HomeScreen : NavigationItem(
         route = Home,
-        title = R.string.navigation_home,
-        selectedIcon = R.drawable.navigation_ic_home_selected,
-        unselectedIcon = R.drawable.navigation_ic_home_unselected
+        title = "Home",
+        icon = Icons.Filled.Home
     )
 
-    data object FavoriteScreen : NavigationItem(
+    data object PointOfSaleScreen : NavigationItem(
         route = Home,
-        title = R.string.navigation_favorites,
-        selectedIcon = R.drawable.navigation_ic_star_selected,
-        unselectedIcon = R.drawable.navigation_ic_star_unselected
+        title = "Point Of Sale",
+        icon = Icons.Filled.Home
     )
 
-    data object LeaderBoardScreen : NavigationItem(
+    data object LogoutScreen : NavigationItem(
         route = Home,
-        title = R.string.navigation_leaderboard,
-        selectedIcon = R.drawable.navigation_ic_leaderboard_selected,
-        unselectedIcon = R.drawable.navigation_ic_leaderboard_unselected
+        title = "Point Of Sale",
+        icon = Icons.Filled.Home
     )
-
-    data object ProfileScreen : NavigationItem(
+    data object CustomersScreen : NavigationItem(
         route = Home,
-        title = R.string.navigation_profile,
-        selectedIcon = R.drawable.navigation_ic_profile_selected,
-        unselectedIcon = R.drawable.navigation_ic_profile_unselected
+        title = "Point Of Sale",
+        icon = Icons.Filled.Home
     )
 
     companion object {
         fun getNavigationRoutes() = listOf(
             HomeScreen.route.getRoute(),
-            FavoriteScreen.route.getRoute(),
-            LeaderBoardScreen.route.getRoute(),
-            ProfileScreen.route.getRoute(),
         )
-        fun getNavigationItems() = listOf(
+        fun getAllNavigationItem() = listOf(
             HomeScreen,
-            FavoriteScreen,
-            LeaderBoardScreen,
-            ProfileScreen
+            PointOfSaleScreen
         )
+
     }
 
 }

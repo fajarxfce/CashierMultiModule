@@ -95,7 +95,11 @@ fun CashierAppNavGraph(
             onNavigateBack = {
                 navController.popBackStack()
             },
-            onNavigateDetail = {}
+            onNavigateDetail = {
+                navController.apply {
+                    popBackStack()
+                }
+            }
         )
     }
 }

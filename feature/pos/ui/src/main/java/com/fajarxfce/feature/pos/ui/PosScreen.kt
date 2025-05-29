@@ -43,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -58,6 +59,9 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.fajarxfce.core.ui.component.BaseTopAppBar
+import com.fajarxfce.core.ui.component.textfield.CashierSearchTextField
+import com.fajarxfce.core.ui.theme.CashierBlue
 import com.fajarxfce.feature.pos.domain.model.Product
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -69,6 +73,7 @@ internal fun PosScreen(
     uiState: PosContract.UiState,
     onAction: (PosContract.UiAction) -> Unit,
     uiEffect: Flow<PosContract.UiEffect>,
+    onNavigateBack: () -> Unit,
 ) {
     val pagingItems: LazyPagingItems<Product> = uiState.productsFlow.collectAsLazyPagingItems()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -76,49 +81,21 @@ internal fun PosScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            PosTopAppBar(
-                onSearchClick = { onAction(PosContract.UiAction.OnSearchClick) }
+            BaseTopAppBar(
+                toolbarTitle = "Select Product",
+                backButtonAction = onNavigateBack,
             )
         },
+        contentColor = Color.White,
         content = { paddingValues ->
             PosContent(
                 modifier = Modifier.padding(paddingValues),
                 pagingItems = pagingItems,
                 onProductClick = { productId ->
                     onAction(PosContract.UiAction.OnSearchClick)
-                }
-            )
-        }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun PosTopAppBar(
-    onSearchClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    TopAppBar(
-        modifier = modifier,
-        title = {
-            Text(
-                text = "Point of Sale",
-                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)
+                },
             )
         },
-        actions = {
-            IconButton(onClick = onSearchClick) {
-                Icon(
-                    imageVector = Icons.Filled.Search,
-                    contentDescription = "Search Products",
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-        )
     )
 }
 
@@ -126,7 +103,7 @@ private fun PosTopAppBar(
 private fun PosContent(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<Product>,
-    onProductClick: (Int) -> Unit
+    onProductClick: (Int) -> Unit,
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -137,42 +114,50 @@ private fun PosContent(
             val error = (pagingItems.loadState.refresh as LoadState.Error).error
             ErrorStateView(
                 modifier = Modifier.align(Alignment.Center),
-                message = error.localizedMessage ?: "An unknown error occurred", // stringResource(id = R.string.unknown_error),
-                onRetry = { pagingItems.retry() }
+                message = error.localizedMessage
+                    ?: "An unknown error occurred", // stringResource(id = R.string.unknown_error),
+                onRetry = { pagingItems.retry() },
             )
         } else if (pagingItems.loadState.refresh is LoadState.NotLoading && pagingItems.itemCount == 0 && pagingItems.loadState.append.endOfPaginationReached) {
             EmptyStateView(
                 modifier = Modifier.align(Alignment.Center),
-                message = "No products found."
+                message = "No products found.",
             )
         } else {
             LazyColumn(
                 state = lazyListState,
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 items(
                     count = pagingItems.itemCount,
-                     key = pagingItems.itemKey { it.id ?: -1 }
+                    key = pagingItems.itemKey { it.id ?: -1 },
                 ) { index ->
                     val product = pagingItems[index]
                     if (product != null) {
                         ProductItemCard(
                             product = product,
-                            onClick = { product.id?.let { onProductClick(it) } }
+                            onClick = { product.id?.let { onProductClick(it) } },
                         )
                     } else {
-                        Spacer(modifier = Modifier.height(100.dp)
-                            .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.surfaceVariant))
+                        Spacer(
+                            modifier = Modifier
+                                .height(100.dp)
+                                .fillMaxWidth()
+                                .background(MaterialTheme.colorScheme.surfaceVariant),
+                        )
                     }
                 }
 
                 // Append loading state
                 item {
                     if (pagingItems.loadState.append is LoadState.Loading) {
-                        LoadingIndicator(modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp))
+                        LoadingIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
+                        )
                     }
                 }
 
@@ -182,7 +167,7 @@ private fun PosContent(
                         val error = (pagingItems.loadState.append as LoadState.Error).error
                         ErrorItemView(
                             message = error.localizedMessage ?: "Failed to load more products",
-                            onRetry = { pagingItems.retry() }
+                            onRetry = { pagingItems.retry() },
                         )
                     }
                 }
@@ -196,7 +181,7 @@ private fun PosContent(
 fun ProductItemCard(
     product: Product,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier
@@ -204,17 +189,17 @@ fun ProductItemCard(
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(product.imageUrl ?: "")
+                    .data(product.imageUrl.orEmpty())
                     .crossfade(true)
                     // .placeholder(R.drawable.placeholder_image)
                     // .error(R.drawable.error_image)
@@ -224,32 +209,32 @@ fun ProductItemCard(
                 modifier = Modifier
                     .size(80.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
             )
 
             Spacer(modifier = Modifier.width(16.dp))
 
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = product.name ?: "Unnamed Product",
+                    text = product.name.orEmpty(),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSurface,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = product.description ?: "",
+                    text = product.description.orEmpty(),
                     style = MaterialTheme.typography.bodySmall,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "Rp ${product.price?.toString() ?: "N/A"}", // Format harga sesuai kebutuhan
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.primary
+                    color = CashierBlue,
                 )
             }
         }
@@ -258,9 +243,14 @@ fun ProductItemCard(
 
 @Composable
 fun LoadingIndicator(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize().padding(16.dp), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center,
+    ) {
         CircularProgressIndicator(
-            color = MaterialTheme.colorScheme.primary
+            color = CashierBlue,
         )
     }
 }
@@ -269,27 +259,27 @@ fun LoadingIndicator(modifier: Modifier = Modifier) {
 fun EmptyStateView(
     message: String,
     modifier: Modifier = Modifier,
-    icon: ImageVector = Icons.Outlined.ShoppingCartCheckout
+    icon: ImageVector = Icons.Outlined.ShoppingCartCheckout,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             modifier = Modifier.size(72.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = message,
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
@@ -299,32 +289,32 @@ fun ErrorStateView(
     message: String,
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
-    icon: ImageVector = Icons.Outlined.CloudOff
+    icon: ImageVector = Icons.Outlined.CloudOff,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
             modifier = Modifier.size(72.dp),
-            tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f)
+            tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f),
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = message,
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.error
+            color = MaterialTheme.colorScheme.error,
         )
         Spacer(modifier = Modifier.height(24.dp))
         Button(
             onClick = onRetry,
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
         ) {
             Text("Retry", color = MaterialTheme.colorScheme.onPrimary)
         }
@@ -335,7 +325,7 @@ fun ErrorStateView(
 fun ErrorItemView(
     message: String,
     onRetry: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
@@ -344,13 +334,13 @@ fun ErrorItemView(
             .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.1f))
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
             text = message,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onErrorContainer,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         TextButton(onClick = onRetry) {
             Text("Retry", color = MaterialTheme.colorScheme.primary)
@@ -367,15 +357,34 @@ fun PosScreenPopulatedPreview() {
                 productsFlow = flowOf(
                     PagingData.from(
                         listOf(
-                            Product(1, "Modern Coffee Table", "Elegant wooden coffee table for your living room.", 250000, "https://via.placeholder.com/150/DDDDDD/808080?Text=Product1"),
-                            Product(2, "Wireless Headphones", "Noise-cancelling over-ear headphones.", 750000, "https://via.placeholder.com/150/CCCCCC/808080?Text=Product2"),
-                            Product(3, "Smart Watch Pro", "Feature-rich smartwatch with long battery life.", 1200000, "https://via.placeholder.com/150/BBBBBB/808080?Text=Product3")
-                        )
-                    )
-                )
+                            Product(
+                                1,
+                                "Modern Coffee Table",
+                                "Elegant wooden coffee table for your living room.",
+                                250000,
+                                "https://via.placeholder.com/150/DDDDDD/808080?Text=Product1",
+                            ),
+                            Product(
+                                2,
+                                "Wireless Headphones",
+                                "Noise-cancelling over-ear headphones.",
+                                750000,
+                                "https://via.placeholder.com/150/CCCCCC/808080?Text=Product2",
+                            ),
+                            Product(
+                                3,
+                                "Smart Watch Pro",
+                                "Feature-rich smartwatch with long battery life.",
+                                1200000,
+                                "https://via.placeholder.com/150/BBBBBB/808080?Text=Product3",
+                            ),
+                        ),
+                    ),
+                ),
             ),
             onAction = {},
-            uiEffect = emptyFlow()
+            uiEffect = emptyFlow(),
+            onNavigateBack = {},
         )
     }
 }
@@ -386,12 +395,13 @@ fun PosScreenEmptyPreview() {
     MaterialTheme {
         PosScreen(
             uiState = PosContract.UiState(
-                productsFlow = flowOf(PagingData.empty())
+                productsFlow = flowOf(PagingData.empty()),
             ),
             onAction = {},
-            uiEffect = emptyFlow<PosContract.UiEffect>()
+            uiEffect = emptyFlow<PosContract.UiEffect>(),
+            onNavigateBack = {},
         )
-         EmptyStateView(message = "No products available for preview.")
+        EmptyStateView(message = "No products available for preview.")
     }
 }
 
@@ -408,8 +418,14 @@ fun PosScreenErrorPreview() {
 fun ProductItemCardPreview() {
     MaterialTheme {
         ProductItemCard(
-            product = Product(1, "Preview Product", "This is a great product description that might be a bit long.", 199000, "https://via.placeholder.com/150"),
-            onClick = {}
+            product = Product(
+                1,
+                "Preview Product",
+                "This is a great product description that might be a bit long.",
+                199000,
+                "https://via.placeholder.com/150",
+            ),
+            onClick = {},
         )
     }
 }

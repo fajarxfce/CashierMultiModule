@@ -4,4 +4,5 @@
     <string name="navigation_favorites">Favorites</string>
     <string name="navigation_leaderboard">Leaderboard</string>
     <string name="navigation_profile">Profile</string>
+    <string name="navigation_point_of_sale">Point of Sale</string>
 </resources>

@@ -12,11 +12,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import com.fajarxfce.core.ui.navigation.Screen
 import com.fajarxfce.feature.pos.ui.PosScreen
 import com.fajarxfce.feature.pos.ui.PosViewModel
 import kotlinx.serialization.Serializable
 
-@Serializable data object Pos
+@Serializable data object Pos : Screen
 
 fun NavGraphBuilder.posScreen(
     onNavigateBack: () -> Unit,
@@ -31,6 +32,7 @@ fun NavGraphBuilder.posScreen(
             uiState = uiState,
             uiEffect = uiEffect,
             onAction = onAction,
+            onNavigateBack = onNavigateBack,
         )
     }
 }
