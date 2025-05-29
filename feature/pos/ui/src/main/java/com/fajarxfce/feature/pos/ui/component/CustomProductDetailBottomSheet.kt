@@ -39,12 +39,12 @@ import com.fajarxfce.feature.pos.domain.model.Product
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomProductDetailBottomSheet(
-    product: Product,
+    product: Product?,
     sheetState: SheetState,
     onDismiss: () -> Unit,
-    onAddToCart: (product: Product, quantity: Int) -> Unit,
+    onAddToCart: (product: Product?, quantity: Int) -> Unit,
 ) {
-    var quantity by rememberSaveable(product.id) { mutableIntStateOf(1) } // Reset quantity saat produk berubah
+    var quantity by rememberSaveable(product?.id) { mutableIntStateOf(1) } // Reset quantity saat produk berubah
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -100,13 +100,13 @@ fun CustomProductDetailBottomSheet(
                 Image(
                     painter = rememberAsyncImagePainter(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(product.imageUrl.orEmpty())
+                            .data(product?.imageUrl.orEmpty())
                             .crossfade(true)
                             // .placeholder(R.drawable.placeholder_image) // Ganti dengan placeholder Anda
                             // .error(R.drawable.error_image) // Ganti dengan error image Anda
                             .build(),
                     ),
-                    contentDescription = product.name ?: "Product Image",
+                    contentDescription = product?.name ?: "Product Image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
                 )
@@ -131,7 +131,7 @@ fun CustomProductDetailBottomSheet(
                     .padding(horizontal = 24.dp),
             ) {
                 Text(
-                    text = product.name.orEmpty(),
+                    text = product?.name.orEmpty(),
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface, // Warna teks utama
@@ -143,7 +143,7 @@ fun CustomProductDetailBottomSheet(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Rp ${product.price?.toString() ?: "0"}", // Format harga
+                    text = "Rp ${product?.price?.toString() ?: "0"}", // Format harga
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.SemiBold,
                         color = CashierBlue, // Warna harga yang menonjol
@@ -153,7 +153,7 @@ fun CustomProductDetailBottomSheet(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
-                    text = product.description.orEmpty(),
+                    text = product?.description.orEmpty(),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant, // Warna teks sekunder
                     ),

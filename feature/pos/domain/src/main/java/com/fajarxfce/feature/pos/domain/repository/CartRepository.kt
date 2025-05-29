@@ -5,5 +5,5 @@ import com.fajarxfce.feature.pos.domain.model.Cart
 
 interface CartRepository {
     suspend fun insert(cart: Cart): Resource<Unit>
-    suspend fun increaseQuantity(productId: Int, quantity: Int): Resource<Unit>
+    suspend fun upsertItem(productId: Int, quantity: Int): Resource<Unit>
 }

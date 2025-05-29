@@ -81,6 +81,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,13 +98,13 @@ internal fun PosScreen(
         skipPartiallyExpanded = true,
     )
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
-    var selectedProduct by remember { mutableStateOf<Product?>(null) }
 
     uiEffect.collectWithLifecycle { effect ->
         when (effect) {
-            is PosContract.UiEffect.ShowProductDetails -> {
-                selectedProduct = effect.product
-                showBottomSheet = true
+            is PosContract.UiEffect.ShowProductDetailsSheet -> {
+//                if (uiState.productForSheet != null){
+                    showBottomSheet = true
+//                }
             }
 
             is PosContract.UiEffect.HideProductDetailsSheet -> {
@@ -112,7 +113,7 @@ internal fun PosScreen(
                 }.invokeOnCompletion {
                     if (!modalSheetState.isVisible) {
                         showBottomSheet = false
-                        selectedProduct = null
+                        onAction(PosContract.UiAction.OnDismissProductDetailsSheet)
                     }
                 }
             }
@@ -121,7 +122,7 @@ internal fun PosScreen(
                 scope.launch {
                     snackbarHostState.showSnackbar(
                         message = effect.message,
-                        withDismissAction = true, // Atau sesuaikan
+                        withDismissAction = true,
                         duration = if (effect.isError) SnackbarDuration.Long else SnackbarDuration.Short,
                     )
                 }
@@ -143,23 +144,27 @@ internal fun PosScreen(
                 modifier = Modifier.padding(paddingValues),
                 pagingItems = pagingItems,
                 onProductClick = { product ->
+                    scope.launch {
+                        Timber.tag("Product Clicked").d("Product: ${product.toString()}")
+                    }
                     onAction(PosContract.UiAction.OnProductItemClick(product))
                 },
             )
         },
     )
 
-    if (showBottomSheet && selectedProduct != null) {
+    val productToShowInSheet = uiState.productForSheet
+
+    if (showBottomSheet && productToShowInSheet != null) {
         CustomProductDetailBottomSheet(
-            product = selectedProduct!!,
+            product = productToShowInSheet,
             sheetState = modalSheetState,
             onDismiss = {
                 showBottomSheet = false
-                selectedProduct = null
+                onAction(PosContract.UiAction.OnDismissProductDetailsSheet)
             },
             onAddToCart = { product, quantity ->
-                onAction(PosContract.UiAction.OnAddToCartFromDetail(product, quantity))
-                 showBottomSheet = false
+                onAction(PosContract.UiAction.AddToCartFromDetail(product, quantity))
             },
         )
     }
@@ -447,6 +452,13 @@ fun PosScreenPopulatedPreview() {
                         ),
                     ),
                 ),
+                productForSheet = Product(
+                    id = 1,
+                    name = "aasas",
+                    description = "asasas",
+                    price = 234234,
+                    imageUrl = ""
+                ),
             ),
             onAction = {},
             uiEffect = emptyFlow(),
@@ -462,6 +474,14 @@ fun PosScreenEmptyPreview() {
         PosScreen(
             uiState = PosContract.UiState(
                 productsFlow = flowOf(PagingData.empty()),
+                isLoading = false,
+                productForSheet = Product(
+                    id = 1,
+                    name = "aasas",
+                    description = "asasas",
+                    price = 234234,
+                    imageUrl = ""
+                ),
             ),
             onAction = {},
             uiEffect = emptyFlow<PosContract.UiEffect>(),

@@ -10,31 +10,31 @@ import com.fajarxfce.feature.pos.domain.repository.CartRepository
 import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
-    private val cartDao: CartDao
+    private val cartDao: CartDao,
 ) : CartRepository {
     override suspend fun insert(cart: Cart): Resource<Unit> {
         return try {
             cartDao.insert(cart.toEntity())
             Resource.Success(Unit)
-        } catch (e: SQLiteConstraintException){
+        } catch (e: SQLiteConstraintException) {
             Resource.Error(BaseException("Product already in cart"))
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Resource.Error(BaseException(e.message ?: "Unknown error"))
         }
     }
 
-    override suspend fun increaseQuantity(
+    override suspend fun upsertItem(
         productId: Int,
         quantity: Int,
     ): Resource<Unit> {
         return try {
-            cartDao.increaseQuantity(productId, quantity)
+            cartDao.upsertItem(
+                productId = productId,
+                quantity = quantity,
+            )
             Resource.Success(Unit)
-        } catch (e: SQLiteConstraintException){
-            Resource.Error(BaseException("Failed to increase quantity"))
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Resource.Error(BaseException(e.message ?: "Unknown error"))
-
         }
     }
 }
