@@ -9,6 +9,6 @@ class InsertProductToCartUseCase @Inject constructor(
     private val cartRepository: CartRepository
 ) {
     suspend operator fun invoke(productId: Int, quantity: Int) {
-        cartRepository.insert(Cart(productId = Random.nextInt(1,5), quantity = quantity, totalPrice = 0.0))
+        cartRepository.insert(Cart(productId = productId, quantity = quantity, totalPrice = 0.0))
     }
 }
