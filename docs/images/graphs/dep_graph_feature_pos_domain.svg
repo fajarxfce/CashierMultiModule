@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="380pt" height="188pt" viewBox="0 0 379.7 188">
+    <g class="graph">
+        <path fill="#fff" d="M0 188V0h379.7v188z"/>
+        <g class="node" transform="translate(4 184)">
+            <ellipse cx="161.07" cy="-162" fill="none" stroke="#000" rx="85.13" ry="18"/>
+            <text x="161.07" y="-156.95" font-family="Times,serif" font-size="14" text-anchor="middle">:feature:pos:domain</text>
+        </g>
+        <g class="node" transform="translate(4 184)">
+            <ellipse cx="39.07" cy="-90" fill="none" stroke="#000" rx="39.07" ry="18"/>
+            <text x="39.07" y="-84.95" font-family="Times,serif" font-size="14" text-anchor="middle">:core:ui</text>
+        </g>
+        <g stroke="#000" class="edge">
+            <path fill="none" d="M136.46 39.41C118.64 49.64 95.61 62.85 76.88 73.6"/>
+            <path d="m78.71 76.59-10.42 1.94 6.93-8.01z"/>
+        </g>
+        <g class="node" transform="translate(4 184)">
+            <ellipse cx="161.07" cy="-90" fill="none" stroke="#000" rx="65.17" ry="18"/>
+            <text x="161.07" y="-84.95" font-family="Times,serif" font-size="14" text-anchor="middle">:core:common</text>
+        </g>
+        <g stroke="#000" class="edge">
+            <path fill="none" d="M165.07 40.3v24.16"/>
+            <path d="m168.57 64.38-3.5 10-3.5-10z"/>
+        </g>
+        <g class="node" transform="translate(4 184)">
+            <ellipse cx="308.07" cy="-90" fill="none" stroke="#000" rx="63.63" ry="18"/>
+            <text x="308.07" y="-84.95" font-family="Times,serif" font-size="14" text-anchor="middle">:core:database</text>
+        </g>
+        <g stroke="red" stroke-width="2" class="edge">
+            <path fill="none" d="M198.42 38.88c21.45 10.22 49.48 23.57 72.34 34.45"/>
+            <path fill="red" d="m270.6 69.38 7.52 7.45-10.53-1.13z"/>
+        </g>
+        <g class="node" transform="translate(4 184)">
+            <ellipse cx="308.07" cy="-18" fill="none" stroke="#000" rx="55.45" ry="18"/>
+            <text x="308.07" y="-12.95" font-family="Times,serif" font-size="14" text-anchor="middle">:core:model</text>
+        </g>
+        <g stroke="red" stroke-width="2" class="edge">
+            <path fill="none" d="M312.07 112.3v24.16"/>
+            <path fill="red" d="m315.57 134.87-3.5 10-3.5-10z"/>
+        </g>
+    </g>
+</svg>

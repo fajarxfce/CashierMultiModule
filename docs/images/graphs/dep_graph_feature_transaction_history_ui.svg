@@ -2,15 +2,15 @@
     <g class="graph">
         <path fill="#fff" d="M0 260V0h380.24v260z"/>
         <g class="node" transform="translate(4 256)">
-            <ellipse cx="160.07" cy="-234" fill="none" stroke="#000" rx="64.15" ry="18"/>
-            <text x="160.07" y="-228.95" font-family="Times,serif" font-size="14" text-anchor="middle">:feature:pos:ui</text>
+            <ellipse cx="160.07" cy="-234" fill="none" stroke="#000" rx="120.45" ry="18"/>
+            <text x="160.07" y="-228.95" font-family="Times,serif" font-size="14" text-anchor="middle">:feature:transaction-history:ui</text>
         </g>
         <g class="node" transform="translate(4 256)">
             <ellipse cx="39.07" cy="-90" fill="none" stroke="#000" rx="39.07" ry="18"/>
             <text x="39.07" y="-84.95" font-family="Times,serif" font-size="14" text-anchor="middle">:core:ui</text>
         </g>
         <g stroke="#000" class="edge">
-            <path fill="none" d="M125.52 36.71C106.39 45.3 84.37 58.17 70.07 76c-13.91 17.34-20.67 41.76-23.94 60.64"/>
+            <path fill="none" d="M120.28 39.13c-17.8 8.53-37.2 20.65-50.21 36.87-13.91 17.34-20.67 41.76-23.94 60.64"/>
             <path d="m49.62 136.96-4.93 9.38-2-10.41z"/>
         </g>
         <g class="node" transform="translate(4 256)">
@@ -18,7 +18,7 @@
             <text x="307.07" y="-84.95" font-family="Times,serif" font-size="14" text-anchor="middle">:core:common</text>
         </g>
         <g stroke="#000" class="edge">
-            <path fill="none" d="M199.1 37.36c19.04 9.05 42.08 22.15 58.97 38.64 17.96 17.54 32.09 42.42 41.23 61.41"/>
+            <path fill="none" d="M203.24 39.36C221.4 48.3 242.39 60.69 258.07 76c17.96 17.54 32.09 42.42 41.23 61.41"/>
             <path d="m302.46 135.9 1 10.54-7.36-7.61z"/>
         </g>
         <g class="node" transform="translate(4 256)">
