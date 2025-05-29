@@ -1,7 +1,5 @@
 package com.fajarxfce.core.data.di
 
-import com.fajarxfce.core.data.repository.DefaultAuthRepository
-import com.fajarxfce.core.data.repository.DefaultProductRepositoryPaging
 import com.fajarxfce.core.domain.repository.AuthRepository
 import com.fajarxfce.core.domain.repository.ProductRepository
 import dagger.Binds
@@ -12,13 +10,4 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataModule {
-    @Binds
-    abstract fun bindAuthRepository(
-        defaultAuthRepository: DefaultAuthRepository
-    ): AuthRepository
-
-    @Binds
-    abstract fun bindGetAllProductRepository(
-        defaultGetAllProductRepository: DefaultProductRepositoryPaging
-    ): ProductRepository
 }

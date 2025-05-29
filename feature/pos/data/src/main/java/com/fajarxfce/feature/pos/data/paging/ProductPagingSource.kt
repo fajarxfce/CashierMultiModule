@@ -15,7 +15,6 @@ import javax.inject.Inject
 
 internal class ProductPagingSource @Inject constructor(
     private val posApi: PosApi,
-    private val authToken: String,
     private val query: String?,
     private val categoryId: String?
 ) : BasePagingSource<Product, ProductDataItem>() {

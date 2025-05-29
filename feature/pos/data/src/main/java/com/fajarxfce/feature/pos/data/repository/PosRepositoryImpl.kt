@@ -13,23 +13,9 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
-interface AuthTokenProvider {
-    suspend fun getAuthToken(): String?
-}
-
-
-@Singleton
-class DemoAuthTokenProvider @Inject constructor(
-    private val niaPreferencesDataSource: NiaPreferencesDataSource
-) : AuthTokenProvider {
-    override suspend fun getAuthToken(): String = niaPreferencesDataSource.getAuthToken().orEmpty()
-}
-
-
 @Singleton
 internal class PosRepositoryImpl @Inject constructor(
     private val posApi: PosApi,
-    private val authTokenProvider: AuthTokenProvider
 ) : PosRepository {
 
     override fun getProducts(
@@ -44,11 +30,8 @@ internal class PosRepositoryImpl @Inject constructor(
             ),
             pagingSourceFactory = {
 
-                val DUMMY_TOKEN_UNTUK_FACTORY = "Bearer 109|LxwBhtpDa8OMzQJZtaywGVsrsuk2pIUf9Fkiwcs92e84c2e4"
-
                 ProductPagingSource(
                     posApi = posApi,
-                    authToken = DUMMY_TOKEN_UNTUK_FACTORY,
                     query = query,
                     categoryId = categoryId
                 )

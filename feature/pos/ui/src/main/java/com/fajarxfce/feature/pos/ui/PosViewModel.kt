@@ -69,6 +69,7 @@ internal class PosViewModel @Inject constructor(
                 currentSearchQuery.value = uiAction.query.takeIf { it.isNotBlank() }
             }
             PosContract.UiAction.RetryLoad -> { /* ... */ }
+            is PosContract.UiAction.OnProductClick -> {}
         }
     }
 }
