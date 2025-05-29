@@ -1,10 +1,14 @@
 plugins {
-    alias(libs.plugins.nowinandroid.jvm.library)
+    alias(libs.plugins.nowinandroid.android.feature)
 }
 
-group = "com.fajarxfce.feature.pos.domain"
+android {
+    namespace = "com.fajarxfce.feature.pos.domain"
+}
 
 dependencies {
     implementation(projects.core.common)
     implementation(libs.javax.inject)
+    implementation("androidx.paging:paging-runtime:3.3.6")
+    implementation("androidx.paging:paging-compose:3.3.6")
 }

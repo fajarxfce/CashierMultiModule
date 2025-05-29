@@ -1,9 +1,12 @@
 package com.fajarxfce.feature.pos.domain.repository
 
-import com.fajarxfce.core.result.Resource
-import com.fajarxfce.feature.pos.domain.model.GetAllProductParams
+import androidx.paging.PagingData
 import com.fajarxfce.feature.pos.domain.model.Product
+import kotlinx.coroutines.flow.Flow
 
 interface PosRepository {
-    suspend fun getAllProduct(): Resource<List<Product>>
+    fun getProducts(
+        query: String? = null,
+        categoryId: String? = null,
+    ): Flow<PagingData<Product>>
 }

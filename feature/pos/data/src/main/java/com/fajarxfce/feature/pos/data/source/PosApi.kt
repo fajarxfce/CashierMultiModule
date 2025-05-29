@@ -12,8 +12,10 @@ internal interface PosApi {
     suspend fun getProducts(
         @Query("orderBy") orderBy: String = "products.id",
         @Query("order") orderDirection: String = "asc",
-        @Query("paginate") pageSize: Int = 10,
-        @Query("page") pageNumber: Int = 1,
-        @Header("Authorization") token: String
+        @Query("paginate") pageSize: Int,
+        @Query("page") pageNumber: Int,
+        @Query("search") query: String? = null,
+        @Query("category_id") categoryId: String? = null,
+        @Header("Authorization") token: String,
     ): BaseResponse<GetAllProductResponse>
 }

@@ -67,52 +67,52 @@ internal data class Merk(
 
 internal data class ProductDataItem(
 
-	@field:SerializedName("merk")
+    @field:SerializedName("merk")
 	val merk: Merk? = null,
 
-	@field:SerializedName("sub_category")
+    @field:SerializedName("sub_category")
 	val subCategory: SubCategory? = null,
 
-	@field:SerializedName("description")
+    @field:SerializedName("description")
 	val description: String? = null,
 
-	@field:SerializedName("created_at")
+    @field:SerializedName("created_at")
 	val createdAt: String? = null,
 
-	@field:SerializedName("media")
-	val media: List<Any?>? = null,
+    @field:SerializedName("media")
+	val media: List<MediaItem?>? = null,
 
-	@field:SerializedName("product_category_id")
+    @field:SerializedName("product_category_id")
 	val productCategoryId: Int? = null,
 
-	@field:SerializedName("updated_at")
+    @field:SerializedName("updated_at")
 	val updatedAt: String? = null,
 
-	@field:SerializedName("product_sub_category_id")
+    @field:SerializedName("product_sub_category_id")
 	val productSubCategoryId: Int? = null,
 
-	@field:SerializedName("price")
+    @field:SerializedName("price")
 	val price: Int? = null,
 
-	@field:SerializedName("product_merk_id")
+    @field:SerializedName("product_merk_id")
 	val productMerkId: Int? = null,
 
-	@field:SerializedName("name")
+    @field:SerializedName("name")
 	val name: String? = null,
 
-	@field:SerializedName("id")
+    @field:SerializedName("id")
 	val id: Int? = null,
 
-	@field:SerializedName("sku")
+    @field:SerializedName("sku")
 	val sku: String? = null,
 
-	@field:SerializedName("stock")
+    @field:SerializedName("stock")
 	val stock: Int? = null,
 
-	@field:SerializedName("category")
+    @field:SerializedName("category")
 	val category: Category? = null,
 
-	@field:SerializedName("status")
+    @field:SerializedName("status")
 	val status: Int? = null
 )
 
@@ -140,6 +140,12 @@ internal data class SubCategory(
 	val status: Int? = null
 )
 
+internal data class MediaItem(
+    @field:SerializedName("id")
+	val id: Int? = null,
+    @field:SerializedName("original_url")
+	val originalUrl: String? = null,
+)
 internal data class Category(
 
 	@field:SerializedName("updated_at")

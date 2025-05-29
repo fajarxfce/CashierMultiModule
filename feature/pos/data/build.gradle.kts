@@ -14,6 +14,7 @@ android {
 
 dependencies {
     implementation(projects.core.common)
+    implementation(projects.core.data)
     implementation(projects.feature.pos.domain)
     implementation(libs.retrofit.core)
     implementation(projects.core.network)

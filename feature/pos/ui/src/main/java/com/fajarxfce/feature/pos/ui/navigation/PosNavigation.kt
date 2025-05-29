@@ -28,8 +28,6 @@ fun NavGraphBuilder.posScreen(
         val uiEffect = viewModel.uiEffect
         val onAction = viewModel::onAction
         PosScreen(
-            onNavigateBack = onNavigateBack,
-            onNavigateDetail = onNavigateDetail,
             uiState = uiState,
             uiEffect = uiEffect,
             onAction = onAction,
