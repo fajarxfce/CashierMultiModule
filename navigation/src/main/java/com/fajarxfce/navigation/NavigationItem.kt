@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Inventory2
+import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.PointOfSale
@@ -13,7 +14,15 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.fajarxfce.feature.home.ui.navigation.Home
 import com.fajarxfce.core.ui.navigation.Screen
 import com.fajarxfce.feature.pos.ui.navigation.Pos
+import kotlinx.serialization.Serializable
 
+@Serializable data object Customer : Screen
+@Serializable data object Product : Screen
+@Serializable data object Setting : Screen
+@Serializable data object Support : Screen
+@Serializable data object Help : Screen
+@Serializable data object Logout : Screen
+@Serializable data object Transaction : Screen
 sealed class NavigationItem(
     var route: Screen,
     var title: String,
@@ -26,21 +35,52 @@ sealed class NavigationItem(
     )
 
     data object PointOfSaleScreen : NavigationItem(
-        route = Home,
+        route = Pos,
         title = "Point Of Sale",
-        icon = Icons.Filled.Home
+        icon = Icons.Filled.PointOfSale
+    )
+    data object CustomersScreen : NavigationItem(
+        route = Customer,
+        title = "Point Of Sale",
+        icon = Icons.Filled.People
+    )
+
+    data object ProductsScreen : NavigationItem(
+        route = Product,
+        title = "Product Management",
+        icon = Icons.Filled.Inventory2
+    )
+
+    data object TransactionsScreen : NavigationItem(
+        route = Transaction,
+        title = "Transactions",
+        icon = Icons.Filled.ListAlt
+    )
+
+    data object SettingsScreen : NavigationItem(
+        route = Setting,
+        title = "Settings",
+        icon = Icons.Filled.Settings
+    )
+
+    data object SupportScreen : NavigationItem(
+        route = Support,
+        title = "Support",
+        icon = Icons.Filled.SupportAgent
+    )
+
+    data object HelpScreen : NavigationItem(
+        route = Help,
+        title = "Help",
+        icon = Icons.AutoMirrored.Filled.ListAlt
     )
 
     data object LogoutScreen : NavigationItem(
-        route = Home,
+        route = Logout,
         title = "Point Of Sale",
-        icon = Icons.Filled.Home
+        icon = Icons.Filled.Logout
     )
-    data object CustomersScreen : NavigationItem(
-        route = Home,
-        title = "Point Of Sale",
-        icon = Icons.Filled.Home
-    )
+
 
     companion object {
         fun getNavigationRoutes() = listOf(
@@ -48,7 +88,14 @@ sealed class NavigationItem(
         )
         fun getAllNavigationItem() = listOf(
             HomeScreen,
-            PointOfSaleScreen
+            PointOfSaleScreen,
+            ProductsScreen,
+            TransactionsScreen,
+            CustomersScreen,
+            SettingsScreen,
+            SupportScreen,
+            HelpScreen,
+            LogoutScreen,
         )
 
     }

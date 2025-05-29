@@ -53,10 +53,10 @@ fun MainAppScreen(appState: AppState) {
                 navigationItems = navigationItems,
                 currentRoute = appState.currentDestination?.route,
                 onNavigate = { route ->
-//                    appState.navController.navigate(route) {
-//                        launchSingleTop = true
-//                        restoreState = true
-//                    }
+                    appState.navController.navigate(route) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                     appState.closeDrawer()
                 },
                 onLogout = {
