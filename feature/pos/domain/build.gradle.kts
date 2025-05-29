@@ -8,6 +8,7 @@ android {
 
 dependencies {
     implementation(projects.core.common)
+    implementation(projects.core.database)
     implementation(libs.javax.inject)
     implementation("androidx.paging:paging-runtime:3.3.6")
     implementation("androidx.paging:paging-compose:3.3.6")

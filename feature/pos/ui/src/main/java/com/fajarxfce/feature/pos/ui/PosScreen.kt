@@ -92,7 +92,7 @@ internal fun PosScreen(
                 modifier = Modifier.padding(paddingValues),
                 pagingItems = pagingItems,
                 onProductClick = { productId ->
-                    onAction(PosContract.UiAction.OnSearchClick)
+                    onAction(PosContract.UiAction.OnProductClick(productId))
                 },
             )
         },

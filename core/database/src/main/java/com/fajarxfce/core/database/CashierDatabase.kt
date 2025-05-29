@@ -3,9 +3,12 @@ package com.fajarxfce.core.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.fajarxfce.core.database.dao.CartDao
+import com.fajarxfce.core.database.entity.CartEntity
 
 @Database(
-    entities = [],
+    entities = [
+        CartEntity::class
+               ],
     version = 1,
     exportSchema = true
 )

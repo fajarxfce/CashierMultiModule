@@ -8,17 +8,20 @@ import com.fajarxfce.core.ui.delegate.mvi.MVI
 import com.fajarxfce.core.ui.delegate.mvi.mvi
 import com.fajarxfce.feature.pos.domain.model.Product
 import com.fajarxfce.feature.pos.domain.usecase.GetProductPagingUseCase
+import com.fajarxfce.feature.pos.domain.usecase.InsertProductToCartUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 internal class PosViewModel @Inject constructor(
-    private val getProductPagingUseCase: GetProductPagingUseCase
+    private val getProductPagingUseCase: GetProductPagingUseCase,
+    private val insertProductToCartUseCase: InsertProductToCartUseCase,
 ) : ViewModel(),
     MVI<PosContract.UiState, PosContract.UiAction, PosContract.UiEffect> by mvi(
         initialState = PosContract.UiState(
@@ -69,7 +72,11 @@ internal class PosViewModel @Inject constructor(
                 currentSearchQuery.value = uiAction.query.takeIf { it.isNotBlank() }
             }
             PosContract.UiAction.RetryLoad -> { /* ... */ }
-            is PosContract.UiAction.OnProductClick -> {}
+            is PosContract.UiAction.OnProductClick -> insertProductToCart()
         }
+    }
+
+    private fun insertProductToCart() = viewModelScope.launch {
+        insertProductToCartUseCase(1,2)
     }
 }

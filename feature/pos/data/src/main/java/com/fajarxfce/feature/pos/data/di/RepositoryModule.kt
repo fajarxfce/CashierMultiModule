@@ -1,6 +1,8 @@
 package com.fajarxfce.feature.pos.data.di
 
+import com.fajarxfce.feature.pos.data.repository.CartRepositoryImpl
 import com.fajarxfce.feature.pos.data.repository.PosRepositoryImpl
+import com.fajarxfce.feature.pos.domain.repository.CartRepository
 import com.fajarxfce.feature.pos.domain.repository.PosRepository
 import dagger.Binds
 import dagger.Module
@@ -16,4 +18,11 @@ internal abstract class RepositoryModule {
     abstract fun bindPosRepository(
         posRepositoryImpl: PosRepositoryImpl
     ): PosRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCartRepository(
+        cartRepositoryImpl: CartRepositoryImpl
+    ): CartRepository
+
 }
