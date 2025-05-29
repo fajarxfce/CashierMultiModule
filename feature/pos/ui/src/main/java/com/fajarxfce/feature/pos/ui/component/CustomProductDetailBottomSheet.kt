@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.fajarxfce.core.ui.theme.CashierBlue // Asumsi Anda punya warna ini
+import com.fajarxfce.core.ui.theme.CashierGray
 import com.fajarxfce.feature.pos.domain.model.Product
 
 
@@ -49,7 +50,7 @@ fun CustomProductDetailBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp), // Bentuk kustom
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh, // Warna latar kustom
+        containerColor = Color.White, // Warna latar kustom
         dragHandle = { // Drag handle kustom atau hilangkan jika tidak mau
             Box(
                 modifier = Modifier
@@ -225,7 +226,7 @@ fun QuantityCounter(
             text = "$quantity",
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(horizontal = 16.dp),
-            color = MaterialTheme.colorScheme.onSurface,
+            color = CashierGray,
         )
 
         CounterButton(icon = Icons.Filled.Add) {

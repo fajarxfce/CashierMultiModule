@@ -73,6 +73,8 @@ import com.fajarxfce.core.ui.component.BaseTopAppBar
 import com.fajarxfce.core.ui.component.textfield.CashierSearchTextField
 import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import com.fajarxfce.core.ui.theme.CashierBlue
+import com.fajarxfce.core.ui.theme.CashierLightGray
+import com.fajarxfce.core.ui.theme.CashierWhisper
 import com.fajarxfce.feature.pos.domain.model.Product
 import com.fajarxfce.feature.pos.ui.component.CustomProductDetailBottomSheet
 import kotlinx.coroutines.flow.Flow
@@ -135,7 +137,7 @@ internal fun PosScreen(
                 backButtonAction = onNavigateBack,
             )
         },
-        contentColor = Color.White,
+        containerColor = Color.White,
         content = { paddingValues ->
             PosContent(
                 modifier = Modifier.padding(paddingValues),
@@ -252,7 +254,7 @@ fun ProductItemCard(
             .fillMaxWidth()
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
         Row(

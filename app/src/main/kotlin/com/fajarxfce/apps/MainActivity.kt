@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.fajarxfce.apps.component.CustomAppDrawerContent
 import com.fajarxfce.core.datastore.NiaPreferencesDataSource
@@ -68,6 +69,7 @@ fun MainAppScreen(appState: AppState) {
         gesturesEnabled = appState.shouldShowDrawer,
     ) {
         Scaffold(
+            containerColor = Color.White
         ) { innerPadding ->
             CashierAppNavGraph(
                 navController = appState.navController,
