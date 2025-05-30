@@ -29,4 +29,5 @@ dependencies {
     implementation(projects.feature.login.ui)
     implementation(projects.feature.pos.ui)
     implementation(projects.feature.transactionHistory.ui)
+    implementation(projects.feature.cart.ui)
 }
