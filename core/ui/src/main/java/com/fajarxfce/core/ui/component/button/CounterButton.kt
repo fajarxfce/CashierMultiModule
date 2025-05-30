@@ -37,9 +37,7 @@ fun CounterButton(
     onDecrement: () -> Unit = {}
 ) {
     Card(
-        modifier = modifier
-            .width(140.dp)
-            .height(70.dp),
+        modifier = modifier,
         colors = CardDefaults.cardColors(
             containerColor = CashierGray.copy(alpha = 0.15f),
             contentColor = CashierGray

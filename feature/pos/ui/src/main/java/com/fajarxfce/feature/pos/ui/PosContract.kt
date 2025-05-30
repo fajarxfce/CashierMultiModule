@@ -1,7 +1,6 @@
 package com.fajarxfce.feature.pos.ui
 
 import androidx.paging.PagingData
-import com.fajarxfce.feature.pos.domain.model.Cart
 import com.fajarxfce.feature.pos.domain.model.Product
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow

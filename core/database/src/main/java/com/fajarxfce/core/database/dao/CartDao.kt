@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.fajarxfce.core.database.entity.CartEntity
+import com.fajarxfce.core.model.entity.CartEntity
 
 @Dao
 interface CartDao {

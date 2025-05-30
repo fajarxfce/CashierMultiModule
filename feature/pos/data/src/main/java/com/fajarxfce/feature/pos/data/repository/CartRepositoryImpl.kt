@@ -4,8 +4,8 @@ import android.database.sqlite.SQLiteConstraintException
 import com.fajarxfce.core.database.dao.CartDao
 import com.fajarxfce.core.exception.BaseException
 import com.fajarxfce.core.result.Resource
-import com.fajarxfce.feature.pos.domain.model.Cart
-import com.fajarxfce.feature.pos.domain.model.toEntity
+import com.fajarxfce.core.model.cart.Cart
+import com.fajarxfce.core.model.cart.toEntity
 import com.fajarxfce.feature.pos.domain.repository.CartRepository
 import javax.inject.Inject
 

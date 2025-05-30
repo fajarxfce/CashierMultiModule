@@ -1,4 +1,4 @@
-package com.fajarxfce.core.database.entity
+package com.fajarxfce.core.model.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

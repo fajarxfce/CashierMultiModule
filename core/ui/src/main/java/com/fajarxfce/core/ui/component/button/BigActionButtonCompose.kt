@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fajarxfce.core.ui.component.CashierText
+import com.fajarxfce.core.ui.theme.AppTheme
 import com.fajarxfce.core.ui.theme.CashierBlue
 import com.fajarxfce.core.ui.theme.CashierBlueDisabled
 
@@ -75,10 +76,10 @@ fun BigActionButtonCompose(
 @Composable
 @Preview
 private fun BottomButtonSegmentPreview() {
-//    AppTheme {
+    AppTheme {
         BigActionButtonCompose(
             buttonText = "Test Click",
             onClick = {}
         )
-//    }
+    }
 }
