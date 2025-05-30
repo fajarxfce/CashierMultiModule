@@ -44,6 +44,10 @@ internal fun CartScreen(
     val snackbarHostState = SnackbarHostState()
 
     LaunchedEffect(key1 = true) {
+        uiAction(CartContract.UiAction.OnLoad)
+    }
+
+    LaunchedEffect(key1 = true) {
         uiEffect.collectLatest { effect ->
             when (effect) {
                 is CartContract.UiEffect.ShowSnackbar -> {

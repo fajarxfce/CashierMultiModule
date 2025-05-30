@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.fajarxfce.feature.cart.ui.navigation.Cart
 import com.fajarxfce.feature.cart.ui.navigation.cartScreen
 import com.fajarxfce.feature.home.ui.navigation.Home
 import com.fajarxfce.feature.home.ui.navigation.homeScreen
@@ -89,7 +90,7 @@ fun CashierAppNavGraph(
             onOpenDrawer = onOpenDrawer,
             onNavigateToPos = {
                 navController.apply {
-                    navigate(Pos)
+                    navigate(Cart)
                 }
             },
         )

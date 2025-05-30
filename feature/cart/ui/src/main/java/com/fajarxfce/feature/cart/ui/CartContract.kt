@@ -9,6 +9,7 @@ object CartContract {
     )
 
     sealed interface UiAction {
+        data object OnLoad : UiAction
         data object OnCheckout : UiAction
     }
     sealed interface UiEffect {

@@ -6,11 +6,15 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.fajarxfce.core.model.entity.CartEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CartDao {
     @Query("SELECT * FROM carts where productId = :productId")
     fun getItem(productId: Int): CartEntity?
+
+    @Query("SELECT * FROM carts")
+    fun getAll(): Flow<List<CartEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(cartEntity: CartEntity)
