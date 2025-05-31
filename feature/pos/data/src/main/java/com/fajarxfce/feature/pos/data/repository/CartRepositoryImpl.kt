@@ -8,6 +8,10 @@ import com.fajarxfce.core.model.cart.Cart
 import com.fajarxfce.core.model.cart.toEntity
 import com.fajarxfce.feature.pos.domain.params.UpsertProductToCartParam
 import com.fajarxfce.feature.pos.domain.repository.CartRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
@@ -25,19 +29,25 @@ class CartRepositoryImpl @Inject constructor(
     }
 
     override suspend fun upsertItem(
-        param: UpsertProductToCartParam
+        param: UpsertProductToCartParam,
     ): Resource<Unit> {
         return try {
-            cartDao.upsertItem(Cart(
-                productId = param.productId,
-                name = param.name,
-                price = param.price,
-                quantity = param.quantity,
-                imageUrl = param.imageUrl
-            ))
+            cartDao.upsertItem(
+                Cart(
+                    productId = param.productId,
+                    name = param.name,
+                    price = param.price,
+                    quantity = param.quantity,
+                    imageUrl = param.imageUrl,
+                ),
+            )
             Resource.Success(Unit)
         } catch (e: Exception) {
             Resource.Error(BaseException(e.message ?: "Unknown error"))
         }
+    }
+
+    override fun getTotalCartItems(): Flow<Int> = flow {
+        emitAll(cartDao.count())
     }
 }

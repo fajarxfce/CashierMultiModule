@@ -12,6 +12,7 @@ import com.fajarxfce.feature.pos.domain.model.Product
 import com.fajarxfce.feature.pos.domain.model.toCart
 import com.fajarxfce.feature.pos.domain.params.UpsertProductToCartParam
 import com.fajarxfce.feature.pos.domain.usecase.GetProductPagingUseCase
+import com.fajarxfce.feature.pos.domain.usecase.GetTotalCartItemsUseCase
 import com.fajarxfce.feature.pos.domain.usecase.UpsertProductToCartUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,6 +34,7 @@ import javax.inject.Inject
 internal class PosViewModel @Inject constructor(
     private val getProductPagingUseCase: GetProductPagingUseCase,
     private val upsertProductToCartUseCase: UpsertProductToCartUseCase,
+    private val getTotalCartItemsUseCase: GetTotalCartItemsUseCase,
 ) : ViewModel(),
     MVI<PosContract.UiState, PosContract.UiAction, PosContract.UiEffect> by mvi(
         initialState = PosContract.UiState(
@@ -62,6 +64,14 @@ internal class PosViewModel @Inject constructor(
 
                 PosContract.UiAction.OnDismissProductDetailsSheet -> {
                     updateUiState { copy(productForSheet = null) }
+                }
+
+                PosContract.UiAction.LoadTotalCartItem -> {
+                    viewModelScope.launch {
+                        getTotalCartItemsUseCase().collect {
+                            updateUiState { copy(totalCartItem = it) }
+                        }
+                    }
                 }
             }
         }

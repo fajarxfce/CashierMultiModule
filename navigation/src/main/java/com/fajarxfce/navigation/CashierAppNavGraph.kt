@@ -107,10 +107,21 @@ fun CashierAppNavGraph(
                 navController.apply {
                     popBackStack()
                 }
+            },
+            onNavigateToCart = {
+                navController.apply {
+                    navigate(Cart)
+                }
             }
         )
 
         transactionHistoryScreen()
-        cartScreen()
+        cartScreen(
+            onNavigateBack = {
+                navController.apply {
+                    popBackStack()
+                }
+            }
+        )
     }
 }

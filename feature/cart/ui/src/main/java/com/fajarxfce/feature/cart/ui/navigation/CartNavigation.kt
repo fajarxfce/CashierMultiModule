@@ -11,7 +11,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable data object Cart
 
-fun NavGraphBuilder.cartScreen(){
+fun NavGraphBuilder.cartScreen(
+    onNavigateBack: () -> Unit,
+){
     composable<Cart> {
         val viewModel = hiltViewModel<CartViewModel>()
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -21,7 +23,8 @@ fun NavGraphBuilder.cartScreen(){
         CartScreen(
             uiState = uiState,
             uiEffect = uiEffect,
-            uiAction = onAction
+            uiAction = onAction,
+            onNavigateBack = onNavigateBack
         )
     }
 }

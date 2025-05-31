@@ -1,7 +1,6 @@
 package com.fajarxfce.feature.pos.ui
 
 
-import androidx.activity.result.launch
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +19,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.ShoppingCartCheckout
 import androidx.compose.material3.Button
@@ -30,20 +28,17 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,7 +54,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -71,11 +65,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fajarxfce.core.ui.component.BaseTopAppBar
 import com.fajarxfce.core.ui.component.CashierText
-import com.fajarxfce.core.ui.component.textfield.CashierSearchTextField
 import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import com.fajarxfce.core.ui.theme.CashierBlue
-import com.fajarxfce.core.ui.theme.CashierLightGray
-import com.fajarxfce.core.ui.theme.CashierWhisper
 import com.fajarxfce.feature.pos.domain.model.Product
 import com.fajarxfce.feature.pos.ui.component.CustomProductDetailBottomSheet
 import kotlinx.coroutines.flow.Flow
@@ -93,6 +84,7 @@ internal fun PosScreen(
     onAction: (PosContract.UiAction) -> Unit,
     uiEffect: Flow<PosContract.UiEffect>,
     onNavigateBack: () -> Unit,
+    onNavigateToCart: () -> Unit,
 ) {
     val pagingItems: LazyPagingItems<Product> = uiState.productsFlow.collectAsLazyPagingItems()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -104,13 +96,14 @@ internal fun PosScreen(
 
     LaunchedEffect(key1 = true) {
         onAction(PosContract.UiAction.LoadProducts)
+        onAction(PosContract.UiAction.LoadTotalCartItem)
     }
 
     uiEffect.collectWithLifecycle { effect ->
         when (effect) {
             is PosContract.UiEffect.ShowProductDetailsSheet -> {
 //                if (uiState.productForSheet != null){
-                    showBottomSheet = true
+                showBottomSheet = true
 //                }
             }
 
@@ -146,6 +139,13 @@ internal fun PosScreen(
             )
         },
         containerColor = Color.White,
+        bottomBar = {
+            PosBottomBar(
+                modifier = Modifier.fillMaxWidth(),
+                totalCartItem = uiState.totalCartItem,
+                onNavigateToCart = onNavigateToCart,
+            )
+        },
         content = { paddingValues ->
             PosContent(
                 modifier = Modifier.padding(paddingValues),
@@ -172,8 +172,61 @@ internal fun PosScreen(
             },
             onAddToCart = { product, quantity ->
                 product?.let { onAction(PosContract.UiAction.AddToCartFromDetail(it, quantity)) }
+                showBottomSheet = false
             },
         )
+    }
+}
+
+@Composable
+private fun PosBottomBar(
+    modifier: Modifier,
+    totalCartItem: Int = 0,
+    onNavigateToCart: () -> Unit,
+) {
+    Surface(
+        modifier = modifier,
+        shadowElevation = 8.dp,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                CashierText(
+                    text = "Total ${totalCartItem} item",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+
+                Text(
+                    text = "Rp 500,000",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = CashierBlue,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = onNavigateToCart,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = CashierBlue,
+                ),
+            ) {
+                Text(
+                    text = "Go To Cart",
+                    modifier = Modifier.padding(vertical = 4.dp),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
+        }
     }
 }
 
@@ -455,12 +508,13 @@ fun PosScreenPopulatedPreview() {
                     name = "aasas",
                     description = "asasas",
                     price = 234234,
-                    imageUrl = ""
+                    imageUrl = "",
                 ),
             ),
             onAction = {},
             uiEffect = emptyFlow(),
             onNavigateBack = {},
+            onNavigateToCart = {},
         )
     }
 }
@@ -478,12 +532,13 @@ fun PosScreenEmptyPreview() {
                     name = "aasas",
                     description = "asasas",
                     price = 234234,
-                    imageUrl = ""
+                    imageUrl = "",
                 ),
             ),
             onAction = {},
             uiEffect = emptyFlow<PosContract.UiEffect>(),
             onNavigateBack = {},
+            onNavigateToCart = {}
         )
         EmptyStateView(message = "No products available for preview.")
     }

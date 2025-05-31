@@ -23,6 +23,7 @@ import kotlinx.serialization.Serializable
 fun NavGraphBuilder.posScreen(
     onNavigateBack: () -> Unit,
     onNavigateDetail: (Int) -> Unit,
+    onNavigateToCart: () -> Unit,
 ){
     composable<Pos>{
         val viewModel = hiltViewModel<PosViewModel>()
@@ -34,6 +35,7 @@ fun NavGraphBuilder.posScreen(
             uiEffect = uiEffect,
             onAction = onAction,
             onNavigateBack = onNavigateBack,
+            onNavigateToCart = onNavigateToCart,
         )
     }
 }

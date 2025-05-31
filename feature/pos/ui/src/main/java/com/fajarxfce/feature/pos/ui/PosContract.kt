@@ -10,13 +10,14 @@ internal object PosContract {
     data class UiState(
         val isLoading: Boolean = false,
         val productsFlow: Flow<PagingData<Product>> = emptyFlow(),
-        val productForSheet: Product? = null
+        val productForSheet: Product? = null,
+        val totalCartItem: Int = 0,
     )
 
     sealed interface UiAction {
         data object LoadProducts : UiAction
+        data object LoadTotalCartItem : UiAction
         data class OnProductItemClick(val product: Product) : UiAction
-
         data class AddToCartFromDetail(val product: Product, val quantitySelected: Int) : UiAction
 
         data object OnDismissProductDetailsSheet : UiAction

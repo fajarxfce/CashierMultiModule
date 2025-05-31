@@ -17,6 +17,9 @@ interface CartDao {
     @Query("SELECT * FROM carts")
     fun getAll(): Flow<List<CartEntity>>
 
+    @Query("SELECT COUNT(*) FROM carts")
+    fun count(): Flow<Int>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(cartEntity: CartEntity)
 
