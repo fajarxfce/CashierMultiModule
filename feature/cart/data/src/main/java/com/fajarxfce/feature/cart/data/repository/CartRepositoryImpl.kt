@@ -2,7 +2,11 @@ package com.fajarxfce.feature.cart.data.repository
 
 import com.fajarxfce.core.database.dao.CartDao
 import com.fajarxfce.core.exception.BaseException
+import com.fajarxfce.core.network.safeApiCall
 import com.fajarxfce.core.result.Resource
+import com.fajarxfce.feature.cart.data.model.CreateTransactionRequest
+import com.fajarxfce.feature.cart.data.model.DataItem
+import com.fajarxfce.feature.cart.data.source.CartApi
 import com.fajarxfce.feature.cart.data.toCartItems
 import com.fajarxfce.feature.cart.domain.model.CartItem
 import com.fajarxfce.feature.cart.domain.repository.CartRepository
@@ -13,7 +17,8 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
-    private val cartDao: CartDao
+    private val cartDao: CartDao,
+    private val cartApi: CartApi,
 ) : CartRepository {
     override fun getCartItems(): Flow<List<CartItem>> = flow {
         emitAll(cartDao.getAll().map { it.toCartItems() })
@@ -34,4 +39,18 @@ class CartRepositoryImpl @Inject constructor(
             Resource.Error(BaseException("Error decreasing product quantity"))
         }
     }
+
+    override suspend fun createTransaction(cartItems: List<CartItem>): Resource<Unit> =
+        safeApiCall {
+            cartApi.createTransaction(
+                CreateTransactionRequest(
+                    data = cartItems.map { cartItem ->
+                        DataItem(
+                            quantity = cartItem.quantity,
+                            productId = cartItem.productId,
+                        )
+                    },
+                ),
+            )
+        }
 }

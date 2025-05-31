@@ -1,12 +1,7 @@
 package com.fajarxfce.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -23,6 +18,7 @@ import com.fajarxfce.feature.pos.ui.navigation.Pos
 import com.fajarxfce.feature.pos.ui.navigation.posScreen
 import com.fajarxfce.feature.splash.ui.navigation.Splash
 import com.fajarxfce.feature.splash.ui.navigation.splashScreen
+import com.fajarxfce.feature.transactionhistory.ui.navigation.TransactionHistoryRoute
 import com.fajarxfce.feature.transactionhistory.ui.navigation.transactionHistoryScreen
 
 @Composable
@@ -97,6 +93,11 @@ fun CashierAppNavGraph(
                 navController.apply {
                     navigate(Cart)
                 }
+            },
+            onNavigateToHistory = {
+                navController.apply {
+                    navigate(TransactionHistoryRoute)
+                }
             }
         )
         posScreen(
@@ -115,7 +116,12 @@ fun CashierAppNavGraph(
             }
         )
 
-        transactionHistoryScreen()
+        transactionHistoryScreen(
+            onNavigateBack = {},
+            onTransactionClick = { transactionId ->
+
+            },
+        )
         cartScreen(
             onNavigateBack = {
                 navController.apply {

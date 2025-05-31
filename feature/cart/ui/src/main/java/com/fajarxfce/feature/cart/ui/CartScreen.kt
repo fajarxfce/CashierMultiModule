@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
@@ -32,11 +33,13 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fajarxfce.core.ui.component.BaseTopAppBar
 import com.fajarxfce.core.ui.component.CashierText
+import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import com.fajarxfce.core.ui.theme.AppTheme
 import com.fajarxfce.core.ui.theme.CashierBlue
 import com.fajarxfce.feature.cart.domain.model.CartItem
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -47,21 +50,18 @@ internal fun CartScreen(
     uiAction: (CartContract.UiAction) -> Unit,
     onNavigateBack: () -> Unit = {},
 ) {
-    val snackbarHostState = SnackbarHostState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = true) {
         uiAction(CartContract.UiAction.OnLoad)
     }
 
-    LaunchedEffect(key1 = true) {
-        uiEffect.collectLatest { effect ->
-            when (effect) {
-                is CartContract.UiEffect.ShowSnackbar -> {
-                    snackbarHostState.showSnackbar(
-                        message = effect.message,
-                        withDismissAction = true,
-                        duration = SnackbarDuration.Short,
-                    )
+    uiEffect.collectWithLifecycle { effect ->
+        when(effect) {
+            is CartContract.UiEffect.ShowSnackbar -> {
+                scope.launch {
+                    snackbarHostState.showSnackbar(effect.message)
                 }
             }
         }
@@ -79,7 +79,7 @@ internal fun CartScreen(
             if (uiState.cartItems.isNotEmpty()) {
                 CartBottomBar(
                     cartItems = uiState.cartItems,
-                    onCheckout = { uiAction(CartContract.UiAction.OnCheckout) },
+                    onCheckout = { uiAction(CartContract.UiAction.OnCheckout(uiState.cartItems)) },
                 )
             }
         },

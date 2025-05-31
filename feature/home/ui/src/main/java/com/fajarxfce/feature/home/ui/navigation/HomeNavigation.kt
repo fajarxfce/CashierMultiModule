@@ -26,7 +26,8 @@ fun NavGraphBuilder.homeScreen(
     onNavigateDetailWithArgs: () -> Unit,
     onNavigateToPos: () -> Unit,
     onOpenDrawer: () -> Unit,
-    onNavigateToReport: () -> Unit
+    onNavigateToReport: () -> Unit,
+    onNavigateToHistory: () -> Unit,
 ) {
     composable<Home>(
         enterTransition = {
@@ -49,7 +50,8 @@ fun NavGraphBuilder.homeScreen(
             onNavigateDetail = onNavigateDetail,
             onNavigateToPos = onNavigateToPos,
             onOpenDrawer = onOpenDrawer,
-            onNavigateToReport = onNavigateToReport
+            onNavigateToReport = onNavigateToReport,
+            onNavigateToHistory = onNavigateToHistory,
         )
     }
 }

@@ -8,7 +8,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.feature.pos.domain)
+    implementation(projects.feature.transactionHistory.domain)
     implementation(libs.androidx.material)
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.0")
 }

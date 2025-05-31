@@ -80,6 +80,7 @@ dependencies {
     implementation(projects.feature.splash.data)
     implementation(projects.feature.pos.data)
     implementation(projects.feature.cart.data)
+    implementation(projects.feature.transactionHistory.data)
 
     implementation(libs.timber)
     implementation(libs.androidx.activity.compose)

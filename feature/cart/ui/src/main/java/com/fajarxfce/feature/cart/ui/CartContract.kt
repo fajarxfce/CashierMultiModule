@@ -10,7 +10,8 @@ object CartContract {
 
     sealed interface UiAction {
         data object OnLoad : UiAction
-        data object OnCheckout : UiAction
+        data class OnCheckout(val cartItems: List<CartItem>) : UiAction
+        data object OnCreateTransaction : UiAction
         data class OnIncreaseQuantity(val productId: Int) : UiAction
         data class OnDecreaseQuantity(val productId: Int) : UiAction
     }

@@ -16,6 +16,5 @@ internal interface PosApi {
         @Query("page") pageNumber: Int,
         @Query("search") query: String? = null,
         @Query("category_id") categoryId: String? = null,
-        @Header("Authorization") token: String,
     ): BaseResponse<GetAllProductResponse>
 }

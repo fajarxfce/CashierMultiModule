@@ -27,7 +27,6 @@ internal class ProductPagingSource @Inject constructor(
             pageSize = pageSize,
             query = query,
             categoryId = categoryId,
-            token = "Bearer 115|peniuAsULVfkHPKjCCfWyvjRI3ImtWLW6WYckgXxcd93bf32"
         )
         return response.data
             ?.data

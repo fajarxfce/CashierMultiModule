@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import com.fajarxfce.feature.home.ui.navigation.Home
 import com.fajarxfce.core.ui.navigation.Screen
 import com.fajarxfce.feature.pos.ui.navigation.Pos
-import com.fajarxfce.feature.transactionhistory.ui.navigation.TransactionHistory
+import com.fajarxfce.feature.transactionhistory.ui.navigation.TransactionHistoryRoute
 import kotlinx.serialization.Serializable
 
 @Serializable data object Customer : Screen
@@ -52,7 +52,7 @@ sealed class NavigationItem(
     )
 
     data object TransactionsHistoryScreen : NavigationItem(
-        route = TransactionHistory,
+        route = TransactionHistoryRoute,
         title = "Transactions History",
         icon = Icons.Filled.ListAlt
     )

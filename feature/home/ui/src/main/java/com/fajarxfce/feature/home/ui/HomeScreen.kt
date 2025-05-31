@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.fajarxfce.core.ui.R
 import com.fajarxfce.core.ui.theme.AppTheme
 import com.fajarxfce.core.ui.theme.CashierBlue
 import kotlinx.coroutines.flow.Flow
@@ -58,7 +59,8 @@ internal fun HomeScreen(
     onNavigateDetail: (Int) -> Unit,
     onNavigateToPos: () -> Unit,
     onOpenDrawer: () -> Unit,
-    onNavigateToReport: () -> Unit
+    onNavigateToReport: () -> Unit,
+    onNavigateToHistory: () -> Unit
 ) {
     val primaryBlue = Color(0xFF0057CC)
     val lightBlue = Color(0xFFE6EFFD)
@@ -110,7 +112,7 @@ internal fun HomeScreen(
                     )
                     .offset(y = 260.dp),  // Adjust this value to control overlap
                 onNavigateToPos = onNavigateToPos,
-                onNavigateToHistory = { /* TODO */ },
+                onNavigateToHistory = onNavigateToHistory,
                 onNavigateToReport = onNavigateToReport,
                 onNavigateToProduct = { /* TODO */ },
             )
@@ -230,7 +232,7 @@ fun CashierIllustration() {
                         .fillMaxWidth(),
                 ) {
                     Image(
-                        painter = painterResource(id = com.fajarxfce.core.ui.R.drawable.core_ui_logo_new),
+                        painter = painterResource(id = R.drawable.core_ui_logo_new),
                         contentDescription = "Cashier",
                         modifier = Modifier
                             .size(400.dp)
@@ -268,7 +270,7 @@ fun MenuGrid(
         ) {
             MenuCard(
                 title = "Point of Sale\nPOS",
-                iconRes = com.fajarxfce.core.ui.R.drawable.core_ui_ic_logo,
+                iconRes = R.drawable.core_ui_ic_logo,
                 backgroundColor = Color.White,
                 contentColor = Color.Black,
                 modifier = Modifier.weight(1f),
@@ -277,7 +279,7 @@ fun MenuGrid(
 
             MenuCard(
                 title = "Kelola\nProduk",
-                iconRes = com.fajarxfce.core.ui.R.drawable.core_ui_ic_google,
+                iconRes = R.drawable.core_ui_ic_google,
                 backgroundColor = Color.White,
                 contentColor = Color.Black,
                 modifier = Modifier.weight(1f),
@@ -293,7 +295,7 @@ fun MenuGrid(
         ) {
             MenuCard(
                 title = "Laporan\nPenjualan",
-                iconRes = com.fajarxfce.core.ui.R.drawable.core_ui_ic_google,
+                iconRes = R.drawable.core_ui_ic_google,
                 backgroundColor = accentGreen,
                 contentColor = Color.White,
                 modifier = Modifier.weight(1f),
@@ -302,7 +304,7 @@ fun MenuGrid(
 
             MenuCard(
                 title = "Riwayat\nTransaksi",
-                iconRes = com.fajarxfce.core.ui.R.drawable.core_ui_ic_google,
+                iconRes = R.drawable.core_ui_ic_google,
                 backgroundColor = accentBlue,
                 contentColor = Color.White,
                 modifier = Modifier.weight(1f),
@@ -383,7 +385,8 @@ fun PreviewMamaPizzadoHomeScreen() {
             onNavigateDetail = {},
             onOpenDrawer = {},
             onNavigateToPos = {},
-            onNavigateToReport = {}
+            onNavigateToReport = {},
+            onNavigateToHistory = {}
         )
     }
 }

@@ -2,8 +2,12 @@ package com.fajarxfce.feature.cart.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.fajarxfce.core.result.onFailure
+import com.fajarxfce.core.result.onSuccess
 import com.fajarxfce.core.ui.delegate.mvi.MVI
 import com.fajarxfce.core.ui.delegate.mvi.mvi
+import com.fajarxfce.feature.cart.domain.model.CartItem
+import com.fajarxfce.feature.cart.domain.usecase.CreateTransactionUseCase
 import com.fajarxfce.feature.cart.domain.usecase.DecreaseProductQuantityUseCase
 import com.fajarxfce.feature.cart.domain.usecase.GetCartItemsUseCase
 import com.fajarxfce.feature.cart.domain.usecase.IncreaseProductQuantityUseCase
@@ -16,12 +20,15 @@ internal class CartViewModel @Inject constructor(
     private val getCartItemsUseCase: GetCartItemsUseCase,
     private val increaseProductQuantityUseCase: IncreaseProductQuantityUseCase,
     private val decreaseProductQuantityUseCase: DecreaseProductQuantityUseCase,
+    private val createTransactionUseCase: CreateTransactionUseCase,
 ) : ViewModel(),
     MVI<CartContract.UiState, CartContract.UiAction, CartContract.UiEffect> by mvi(initialState = CartContract.UiState()) {
 
     override fun onAction(action: CartContract.UiAction) {
         when (action) {
-            CartContract.UiAction.OnCheckout -> {}
+            is CartContract.UiAction.OnCheckout -> {
+                createTransaction(action.cartItems)
+            }
             CartContract.UiAction.OnLoad -> {
                 getCartItems()
             }
@@ -29,9 +36,26 @@ internal class CartViewModel @Inject constructor(
             is CartContract.UiAction.OnDecreaseQuantity -> {
                 decreaseProductQuantity(action.productId)
             }
+
             is CartContract.UiAction.OnIncreaseQuantity -> {
                 increaseProductQuantity(action.productId)
             }
+
+            CartContract.UiAction.OnCreateTransaction -> {
+
+            }
+        }
+    }
+
+    private fun createTransaction(cartItems: List<CartItem>) {
+        viewModelScope.launch {
+            createTransactionUseCase(cartItems)
+                .onSuccess {
+                    emitUiEffect(CartContract.UiEffect.ShowSnackbar("Transaction created"))
+                }
+                .onFailure {
+                    emitUiEffect(CartContract.UiEffect.ShowSnackbar(it.message.toString()))
+                }
         }
     }
 
@@ -46,6 +70,7 @@ internal class CartViewModel @Inject constructor(
             decreaseProductQuantityUseCase(productId)
         }
     }
+
     private fun getCartItems() {
         viewModelScope.launch {
             getCartItemsUseCase().collect { items ->
