@@ -34,6 +34,8 @@ import coil.request.ImageRequest
 import com.fajarxfce.core.ui.theme.CashierBlue // Asumsi Anda punya warna ini
 import com.fajarxfce.core.ui.theme.CashierGray
 import com.fajarxfce.feature.pos.domain.model.Product
+import java.text.NumberFormat
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,13 +47,13 @@ fun CustomProductDetailBottomSheet(
     onAddToCart: (product: Product?, quantity: Int) -> Unit,
 ) {
     var quantity by rememberSaveable(product?.id) { mutableIntStateOf(1) } // Reset quantity saat produk berubah
-
+    val formatter = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
         shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp), // Bentuk kustom
-        containerColor = Color.White, // Warna latar kustom
-        dragHandle = { // Drag handle kustom atau hilangkan jika tidak mau
+        containerColor = Color.White,
+        dragHandle = {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -73,9 +75,8 @@ fun CustomProductDetailBottomSheet(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 32.dp), // Padding untuk tombol CTA
+                .padding(bottom = 32.dp),
         ) {
-            // Tombol Close di pojok kanan atas (opsional)
             IconButton(
                 onClick = onDismiss,
                 modifier = Modifier
@@ -89,11 +90,10 @@ fun CustomProductDetailBottomSheet(
                 )
             }
 
-            // Gambar Produk dengan efek gradasi
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(250.dp) // Sesuaikan tinggi gambar
+                    .height(250.dp)
                     .padding(horizontal = 24.dp)
                     .clip(RoundedCornerShape(16.dp)),
             ) {
@@ -110,7 +110,6 @@ fun CustomProductDetailBottomSheet(
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize(),
                 )
-                // Gradasi di atas gambar untuk kontras teks jika ada teks di atas gambar
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -125,17 +124,16 @@ fun CustomProductDetailBottomSheet(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Detail Teks
             Column(
                 modifier = Modifier
                     .padding(horizontal = 24.dp),
             ) {
                 Text(
-                    text = product?.name.orEmpty(),
+                    text = product.name.orEmpty(),
                     style = MaterialTheme.typography.headlineSmall.copy(
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface, // Warna teks utama
                     ),
+                    color = CashierGray,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -143,10 +141,10 @@ fun CustomProductDetailBottomSheet(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Rp ${product?.price?.toString() ?: "0"}", // Format harga
+                    text = formatter.format(product.price).toString().orEmpty(), // Format harga
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.SemiBold,
-                        color = CashierBlue, // Warna harga yang menonjol
+                        color = CashierBlue,
                     ),
                 )
 
@@ -155,16 +153,15 @@ fun CustomProductDetailBottomSheet(
                 Text(
                     text = product?.description.orEmpty(),
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.onSurfaceVariant, // Warna teks sekunder
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     ),
                     maxLines = 4,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
 
-            Spacer(modifier = Modifier.weight(1f)) // Dorong konten berikutnya ke bawah
+            Spacer(modifier = Modifier.weight(1f))
 
-            // Counter dan Tombol Add to Cart
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -184,11 +181,11 @@ fun CustomProductDetailBottomSheet(
                 Button(
                     onClick = { onAddToCart(product, quantity) },
                     modifier = Modifier
-                        .weight(1f) // Agar tombol memenuhi sisa ruang
+                        .weight(1f)
                         .height(52.dp),
-                    shape = RoundedCornerShape(12.dp), // Bentuk tombol kustom
+                    shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = CashierBlue, // Warna tombol utama
+                        containerColor = CashierBlue,
                         contentColor = Color.White,
                     ),
                 ) {

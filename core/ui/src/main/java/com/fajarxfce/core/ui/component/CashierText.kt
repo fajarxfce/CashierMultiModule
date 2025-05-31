@@ -21,7 +21,8 @@ fun CashierText(
     fontSize: TextUnit = 16.sp,
     color: Color = MaterialTheme.colorScheme.onBackground,
     style: TextStyle = LocalTextStyle.current,
-    textAlign: TextAlign? = null
+    textAlign: TextAlign? = null,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     Text(
         modifier = modifier,
@@ -29,7 +30,8 @@ fun CashierText(
         fontSize = fontSize,
         color = color,
         style = style,
-        textAlign = textAlign
+        textAlign = textAlign,
+        maxLines = maxLines
     )
 }
 

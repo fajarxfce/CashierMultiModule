@@ -70,6 +70,7 @@ import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fajarxfce.core.ui.component.BaseTopAppBar
+import com.fajarxfce.core.ui.component.CashierText
 import com.fajarxfce.core.ui.component.textfield.CashierSearchTextField
 import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import com.fajarxfce.core.ui.theme.CashierBlue
@@ -82,6 +83,8 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.text.NumberFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -258,9 +261,7 @@ fun ProductItemCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(key1 = true) {
-        Timber.tag("ProductItemCard").d("Product: ${product.toString()}")
-    }
+    val formatter = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -293,24 +294,14 @@ fun ProductItemCard(
             Spacer(modifier = Modifier.width(16.dp))
 
             Column(modifier = Modifier.weight(1f)) {
-                Text(
+                CashierText(
                     text = product.name.orEmpty(),
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurface,
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = product.description.orEmpty(),
-                    style = MaterialTheme.typography.bodySmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Rp ${product.price?.toString() ?: "N/A"}", // Format harga sesuai kebutuhan
+                CashierText(
+                    text = formatter.format(product.price), // Format harga sesuai kebutuhan
                     style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
                     color = CashierBlue,
                 )
