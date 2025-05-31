@@ -26,4 +26,12 @@ class CartRepositoryImpl @Inject constructor(
             Resource.Error(BaseException("Error increasing product quantity"))
         }
     }
+
+    override suspend fun decreaseProductQuantity(productId: Int): Resource<Unit> {
+        return try {
+            Resource.Success(cartDao.decreaseProductQuantity(productId))
+        } catch (e: Exception) {
+            Resource.Error(BaseException("Error decreasing product quantity"))
+        }
+    }
 }

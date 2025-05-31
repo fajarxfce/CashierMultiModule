@@ -16,6 +16,10 @@ import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
@@ -33,6 +37,8 @@ import com.fajarxfce.core.ui.theme.CashierBlue
 import com.fajarxfce.feature.cart.domain.model.CartItem
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emptyFlow
+import java.text.NumberFormat
+import java.util.Locale
 
 @Composable
 internal fun CartScreen(
@@ -197,13 +203,14 @@ private fun CartItemCard(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     IconButton(
-                        onClick = { onDecreaseQuantity(item.productId!!) },
+                        onClick = { if (item.quantity!! > 1) onDecreaseQuantity(item.productId!!) },
                         modifier = Modifier
                             .size(32.dp)
                             .background(
                                 MaterialTheme.colorScheme.surfaceVariant,
                                 RoundedCornerShape(8.dp),
                             ),
+                        enabled = item.quantity!! > 1,
                     ) {
                         Icon(
                             imageVector = Icons.Default.Remove,
@@ -267,13 +274,14 @@ private fun CartBottomBar(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
+
                 CashierText(
-                    text = "Total ${cartItems.size.toString()} item)",
+                    text = "Total ${cartItems.size.toString()} (item)",
                     style = MaterialTheme.typography.bodyMedium,
                 )
 
                 Text(
-                    text = "Rp 500,000",
+                    text = NumberFormat.getCurrencyInstance(Locale("id", "ID")).format(cartItems.sumOf { it.price!! * it.quantity!! }),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = CashierBlue,

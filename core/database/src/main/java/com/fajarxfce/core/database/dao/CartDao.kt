@@ -26,6 +26,9 @@ interface CartDao {
     @Query("UPDATE carts SET quantity = quantity + 1 WHERE productId = :productId")
     suspend fun increaseProductQuantity(productId: Int)
 
+    @Query("UPDATE carts SET quantity = quantity - 1 WHERE productId = :productId")
+    suspend fun decreaseProductQuantity(productId: Int)
+
     @Query("SELECT * FROM carts WHERE productId = :productId")
     fun getProductById(productId: Int): CartEntity?
 

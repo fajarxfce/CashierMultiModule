@@ -151,9 +151,6 @@ internal fun PosScreen(
                 modifier = Modifier.padding(paddingValues),
                 pagingItems = pagingItems,
                 onProductClick = { product ->
-                    scope.launch {
-                        Timber.tag("Product Clicked").d("Product: ${product.toString()}")
-                    }
                     onAction(PosContract.UiAction.OnProductItemClick(product))
                 },
             )
