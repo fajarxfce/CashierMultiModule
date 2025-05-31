@@ -40,37 +40,40 @@ internal class PosViewModel @Inject constructor(
         )
     ) {
 
-    private val currentSearchQuery = MutableStateFlow<String?>(null)
-
-    @OptIn(FlowPreview::class)
-    private val productsBasedOnSearch: Flow<PagingData<Product>> = currentSearchQuery
-        .debounce(300)
-        .distinctUntilChanged()
-        .flatMapLatest { query ->
-            getProductPagingUseCase(query = query).cachedIn(viewModelScope)
-        }
-
-    init {
-        val initialProductsFlow = getProductPagingUseCase()
-            .cachedIn(viewModelScope)
-
-        initialProductsFlow
-            .onEach { pagingData ->
-                updateUiState { copy(productsFlow = flowOf(pagingData)) }
-            }
-            .launchIn(viewModelScope)
-
-        productsBasedOnSearch
-            .onEach { pagingData ->
-                updateUiState { copy(productsFlow = flowOf(pagingData)) }
-            }
-            .launchIn(viewModelScope)
-    }
+//    private val currentSearchQuery = MutableStateFlow<String?>(null)
+//
+//    @OptIn(FlowPreview::class)
+//    private val productsBasedOnSearch: Flow<PagingData<Product>> = currentSearchQuery
+//        .debounce(300)
+//        .distinctUntilChanged()
+//        .flatMapLatest { query ->
+//            getProductPagingUseCase(query = query).cachedIn(viewModelScope)
+//        }
+//
+//    init {
+//        val initialProductsFlow = getProductPagingUseCase()
+//            .cachedIn(viewModelScope)
+//
+//        initialProductsFlow
+//            .onEach { pagingData ->
+//                updateUiState { copy(productsFlow = flowOf(pagingData)) }
+//            }
+//            .launchIn(viewModelScope)
+//
+//        productsBasedOnSearch
+//            .onEach { pagingData ->
+//                updateUiState { copy(productsFlow = flowOf(pagingData)) }
+//            }
+//            .launchIn(viewModelScope)
+//    }
 
     override fun onAction(uiAction: PosContract.UiAction) {
         viewModelScope.launch {
             when (uiAction) {
-                is PosContract.UiAction.LoadProducts -> {}
+                is PosContract.UiAction.LoadProducts -> {
+                    val productsFlow = getProductPagingUseCase().cachedIn(viewModelScope)
+                    updateUiState { copy(productsFlow = productsFlow) }
+                }
                 is PosContract.UiAction.OnProductItemClick -> {
                     updateUiState { copy(productForSheet = uiAction.product, isLoading = false) }
                     viewModelScope.launch {

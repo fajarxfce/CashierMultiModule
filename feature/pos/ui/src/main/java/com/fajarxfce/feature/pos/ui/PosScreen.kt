@@ -99,6 +99,10 @@ internal fun PosScreen(
     )
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
 
+    LaunchedEffect(key1 = true) {
+        onAction(PosContract.UiAction.LoadProducts)
+    }
+
     uiEffect.collectWithLifecycle { effect ->
         when (effect) {
             is PosContract.UiEffect.ShowProductDetailsSheet -> {
