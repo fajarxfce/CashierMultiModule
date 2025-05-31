@@ -23,8 +23,8 @@ interface CartDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(cartEntity: CartEntity)
 
-    @Query("UPDATE carts SET quantity = :quantity + quantity WHERE productId = :productId")
-    suspend fun increaseQuantity(productId: Int, quantity: Int)
+    @Query("UPDATE carts SET quantity = quantity + 1 WHERE productId = :productId")
+    suspend fun increaseProductQuantity(productId: Int)
 
     @Query("SELECT * FROM carts WHERE productId = :productId")
     fun getProductById(productId: Int): CartEntity?
