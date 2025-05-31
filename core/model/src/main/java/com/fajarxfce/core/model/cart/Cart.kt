@@ -4,12 +4,16 @@ import com.fajarxfce.core.model.entity.CartEntity
 
 data class Cart(
     val productId: Int?,
+    val name: String?,
+    val price: Int?,
     val quantity: Int?,
-    val totalPrice: Double?
+    val imageUrl: String?,
 )
 
 fun Cart.toEntity(): CartEntity = CartEntity(
     productId = productId,
     quantity = quantity,
-    totalPrice = totalPrice
+    name = name,
+    price = price,
+    imageUrl = imageUrl
 )

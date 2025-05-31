@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.fajarxfce.core.model.cart.Cart
 import com.fajarxfce.core.model.entity.CartEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -20,7 +21,7 @@ interface CartDao {
     suspend fun insert(cartEntity: CartEntity)
 
     @Query("UPDATE carts SET quantity = :quantity + quantity WHERE productId = :productId")
-    suspend fun  increaseQuantity(productId: Int, quantity: Int)
+    suspend fun increaseQuantity(productId: Int, quantity: Int)
 
     @Query("SELECT * FROM carts WHERE productId = :productId")
     fun getProductById(productId: Int): CartEntity?
@@ -29,12 +30,20 @@ interface CartDao {
     suspend fun updateQuantity(productId: Int, newQuantity: Int)
 
     @Transaction
-    suspend fun upsertItem(productId: Int, quantity: Int) {
-        val existingItem = getItem(productId)
+    suspend fun upsertItem(cart: Cart) {
+        val existingItem = getItem(cart.productId ?: 0)
         if (existingItem != null) {
-            updateQuantity(productId, quantity)
+            updateQuantity(cart.productId ?: 0, cart.quantity ?: 0)
         } else {
-            insert(CartEntity(productId = productId, quantity = quantity, totalPrice = 0.0))
+            insert(
+                CartEntity(
+                    productId = cart.productId,
+                    quantity = cart.quantity,
+                    imageUrl = cart.imageUrl,
+                    name = cart.name,
+                    price = cart.price,
+                ),
+            )
         }
     }
 }

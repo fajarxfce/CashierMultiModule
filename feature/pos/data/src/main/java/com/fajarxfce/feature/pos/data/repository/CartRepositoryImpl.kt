@@ -6,6 +6,7 @@ import com.fajarxfce.core.exception.BaseException
 import com.fajarxfce.core.result.Resource
 import com.fajarxfce.core.model.cart.Cart
 import com.fajarxfce.core.model.cart.toEntity
+import com.fajarxfce.feature.pos.domain.params.UpsertProductToCartParam
 import com.fajarxfce.feature.pos.domain.repository.CartRepository
 import javax.inject.Inject
 
@@ -24,14 +25,16 @@ class CartRepositoryImpl @Inject constructor(
     }
 
     override suspend fun upsertItem(
-        productId: Int,
-        quantity: Int,
+        param: UpsertProductToCartParam
     ): Resource<Unit> {
         return try {
-            cartDao.upsertItem(
-                productId = productId,
-                quantity = quantity,
-            )
+            cartDao.upsertItem(Cart(
+                productId = param.productId,
+                name = param.name,
+                price = param.price,
+                quantity = param.quantity,
+                imageUrl = param.imageUrl
+            ))
             Resource.Success(Unit)
         } catch (e: Exception) {
             Resource.Error(BaseException(e.message ?: "Unknown error"))

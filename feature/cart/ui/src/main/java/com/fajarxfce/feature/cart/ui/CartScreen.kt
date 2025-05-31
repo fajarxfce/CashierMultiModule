@@ -153,7 +153,7 @@ private fun CartItemCard(
                 contentDescription = item.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(80.dp)
+                    .size(100.dp)
                     .clip(RoundedCornerShape(8.dp))
                     .background(MaterialTheme.colorScheme.surfaceVariant)
             )
@@ -162,14 +162,14 @@ private fun CartItemCard(
 
             Column(modifier = Modifier.weight(1f)) {
                 CashierText(
-                    text = item.name!!,
+                    text = item.name.orEmpty(),
                     style = MaterialTheme.typography.titleMedium,
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "Rp 20,000",
+                    text = item.price.toString(),
                     style = MaterialTheme.typography.bodyMedium,
                     color = CashierBlue
                 )
@@ -195,7 +195,7 @@ private fun CartItemCard(
                         )
                     }
 
-                    Text(
+                    CashierText(
                         text = item.quantity.toString(),
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(horizontal = 16.dp)
@@ -251,7 +251,7 @@ private fun CartBottomBar(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 CashierText(
-                    text = "Total 0 item)",
+                    text = "Total ${cartItems.size.toString()} item)",
                     style = MaterialTheme.typography.bodyMedium
                 )
 
@@ -335,8 +335,20 @@ private fun CartScreenPreview() {
             uiState = CartContract.UiState(
                 isLoading = false,
                 cartItems = listOf(
-                    CartItem(productId = 1, name = "Product 1", quantity = 1),
-                    CartItem(productId = 2, name = "Product 2", quantity = 2),
+                    CartItem(
+                        productId = 1,
+                        name = "Product 1",
+                        quantity = 1,
+                        price = 20000,
+                        imageUrl = ""
+                    ),
+                    CartItem(
+                        productId = 2,
+                        name = "Product 1",
+                        quantity = 1,
+                        price = 20000,
+                        imageUrl = ""
+                    ),
                 ),
             ),
             uiEffect = emptyFlow(),
@@ -352,8 +364,20 @@ private fun CartContentPreview() {
     AppTheme {
         CartContent(
             cartItems = listOf(
-                CartItem(productId = 1, name = "Product 1", quantity = 1),
-                CartItem(productId = 2, name = "Product 2", quantity = 2),
+                CartItem(
+                    productId = 1,
+                    name = "Product 1",
+                    quantity = 1,
+                    price = 20000,
+                    imageUrl = ""
+                ),
+                CartItem(
+                    productId = 2,
+                    name = "Product 1",
+                    quantity = 1,
+                    price = 20000,
+                    imageUrl = ""
+                ),
             ),
             onUpdateQuantity = { _, _ -> },
             onRemoveItem = {},
@@ -366,7 +390,13 @@ private fun CartContentPreview() {
 private fun CartItemCardPreview() {
     AppTheme {
         CartItemCard(
-            item = CartItem(productId = 1, name = "Product 1", quantity = 1),
+            item = CartItem(
+                productId = 1,
+                name = "Product 1",
+                quantity = 1,
+                price = 20000,
+                imageUrl = ""
+            ),
             onUpdateQuantity = { _, _ -> },
             onRemoveItem = {},
         )
@@ -378,8 +408,20 @@ private fun CartItemCardPreview() {
 private fun CartBottomBarPreview() {
     CartBottomBar(
         cartItems = listOf(
-            CartItem(productId = 1, name = "Product 1", quantity = 1),
-            CartItem(productId = 2, name = "Product 2", quantity = 2)
+            CartItem(
+                productId = 1,
+                name = "Product 1",
+                quantity = 1,
+                price = 20000,
+                imageUrl = ""
+            ),
+            CartItem(
+                productId = 2,
+                name = "Product 1",
+                quantity = 1,
+                price = 20000,
+                imageUrl = ""
+            ),
         ),
         onCheckout = {}
     )

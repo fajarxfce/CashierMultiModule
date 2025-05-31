@@ -164,7 +164,7 @@ internal fun PosScreen(
                 onAction(PosContract.UiAction.OnDismissProductDetailsSheet)
             },
             onAddToCart = { product, quantity ->
-                onAction(PosContract.UiAction.AddToCartFromDetail(product, quantity))
+                product?.let { onAction(PosContract.UiAction.AddToCartFromDetail(it, quantity)) }
             },
         )
     }
@@ -254,6 +254,9 @@ fun ProductItemCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    LaunchedEffect(key1 = true) {
+        Timber.tag("ProductItemCard").d("Product: ${product.toString()}")
+    }
     Card(
         modifier = modifier
             .fillMaxWidth()

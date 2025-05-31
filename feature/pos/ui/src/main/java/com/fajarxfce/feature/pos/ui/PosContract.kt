@@ -17,7 +17,7 @@ internal object PosContract {
         data object LoadProducts : UiAction
         data class OnProductItemClick(val product: Product) : UiAction
 
-        data class AddToCartFromDetail(val product: Product?, val quantitySelected: Int) : UiAction
+        data class AddToCartFromDetail(val product: Product, val quantitySelected: Int) : UiAction
 
         data object OnDismissProductDetailsSheet : UiAction
     }

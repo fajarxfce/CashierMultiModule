@@ -39,7 +39,7 @@ import com.fajarxfce.feature.pos.domain.model.Product
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomProductDetailBottomSheet(
-    product: Product?,
+    product: Product,
     sheetState: SheetState,
     onDismiss: () -> Unit,
     onAddToCart: (product: Product?, quantity: Int) -> Unit,

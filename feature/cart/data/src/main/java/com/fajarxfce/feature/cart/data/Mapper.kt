@@ -7,7 +7,9 @@ fun CartEntity.toCartItem(): CartItem {
     return CartItem(
         productId = productId,
         quantity = quantity,
-        name = "",
+        name = name,
+        price = price,
+        imageUrl = imageUrl,
     )
 }
 

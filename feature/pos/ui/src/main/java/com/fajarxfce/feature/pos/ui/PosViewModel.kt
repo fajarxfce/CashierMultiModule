@@ -9,6 +9,8 @@ import com.fajarxfce.core.result.onSuccess
 import com.fajarxfce.core.ui.delegate.mvi.MVI
 import com.fajarxfce.core.ui.delegate.mvi.mvi
 import com.fajarxfce.feature.pos.domain.model.Product
+import com.fajarxfce.feature.pos.domain.model.toCart
+import com.fajarxfce.feature.pos.domain.params.UpsertProductToCartParam
 import com.fajarxfce.feature.pos.domain.usecase.GetProductPagingUseCase
 import com.fajarxfce.feature.pos.domain.usecase.UpsertProductToCartUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -89,7 +91,7 @@ internal class PosViewModel @Inject constructor(
         }
     }
 
-    private fun handleAddToCart(product: Product?, quantitySelected: Int){
+    private fun handleAddToCart(product: Product, quantitySelected: Int){
         if (quantitySelected <= 0) {
             viewModelScope.launch {
                 emitUiEffect(PosContract.UiEffect.ShowSnackbar("Quantity must be greater than 0"))
@@ -97,7 +99,13 @@ internal class PosViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
-            upsertProductToCartUseCase(product?.id!!, quantitySelected)
+            upsertProductToCartUseCase(param = UpsertProductToCartParam(
+                productId = product.id,
+                name = product.name,
+                price = product.price,
+                quantity = quantitySelected,
+                imageUrl = product.imageUrl
+            ))
                 .onSuccess {
                     emitUiEffect(PosContract.UiEffect.ShowSnackbar("Product added to cart"))
                 }
