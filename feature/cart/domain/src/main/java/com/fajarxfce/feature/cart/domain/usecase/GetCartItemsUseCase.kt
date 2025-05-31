@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetCartItemsUseCase @Inject constructor(
     private val cartRepository: CartRepository
 ) {
-    operator fun invoke(): Flow<Resource<List<CartItem>>> {
+    operator fun invoke(): Flow<List<CartItem>> {
         return cartRepository.getCartItems()
     }
 }

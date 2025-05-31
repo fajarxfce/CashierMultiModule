@@ -26,6 +26,7 @@ fun NavGraphBuilder.homeScreen(
     onNavigateDetailWithArgs: () -> Unit,
     onNavigateToPos: () -> Unit,
     onOpenDrawer: () -> Unit,
+    onNavigateToReport: () -> Unit
 ) {
     composable<Home>(
         enterTransition = {
@@ -47,7 +48,8 @@ fun NavGraphBuilder.homeScreen(
             onAction = viewModel::onAction,
             onNavigateDetail = onNavigateDetail,
             onNavigateToPos = onNavigateToPos,
-            onOpenDrawer = onOpenDrawer
+            onOpenDrawer = onOpenDrawer,
+            onNavigateToReport = onNavigateToReport
         )
     }
 }

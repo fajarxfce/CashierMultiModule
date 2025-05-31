@@ -7,7 +7,6 @@ import com.fajarxfce.core.ui.delegate.mvi.mvi
 import com.fajarxfce.feature.cart.domain.usecase.GetCartItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,8 +26,8 @@ internal class CartViewModel @Inject constructor(
 
     private fun getCartItems() {
         viewModelScope.launch {
-            getCartItemsUseCase().collect {
-                Timber.tag("CartViewModel").d("getCartItems: $it")
+            getCartItemsUseCase().collect { items ->
+                updateUiState { copy(cartItems = items) }
             }
         }
     }

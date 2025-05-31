@@ -58,6 +58,7 @@ internal fun HomeScreen(
     onNavigateDetail: (Int) -> Unit,
     onNavigateToPos: () -> Unit,
     onOpenDrawer: () -> Unit,
+    onNavigateToReport: () -> Unit
 ) {
     val primaryBlue = Color(0xFF0057CC)
     val lightBlue = Color(0xFFE6EFFD)
@@ -110,7 +111,7 @@ internal fun HomeScreen(
                     .offset(y = 260.dp),  // Adjust this value to control overlap
                 onNavigateToPos = onNavigateToPos,
                 onNavigateToHistory = { /* TODO */ },
-                onNavigateToReport = { /* TODO */ },
+                onNavigateToReport = onNavigateToReport,
                 onNavigateToProduct = { /* TODO */ },
             )
         }
@@ -381,7 +382,8 @@ fun PreviewMamaPizzadoHomeScreen() {
             onAction = {},
             onNavigateDetail = {},
             onOpenDrawer = {},
-            onNavigateToPos = {}
+            onNavigateToPos = {},
+            onNavigateToReport = {}
         )
     }
 }

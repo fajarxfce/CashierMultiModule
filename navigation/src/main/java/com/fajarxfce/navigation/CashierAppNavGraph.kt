@@ -90,9 +90,14 @@ fun CashierAppNavGraph(
             onOpenDrawer = onOpenDrawer,
             onNavigateToPos = {
                 navController.apply {
-                    navigate(Cart)
+                    navigate(Pos)
                 }
             },
+            onNavigateToReport = {
+                navController.apply {
+                    navigate(Cart)
+                }
+            }
         )
         posScreen(
             onNavigateBack = {
