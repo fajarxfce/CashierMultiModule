@@ -136,7 +136,7 @@ fun TopAppBar(
             ) {
                 Column {
                     Text(
-                        text = "Mama Pizzado",
+                        text = "Cashier",
                         color = Color.White,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
