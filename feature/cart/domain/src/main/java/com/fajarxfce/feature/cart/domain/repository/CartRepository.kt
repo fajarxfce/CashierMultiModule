@@ -8,4 +8,5 @@ interface CartRepository {
     fun getCartItems(): Flow<List<CartItem>>
     suspend fun increaseProductQuantity(productId: Int): Resource<Unit>
     suspend fun decreaseProductQuantity(productId: Int): Resource<Unit>
+    suspend fun createTransaction(cartItems: List<CartItem>): Resource<Unit>
 }

@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.ShoppingCartCheckout
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -93,6 +94,7 @@ internal fun PosScreen(
         skipPartiallyExpanded = true,
     )
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
+    val showBottomBar by remember { mutableStateOf(true) }
 
     LaunchedEffect(key1 = true) {
         onAction(PosContract.UiAction.LoadProducts)

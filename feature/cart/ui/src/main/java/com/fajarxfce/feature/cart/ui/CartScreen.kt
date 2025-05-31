@@ -79,7 +79,7 @@ internal fun CartScreen(
             if (uiState.cartItems.isNotEmpty()) {
                 CartBottomBar(
                     cartItems = uiState.cartItems,
-                    onCheckout = { uiAction(CartContract.UiAction.OnCheckout) },
+                    onCheckout = { uiAction(CartContract.UiAction.OnCheckout(uiState.cartItems)) },
                 )
             }
         },
