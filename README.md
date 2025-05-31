@@ -1,33 +1,31 @@
-# Shopping App
+# Cashier App
 
-A modern e-commerce mobile application built with Jetpack Compose and Clean Architecture principles.
+## Overview
+Cashier App is a modern point-of-sale system designed for retail businesses. It features an intuitive interface for managing transactions, products, and generating reports to help streamline business operations.
 
 ## Features
+- **Point of Sale (POS)**: Process customer transactions quickly and efficiently
+- **Product Management**: Add, edit, and track your inventory
+- **Sales Reports**: Generate and view comprehensive sales analytics
+- **Transaction History**: Review past transactions with detailed information
 
-### Core Features
-- **Paginated Product Listing**: Efficiently loads products as you scroll
-- **Product Sorting**: Sort products by price, newest, etc.
-- **Product Details**: View comprehensive product information
-- **Shopping Cart**: Add products to cart with quantity control
-- **Clean UI**: Modern material design with dark mode support
+## Tech Stack
+- Kotlin
+- Jetpack Compose for UI
+- Modular Architecture
+- Material Design 3
+- MVI Archirecture
 
-### Technical Features
+## Getting Started
+### Prerequisites
+- Android Studio Narwhal or later
+- JDK 17+
+- Gradle 8.0+
 
-- **Clean Architecture**: Separation of concerns with domain, data, and presentation layers
-- **MVVM Pattern**: Using ViewModels and StateFlow for reactive UI updates
-- **Pagination**: Efficient data loading with Jetpack Paging 3
-- **State Management**: Robust state handling with sealed classes
-- **Dependency Injection**: Using Hilt for clean dependency management
-
-## Libraries Used
-
-- **Jetpack Compose**: UI toolkit
-- **Jetpack Paging 3**: Pagination library
-- **Hilt**: Dependency injection
-- **Coil**: Image loading
-- **Retrofit**: Network requests
-- **Kotlin Coroutines & Flow**: Asynchronous programming
-- **Material3**: Design system
-
+### Installation
+1. Clone the repository
+```bash
+git clone https://github.com/fajarxfce/cashier-app.git
+```
 ## Project Structure
 ![Dependency graph](docs/images/graphs/dep_graph_app.svg)
