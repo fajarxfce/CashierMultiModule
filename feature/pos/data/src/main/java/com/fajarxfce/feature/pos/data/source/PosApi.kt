@@ -6,15 +6,11 @@ import com.fajarxfce.feature.pos.data.model.ProductDataItem
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 internal interface PosApi {
     @GET("product")
     suspend fun getProducts(
-        @Query("orderBy") orderBy: String = "products.id",
-        @Query("order") orderDirection: String = "asc",
-        @Query("paginate") pageSize: Int,
-        @Query("page") pageNumber: Int,
-        @Query("search") query: String? = null,
-        @Query("category_id") categoryId: String? = null,
+        @QueryMap(encoded = true) params: Map<String, String>
     ): BaseResponse<GetAllProductResponse>
 }

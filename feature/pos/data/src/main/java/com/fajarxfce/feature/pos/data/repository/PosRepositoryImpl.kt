@@ -3,8 +3,7 @@ package com.fajarxfce.feature.pos.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.fajarxfce.core.data.DEFAULT_PAGE_SIZE
-import com.fajarxfce.core.datastore.NiaPreferencesDataSource
+import com.fajarxfce.feature.pos.domain.params.GetAllProductParams
 import com.fajarxfce.feature.pos.data.paging.ProductPagingSource
 import com.fajarxfce.feature.pos.data.source.PosApi
 import com.fajarxfce.feature.pos.domain.model.Product
@@ -19,22 +18,16 @@ internal class PosRepositoryImpl @Inject constructor(
 ) : PosRepository {
 
     override fun getProducts(
-        query: String?,
-        categoryId: String?
+        params: GetAllProductParams
     ): Flow<PagingData<Product>> {
         return Pager(
             config = PagingConfig(
-                pageSize = DEFAULT_PAGE_SIZE,
-                prefetchDistance = DEFAULT_PAGE_SIZE / 2,
+                pageSize = params.paginate,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
 
-                ProductPagingSource(
-                    posApi = posApi,
-                    query = query,
-                    categoryId = categoryId
-                )
+                ProductPagingSource(posApi = posApi, initialParams = params)
             }
         ).flow
     }

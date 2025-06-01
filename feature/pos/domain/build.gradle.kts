@@ -12,4 +12,6 @@ dependencies {
     implementation(libs.javax.inject)
     implementation("androidx.paging:paging-runtime:3.3.6")
     implementation("androidx.paging:paging-compose:3.3.6")
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.converter.gson)
 }

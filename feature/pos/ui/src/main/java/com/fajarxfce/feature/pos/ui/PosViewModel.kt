@@ -47,7 +47,9 @@ internal class PosViewModel @Inject constructor(
             when (uiAction) {
                 is PosContract.UiAction.LoadProducts -> {
                     viewModelScope.launch {
-                        val productsFlow = getProductPagingUseCase().cachedIn(viewModelScope)
+                        val productsFlow = getProductPagingUseCase(
+                            params = uiAction.params
+                        ).cachedIn(viewModelScope)
                         updateUiState { copy(productsFlow = productsFlow) }
                     }
                 }

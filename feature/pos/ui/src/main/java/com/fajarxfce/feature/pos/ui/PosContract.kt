@@ -2,6 +2,7 @@ package com.fajarxfce.feature.pos.ui
 
 import androidx.paging.PagingData
 import com.fajarxfce.feature.pos.domain.model.Product
+import com.fajarxfce.feature.pos.domain.params.GetAllProductParams
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -12,10 +13,11 @@ internal object PosContract {
         val productsFlow: Flow<PagingData<Product>> = emptyFlow(),
         val productForSheet: Product? = null,
         val totalCartItem: Int = 0,
+        val params: GetAllProductParams = GetAllProductParams(page = 1)
     )
 
     sealed interface UiAction {
-        data object LoadProducts : UiAction
+        data class LoadProducts(val params: GetAllProductParams) : UiAction
         data object LoadTotalCartItem : UiAction
         data class OnProductItemClick(val product: Product) : UiAction
         data class AddToCartFromDetail(val product: Product, val quantitySelected: Int) : UiAction

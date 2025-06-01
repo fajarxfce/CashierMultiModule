@@ -1,0 +1,1 @@
+-keep class com.fajarxfce.feature.cart.data.model.** { *; }
