@@ -16,18 +16,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.ShoppingCartCheckout
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -66,15 +68,17 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fajarxfce.core.ui.component.BaseTopAppBar
 import com.fajarxfce.core.ui.component.CashierText
+import com.fajarxfce.core.ui.component.textfield.CashierSearchTextField
 import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import com.fajarxfce.core.ui.theme.CashierBlue
 import com.fajarxfce.feature.pos.domain.model.Product
+import com.fajarxfce.feature.pos.domain.params.GetAllProductParams
+import com.fajarxfce.feature.pos.ui.component.CashierFilterChip
 import com.fajarxfce.feature.pos.ui.component.CustomProductDetailBottomSheet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -106,8 +110,9 @@ internal fun PosScreen(
         search = searchQuery,
         productCategoryId = selectedCategoryIds,
         productSubCategoryId = selectedSubCategoryIds,
-        productMerkId = selectedMerkIds
+        productMerkId = selectedMerkIds,
     )
+
 
     LaunchedEffect(key1 = true) {
         onAction(PosContract.UiAction.LoadProducts(newParams))
@@ -162,13 +167,40 @@ internal fun PosScreen(
             )
         },
         content = { paddingValues ->
-            PosContent(
-                modifier = Modifier.padding(paddingValues),
-                pagingItems = pagingItems,
-                onProductClick = { product ->
-                    onAction(PosContract.UiAction.OnProductItemClick(product))
-                },
-            )
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize(),
+            ) {
+                CashierSearchTextField(
+                    text = searchQuery,
+                    onTextChange = { query ->
+//                        searchQuery = query
+                    },
+                    onImeAction = {
+                        val newParams = uiState.params.copy(
+                            search = if (searchQuery.isNotBlank()) searchQuery else null,
+                            page = 1,
+                        )
+                        onAction(PosContract.UiAction.LoadProducts(newParams))
+                    },
+                    modifier = Modifier.padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 16.dp,
+                    ),
+                    showFilterIcon = true,
+                    onFilterClick = {}
+                )
+
+                PosContent(
+                    modifier = Modifier.weight(1f),
+                    pagingItems = pagingItems,
+                    onProductClick = { product ->
+                        onAction(PosContract.UiAction.OnProductItemClick(product))
+                    },
+                )
+            }
         },
     )
 
@@ -189,7 +221,6 @@ internal fun PosScreen(
         )
     }
 }
-
 @Composable
 private fun PosBottomBar(
     modifier: Modifier,
@@ -550,7 +581,7 @@ fun PosScreenEmptyPreview() {
             onAction = {},
             uiEffect = emptyFlow<PosContract.UiEffect>(),
             onNavigateBack = {},
-            onNavigateToCart = {}
+            onNavigateToCart = {},
         )
         EmptyStateView(message = "No products available for preview.")
     }

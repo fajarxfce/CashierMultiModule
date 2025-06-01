@@ -7,4 +7,5 @@
     <string name="core_ui_title_password">Password</string>
     <string name="core_ui_action_search">Search</string>
     <string name="core_ui_title_phone_number">Phone number</string>
+    <string name="core_ui_action_filter">Filter</string>
 </resources>
