@@ -16,20 +16,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.ShoppingCartCheckout
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -66,15 +62,19 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.fajarxfce.core.ui.component.ErrorStateView
 import com.fajarxfce.core.ui.component.BaseTopAppBar
+import com.fajarxfce.core.ui.component.CashierLoadingIndicator
 import com.fajarxfce.core.ui.component.CashierText
+import com.fajarxfce.core.ui.component.EmptyStateView
+import com.fajarxfce.core.ui.component.ErrorItemView
 import com.fajarxfce.core.ui.component.textfield.CashierSearchTextField
 import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import com.fajarxfce.core.ui.theme.CashierBlue
 import com.fajarxfce.feature.pos.domain.model.Product
-import com.fajarxfce.feature.pos.domain.params.GetAllProductParams
-import com.fajarxfce.feature.pos.ui.component.CashierFilterChip
 import com.fajarxfce.feature.pos.ui.component.CustomProductDetailBottomSheet
+import com.fajarxfce.feature.pos.ui.component.PosBottomBar
+import com.fajarxfce.feature.pos.ui.component.ProductItemCard
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
@@ -221,57 +221,6 @@ internal fun PosScreen(
         )
     }
 }
-@Composable
-private fun PosBottomBar(
-    modifier: Modifier,
-    totalCartItem: Int = 0,
-    onNavigateToCart: () -> Unit,
-) {
-    Surface(
-        modifier = modifier,
-        shadowElevation = 8.dp,
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                CashierText(
-                    text = "Total ${totalCartItem} item",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-
-                Text(
-                    text = "Rp 500,000",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = CashierBlue,
-                )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Button(
-                onClick = onNavigateToCart,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = CashierBlue,
-                ),
-            ) {
-                Text(
-                    text = "Go To Cart",
-                    modifier = Modifier.padding(vertical = 4.dp),
-                    style = MaterialTheme.typography.titleMedium,
-                )
-            }
-        }
-    }
-}
 
 @Composable
 private fun PosContent(
@@ -283,7 +232,7 @@ private fun PosContent(
 
     Box(modifier = modifier.fillMaxSize()) {
         if (pagingItems.loadState.refresh is LoadState.Loading && pagingItems.itemCount == 0) {
-            LoadingIndicator(Modifier.align(Alignment.Center))
+            CashierLoadingIndicator(Modifier.align(Alignment.Center))
         } else if (pagingItems.loadState.refresh is LoadState.Error && pagingItems.itemCount == 0) {
             val error = (pagingItems.loadState.refresh as LoadState.Error).error
             ErrorStateView(
@@ -327,7 +276,7 @@ private fun PosContent(
                 // Append loading state
                 item {
                     if (pagingItems.loadState.append is LoadState.Loading) {
-                        LoadingIndicator(
+                        CashierLoadingIndicator(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 16.dp),
@@ -346,169 +295,6 @@ private fun PosContent(
                     }
                 }
             }
-        }
-    }
-}
-
-
-@Composable
-fun ProductItemCard(
-    product: Product,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val formatter = NumberFormat.getCurrencyInstance(Locale("id", "ID"))
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(product.imageUrl.orEmpty())
-                    .crossfade(true)
-                    // .placeholder(R.drawable.placeholder_image)
-                    // .error(R.drawable.error_image)
-                    .build(),
-                contentDescription = product.name ?: "Product Image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
-            )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                CashierText(
-                    text = product.name.orEmpty(),
-                    maxLines = 2,
-                    style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.SemiBold),
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                CashierText(
-                    text = formatter.format(product.price), // Format harga sesuai kebutuhan
-                    style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                    color = CashierBlue,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun LoadingIndicator(modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        CircularProgressIndicator(
-            color = CashierBlue,
-        )
-    }
-}
-
-@Composable
-fun EmptyStateView(
-    message: String,
-    modifier: Modifier = Modifier,
-    icon: ImageVector = Icons.Outlined.ShoppingCartCheckout,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            modifier = Modifier.size(72.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
-}
-
-@Composable
-fun ErrorStateView(
-    message: String,
-    onRetry: () -> Unit,
-    modifier: Modifier = Modifier,
-    icon: ImageVector = Icons.Outlined.CloudOff,
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            modifier = Modifier.size(72.dp),
-            tint = MaterialTheme.colorScheme.error.copy(alpha = 0.8f),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.error,
-        )
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(
-            onClick = onRetry,
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-        ) {
-            Text("Retry", color = MaterialTheme.colorScheme.onPrimary)
-        }
-    }
-}
-
-@Composable
-fun ErrorItemView(
-    message: String,
-    onRetry: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.1f))
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Text(
-            text = message,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onErrorContainer,
-            modifier = Modifier.weight(1f),
-        )
-        TextButton(onClick = onRetry) {
-            Text("Retry", color = MaterialTheme.colorScheme.primary)
         }
     }
 }
