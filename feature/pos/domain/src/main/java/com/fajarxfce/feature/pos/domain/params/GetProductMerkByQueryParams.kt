@@ -1,8 +1,6 @@
 package com.fajarxfce.feature.pos.domain.params
 
-import com.google.gson.annotations.SerializedName
-
-data class GetCategoryByQueryParams (
+data class GetProductMerkByQueryParams (
     val orderBy: String = "id",
     val order: String = "asc",
     val paginate: Int = 10,
@@ -11,7 +9,7 @@ data class GetCategoryByQueryParams (
     val page: Int,
 )
 
-fun GetCategoryByQueryParams.toQueryMap(): Map<String, String> {
+fun GetProductMerkByQueryParams.toQueryMap(): Map<String, String> {
     val map = mutableMapOf<String, String>()
 
     map["orderBy"] = this.orderBy
@@ -21,6 +19,6 @@ fun GetCategoryByQueryParams.toQueryMap(): Map<String, String> {
 
     this.searchBySpecific?.let { map["searchBySpecific"] = it }
     this.search?.let { map["search"] = it }
-    
+
     return map
 }

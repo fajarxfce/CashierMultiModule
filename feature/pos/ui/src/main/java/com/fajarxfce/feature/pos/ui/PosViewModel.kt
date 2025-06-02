@@ -12,6 +12,7 @@ import com.fajarxfce.feature.pos.domain.model.Product
 import com.fajarxfce.feature.pos.domain.model.toCart
 import com.fajarxfce.feature.pos.domain.params.UpsertProductToCartParam
 import com.fajarxfce.feature.pos.domain.usecase.GetCategoryByQueryUseCase
+import com.fajarxfce.feature.pos.domain.usecase.GetProductMerkByQueryUseCase
 import com.fajarxfce.feature.pos.domain.usecase.GetProductPagingUseCase
 import com.fajarxfce.feature.pos.domain.usecase.GetTotalCartItemsUseCase
 import com.fajarxfce.feature.pos.domain.usecase.UpsertProductToCartUseCase
@@ -36,7 +37,8 @@ internal class PosViewModel @Inject constructor(
     private val getProductPagingUseCase: GetProductPagingUseCase,
     private val upsertProductToCartUseCase: UpsertProductToCartUseCase,
     private val getTotalCartItemsUseCase: GetTotalCartItemsUseCase,
-    private val getCategoryByQueryUseCase: GetCategoryByQueryUseCase
+    private val getCategoryByQueryUseCase: GetCategoryByQueryUseCase,
+    private val getProductMerkByQueryUseCase: GetProductMerkByQueryUseCase,
 ) : ViewModel(),
     MVI<PosContract.UiState, PosContract.UiAction, PosContract.UiEffect> by mvi(
         initialState = PosContract.UiState(
@@ -87,6 +89,34 @@ internal class PosViewModel @Inject constructor(
                         ).cachedIn(viewModelScope)
                         updateUiState { copy(categoryFlow = categoryFlow) }
                     }
+                }
+
+                is PosContract.UiAction.LoadProductMerk -> {
+                    viewModelScope.launch {
+                        val productMerkFlow = getProductMerkByQueryUseCase(
+                            params = uiAction.params
+                        ).cachedIn(viewModelScope)
+                        updateUiState { copy(productMerkFlow = productMerkFlow) }
+                    }
+                }
+
+                is PosContract.UiAction.ApplyFilters -> {
+                    val currentParams = uiState.value.params
+                    val newParams = currentParams.copy(
+                        page = 1,
+                        productCategoryId = uiAction.selectedCategoryIds,
+                        productMerkId = uiAction.selectedMerkIds,
+                    )
+                    onAction(PosContract.UiAction.LoadProducts(newParams))
+                }
+                is PosContract.UiAction.ResetAppliedFilters -> {
+                    val currentParams = uiState.value.params
+                    val newParams = currentParams.copy(
+                        page = 1,
+                        productCategoryId = null,
+                        productMerkId = null,
+                    )
+                    onAction(PosContract.UiAction.LoadProducts(newParams))
                 }
             }
         }

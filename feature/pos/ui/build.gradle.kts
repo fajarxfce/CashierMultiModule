@@ -12,4 +12,5 @@ dependencies {
     api(projects.core.model)
     implementation(libs.androidx.material)
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.0")
+    implementation("androidx.compose.foundation:foundation-layout:1.9.0-alpha03")
 }

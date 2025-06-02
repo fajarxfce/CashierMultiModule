@@ -31,5 +31,11 @@ fun GetAllProductParams.toQueryMap(): Map<String, String> {
     this.productCategoryId?.forEachIndexed { index, categoryId ->
         map["product_category_id[$index]"] = categoryId.toString()
     }
+    this.productMerkId?.forEachIndexed { index, merkId ->
+        map["product_merk_id[$index]"] = merkId.toString()
+    }
+    this.productSubCategoryId?.forEachIndexed { index, subCategoryId ->
+        map["product_sub_category_id[$index]"] = subCategoryId.toString()
+    }
     return map
 }

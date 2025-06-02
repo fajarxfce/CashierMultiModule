@@ -50,9 +50,12 @@ import com.fajarxfce.core.ui.component.ErrorStateView
 import com.fajarxfce.core.ui.component.textfield.CashierSearchTextField
 import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import com.fajarxfce.core.ui.theme.CashierBlue
+import com.fajarxfce.feature.pos.domain.model.Category
+import com.fajarxfce.feature.pos.domain.model.Merk
 import com.fajarxfce.feature.pos.domain.model.Product
 import com.fajarxfce.feature.pos.ui.component.CustomProductDetailBottomSheet
 import com.fajarxfce.feature.pos.ui.component.PosBottomBar
+import com.fajarxfce.feature.pos.ui.component.ProductFilterBottomSheet
 import com.fajarxfce.feature.pos.ui.component.ProductItemCard
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -70,6 +73,10 @@ internal fun PosScreen(
     onNavigateToCart: () -> Unit,
 ) {
     val pagingItems: LazyPagingItems<Product> = uiState.productsFlow.collectAsLazyPagingItems()
+
+    val categoryFilterPagingItems: LazyPagingItems<Category> = uiState.categoryFlow.collectAsLazyPagingItems()
+    val merkFilterPagingItems: LazyPagingItems<Merk> = uiState.productMerkFlow.collectAsLazyPagingItems()
+
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val modalSheetState = rememberModalBottomSheetState(
@@ -82,6 +89,9 @@ internal fun PosScreen(
     val selectedCategoryIds by rememberSaveable { mutableStateOf<List<Int>?>(null) }
     val selectedSubCategoryIds by rememberSaveable { mutableStateOf<List<Int>?>(null) }
     val selectedMerkIds by rememberSaveable { mutableStateOf<List<Int>?>(null) }
+
+    val filterModalSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showFilterBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     val currentParams = uiState.params
     val newParams = currentParams.copy(
@@ -98,6 +108,9 @@ internal fun PosScreen(
     }
     LaunchedEffect(key1 = true) {
         onAction(PosContract.UiAction.LoadCategory(uiState.categoryParams))
+    }
+    LaunchedEffect(key1 = true) {
+        onAction(PosContract.UiAction.LoadProductMerk(uiState.productMerkParams))
     }
 
     uiEffect.collectWithLifecycle { effect ->
@@ -144,24 +157,33 @@ internal fun PosScreen(
                         onImeAction = {
                             val params = uiState.params.copy(
                                 search = searchQuery.ifBlank { null },
-                                page = 1
+                                page = 1,
                             )
                             onAction(PosContract.UiAction.LoadProducts(params))
                         },
                         placeholderText = "Search products...",
-                        modifier = Modifier.height(50.dp)
+                        modifier = Modifier.height(50.dp),
                     )
                 },
                 actions = {
-                    IconButton(onClick = {
-                    }) {
+                    IconButton(
+                        onClick = {
+                            if (categoryFilterPagingItems.itemCount == 0 && !uiState.isCategoryFilterLoading) {
+                                onAction(PosContract.UiAction.LoadCategory(uiState.categoryParams))
+                            }
+                            if (merkFilterPagingItems.itemCount == 0 && !uiState.isMerkFilterLoading) {
+                                onAction(PosContract.UiAction.LoadProductMerk(uiState.productMerkParams))
+                            }
+                            showFilterBottomSheet = true
+                        },
+                    ) {
                         Icon(
                             tint = CashierBlue,
                             imageVector = Icons.Filled.FilterList,
-                            contentDescription = "Filter Products"
+                            contentDescription = "Filter Products",
                         )
                     }
-                }
+                },
             )
         },
         containerColor = Color.White,
@@ -204,6 +226,29 @@ internal fun PosScreen(
                 product?.let { onAction(PosContract.UiAction.AddToCartFromDetail(it, quantity)) }
                 showBottomSheet = false
             },
+        )
+    }
+
+    if (showFilterBottomSheet) {
+        ProductFilterBottomSheet(
+            sheetState = filterModalSheetState,
+            onDismiss = { showFilterBottomSheet = false },
+            onApplyFilters = { selectedCategoryIds, selectedMerkIds ->
+                onAction(PosContract.UiAction.ApplyFilters(selectedCategoryIds, selectedMerkIds))
+                // showFilterBottomSheet = false // Ditutup dari dalam BottomSheet
+            },
+            onResetFilters = {
+                onAction(PosContract.UiAction.ResetAppliedFilters)
+                // Pilihan reset di dalam bottom sheet sudah membersihkan temp state.
+                // Jika ingin menutup sheet setelah reset, bisa ditambahkan di sini atau di dalam onResetFilters di BottomSheet.
+            },
+            // Berikan filter yang *sedang aktif* dari uiState.params sebagai initial
+            initialSelectedCategoryIds = uiState.params.productCategoryId,
+            initialSelectedMerkIds = uiState.params.productMerkId,
+            categoriesPagingItems = categoryFilterPagingItems,
+            merksPagingItems = merkFilterPagingItems,
+            isCategoryLoading = uiState.isCategoryFilterLoading, // dari UiState
+            isMerkLoading = uiState.isMerkFilterLoading        // dari UiState
         )
     }
 }
