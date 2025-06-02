@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.*
@@ -31,8 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.fajarxfce.core.ui.component.BaseTopAppBar
 import com.fajarxfce.core.ui.component.CashierText
+import com.fajarxfce.core.ui.component.CashierTopAppBar
+import com.fajarxfce.core.ui.component.textfield.CashierSearchTextField
 import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import com.fajarxfce.core.ui.theme.AppTheme
 import com.fajarxfce.core.ui.theme.CashierBlue
@@ -43,6 +45,7 @@ import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CartScreen(
     uiState: CartContract.UiState,
@@ -70,9 +73,20 @@ internal fun CartScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            BaseTopAppBar(
-                toolbarTitle = "Keranjang",
-                backButtonAction = onNavigateBack,
+            CashierTopAppBar(
+                showNavigationIcon = true,
+                title = "Cart",
+                onNavigationIconClick = onNavigateBack,
+                actions = {
+                    IconButton(onClick = {
+                    }) {
+                        Icon(
+                            tint = CashierBlue,
+                            imageVector = Icons.Filled.FilterList,
+                            contentDescription = "Filter Products"
+                        )
+                    }
+                }
             )
         },
         bottomBar = {

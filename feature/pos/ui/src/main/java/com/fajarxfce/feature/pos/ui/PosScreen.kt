@@ -2,39 +2,27 @@ package com.fajarxfce.feature.pos.ui
 
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ShoppingCartCheckout
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,13 +34,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
@@ -60,14 +42,11 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.fajarxfce.core.ui.component.ErrorStateView
-import com.fajarxfce.core.ui.component.BaseTopAppBar
 import com.fajarxfce.core.ui.component.CashierLoadingIndicator
-import com.fajarxfce.core.ui.component.CashierText
+import com.fajarxfce.core.ui.component.CashierTopAppBar
 import com.fajarxfce.core.ui.component.EmptyStateView
 import com.fajarxfce.core.ui.component.ErrorItemView
+import com.fajarxfce.core.ui.component.ErrorStateView
 import com.fajarxfce.core.ui.component.textfield.CashierSearchTextField
 import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import com.fajarxfce.core.ui.theme.CashierBlue
@@ -79,12 +58,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
-import java.text.NumberFormat
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PosScreen(
+    modifier: Modifier = Modifier,
     uiState: PosContract.UiState,
     onAction: (PosContract.UiAction) -> Unit,
     uiEffect: Flow<PosContract.UiEffect>,
@@ -100,7 +78,7 @@ internal fun PosScreen(
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val showBottomBar by remember { mutableStateOf(true) }
 
-    val searchQuery by rememberSaveable { mutableStateOf("") }
+    var searchQuery by rememberSaveable { mutableStateOf("") }
     val selectedCategoryIds by rememberSaveable { mutableStateOf<List<Int>?>(null) }
     val selectedSubCategoryIds by rememberSaveable { mutableStateOf<List<Int>?>(null) }
     val selectedMerkIds by rememberSaveable { mutableStateOf<List<Int>?>(null) }
@@ -153,9 +131,34 @@ internal fun PosScreen(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            BaseTopAppBar(
-                toolbarTitle = "Select Product",
-                backButtonAction = onNavigateBack,
+            CashierTopAppBar(
+                showNavigationIcon = true,
+                onNavigationIconClick = onNavigateBack,
+                titleContent = {
+                    CashierSearchTextField(
+                        value = searchQuery,
+                        onValueChange = { query -> searchQuery = query },
+                        onImeAction = {
+                            val params = uiState.params.copy(
+                                search = searchQuery.ifBlank { null },
+                                page = 1
+                            )
+                            onAction(PosContract.UiAction.LoadProducts(params))
+                        },
+                        placeholderText = "Search products...",
+                        modifier = Modifier.height(50.dp)
+                    )
+                },
+                actions = {
+                    IconButton(onClick = {
+                    }) {
+                        Icon(
+                            tint = CashierBlue,
+                            imageVector = Icons.Filled.FilterList,
+                            contentDescription = "Filter Products"
+                        )
+                    }
+                }
             )
         },
         containerColor = Color.White,
@@ -172,26 +175,6 @@ internal fun PosScreen(
                     .padding(paddingValues)
                     .fillMaxSize(),
             ) {
-                CashierSearchTextField(
-                    text = searchQuery,
-                    onTextChange = { query ->
-//                        searchQuery = query
-                    },
-                    onImeAction = {
-                        val newParams = uiState.params.copy(
-                            search = if (searchQuery.isNotBlank()) searchQuery else null,
-                            page = 1,
-                        )
-                        onAction(PosContract.UiAction.LoadProducts(newParams))
-                    },
-                    modifier = Modifier.padding(
-                        start = 16.dp,
-                        end = 16.dp,
-                        top = 16.dp,
-                    ),
-                    showFilterIcon = true,
-                    onFilterClick = {}
-                )
 
                 PosContent(
                     modifier = Modifier.weight(1f),

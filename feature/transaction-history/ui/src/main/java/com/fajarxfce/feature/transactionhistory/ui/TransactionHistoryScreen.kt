@@ -12,12 +12,14 @@ import androidx.compose.material.ChipDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.outlined.CloudOff
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Receipt
 import androidx.compose.material.icons.outlined.ShoppingCartCheckout
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,8 +34,9 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.fajarxfce.core.ui.component.BaseTopAppBar
 import com.fajarxfce.core.ui.component.CashierText
+import com.fajarxfce.core.ui.component.CashierTopAppBar
+import com.fajarxfce.core.ui.component.textfield.CashierSearchTextField
 import com.fajarxfce.core.ui.theme.AppTheme
 import com.fajarxfce.core.ui.theme.CashierBlue
 import com.fajarxfce.core.ui.theme.CashierGray
@@ -64,7 +67,10 @@ internal fun TransactionHistoryScreen(
 
     Scaffold(
         topBar = {
-            TransactionHistoryTopBar(onNavigateBack)
+            TransactionHistoryTopBar(
+                onNavigateBack =onNavigateBack,
+                onFilterClick = {}
+            )
         },
     ) { innerPadding ->
         Box(
@@ -83,10 +89,35 @@ internal fun TransactionHistoryScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TransactionHistoryTopBar(onNavigateBack: () -> Unit) {
-    BaseTopAppBar(
-        toolbarTitle = "Transaction History",
-        backButtonAction = onNavigateBack,
+private fun TransactionHistoryTopBar(
+    onNavigateBack: () -> Unit,
+    onFilterClick: () -> Unit
+) {
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    CashierTopAppBar(
+        showNavigationIcon = true,
+        onNavigationIconClick = onNavigateBack,
+        titleContent = {
+            CashierSearchTextField(
+                value = searchQuery,
+                onValueChange = { query -> searchQuery = query },
+                onImeAction = {
+
+                },
+                placeholderText = "Search Transaction",
+                modifier = Modifier.padding(end = 8.dp)
+            )
+        },
+        actions = {
+            IconButton(onClick = {
+            }) {
+                Icon(
+                    tint = CashierBlue,
+                    imageVector = Icons.Filled.FilterList,
+                    contentDescription = "Filter Products"
+                )
+            }
+        }
     )
 }
 
