@@ -35,7 +35,7 @@ internal data class GetAllProductResponse(
 	val from: Int? = null,
 
     @field:SerializedName("links")
-	val links: List<LinksItem?>? = null,
+	val links: List<LinksProductItem?>? = null,
 
     @field:SerializedName("to")
 	val to: Int? = null,
@@ -167,7 +167,7 @@ internal data class Category(
 	val status: Int? = null
 )
 
-internal data class LinksItem(
+internal data class LinksProductItem(
 
 	@field:SerializedName("active")
 	val active: Boolean? = null,

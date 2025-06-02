@@ -11,6 +11,7 @@ import com.fajarxfce.core.ui.delegate.mvi.mvi
 import com.fajarxfce.feature.pos.domain.model.Product
 import com.fajarxfce.feature.pos.domain.model.toCart
 import com.fajarxfce.feature.pos.domain.params.UpsertProductToCartParam
+import com.fajarxfce.feature.pos.domain.usecase.GetCategoryByQueryUseCase
 import com.fajarxfce.feature.pos.domain.usecase.GetProductPagingUseCase
 import com.fajarxfce.feature.pos.domain.usecase.GetTotalCartItemsUseCase
 import com.fajarxfce.feature.pos.domain.usecase.UpsertProductToCartUseCase
@@ -35,6 +36,7 @@ internal class PosViewModel @Inject constructor(
     private val getProductPagingUseCase: GetProductPagingUseCase,
     private val upsertProductToCartUseCase: UpsertProductToCartUseCase,
     private val getTotalCartItemsUseCase: GetTotalCartItemsUseCase,
+    private val getCategoryByQueryUseCase: GetCategoryByQueryUseCase
 ) : ViewModel(),
     MVI<PosContract.UiState, PosContract.UiAction, PosContract.UiEffect> by mvi(
         initialState = PosContract.UiState(
@@ -75,6 +77,15 @@ internal class PosViewModel @Inject constructor(
                         getTotalCartItemsUseCase().collect {
                             updateUiState { copy(totalCartItem = it) }
                         }
+                    }
+                }
+
+                is PosContract.UiAction.LoadCategory -> {
+                    viewModelScope.launch {
+                        val categoryFlow = getCategoryByQueryUseCase(
+                            params = uiAction.params
+                        ).cachedIn(viewModelScope)
+                        updateUiState { copy(categoryFlow = categoryFlow) }
                     }
                 }
             }

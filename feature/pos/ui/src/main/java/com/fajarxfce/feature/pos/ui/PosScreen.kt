@@ -96,6 +96,9 @@ internal fun PosScreen(
         onAction(PosContract.UiAction.LoadProducts(newParams))
         onAction(PosContract.UiAction.LoadTotalCartItem)
     }
+    LaunchedEffect(key1 = true) {
+        onAction(PosContract.UiAction.LoadCategory(uiState.categoryParams))
+    }
 
     uiEffect.collectWithLifecycle { effect ->
         when (effect) {
