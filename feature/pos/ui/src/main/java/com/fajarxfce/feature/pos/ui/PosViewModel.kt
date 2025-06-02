@@ -46,6 +46,14 @@ internal class PosViewModel @Inject constructor(
         )
     ) {
 
+        init {
+            val initialSearchQuery = uiState.value.searchQuery.value
+            val initialParams = uiState.value.params.copy(search = initialSearchQuery.ifBlank { null })
+            onAction(PosContract.UiAction.LoadProducts(initialParams))
+
+            onAction(PosContract.UiAction.LoadTotalCartItem)
+        }
+
     override fun onAction(uiAction: PosContract.UiAction) {
         viewModelScope.launch {
             when (uiAction) {

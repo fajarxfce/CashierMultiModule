@@ -1,5 +1,7 @@
 package com.fajarxfce.feature.pos.ui
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.paging.PagingData
 import com.fajarxfce.feature.pos.domain.model.Category
 import com.fajarxfce.feature.pos.domain.model.Merk
@@ -17,7 +19,7 @@ internal object PosContract {
     )
     data class UiState(
         val isLoading: Boolean = false,
-
+        val searchQuery: MutableState<String> = mutableStateOf(""),
         val productsFlow: Flow<PagingData<Product>> = emptyFlow(),
         val categoryFlow: Flow<PagingData<Category>> = emptyFlow(),
         val productMerkFlow: Flow<PagingData<Merk>> = emptyFlow(),

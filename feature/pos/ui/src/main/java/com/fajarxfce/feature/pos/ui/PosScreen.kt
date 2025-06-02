@@ -85,8 +85,10 @@ internal fun PosScreen(
     var showBottomSheet by rememberSaveable { mutableStateOf(false) }
     val showBottomBar by remember { mutableStateOf(true) }
 
-    var searchQuery by rememberSaveable { mutableStateOf("") }
+    var searchQuery by uiState.searchQuery
+//    var searchQuery by rememberSaveable { mutableStateOf("") }
     val selectedCategoryIds by rememberSaveable { mutableStateOf<List<Int>?>(null) }
+    val selectedCategoryIdsx by rememberSaveable { mutableStateOf<List<Int>?>(null) }
     val selectedSubCategoryIds by rememberSaveable { mutableStateOf<List<Int>?>(null) }
     val selectedMerkIds by rememberSaveable { mutableStateOf<List<Int>?>(null) }
 
@@ -101,17 +103,6 @@ internal fun PosScreen(
         productMerkId = selectedMerkIds,
     )
 
-
-    LaunchedEffect(key1 = true) {
-        onAction(PosContract.UiAction.LoadProducts(newParams))
-        onAction(PosContract.UiAction.LoadTotalCartItem)
-    }
-    LaunchedEffect(key1 = true) {
-        onAction(PosContract.UiAction.LoadCategory(uiState.categoryParams))
-    }
-    LaunchedEffect(key1 = true) {
-        onAction(PosContract.UiAction.LoadProductMerk(uiState.productMerkParams))
-    }
 
     uiEffect.collectWithLifecycle { effect ->
         when (effect) {
