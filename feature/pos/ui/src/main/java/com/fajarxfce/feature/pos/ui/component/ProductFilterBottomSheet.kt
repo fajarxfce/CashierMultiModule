@@ -37,30 +37,17 @@ import kotlinx.coroutines.flow.flowOf
 fun ProductFilterBottomSheet(
     sheetState: SheetState,
     onDismiss: () -> Unit,
-    onApplyFilters: (selectedCategoryIds: List<Int>?, selectedMerkIds: List<Int>?) -> Unit,
-    onResetFilters: () -> Unit,
-    initialSelectedCategoryIds: List<Int>?,
-    initialSelectedMerkIds: List<Int>?,
+    selectedCategoryIdsInSheet: List<Int>?,
+    selectedMerkIdsInSheet: List<Int>?,
     categoriesPagingItems: LazyPagingItems<Category>,
     merksPagingItems: LazyPagingItems<Merk>,
     isCategoryLoading: Boolean,
     isMerkLoading: Boolean,
+    onToggleCategory: (categoryId: Int) -> Unit,
+    onToggleMerk: (merkId: Int) -> Unit,
+    onApplyFilters: () -> Unit,
+    onResetFilters: () -> Unit
 ) {
-
-    var tempSelectedCategoryIds by remember {
-        mutableStateOf(initialSelectedCategoryIds?.toSet() ?: emptySet())
-    }
-    var tempSelectedMerkIds by remember {
-        mutableStateOf(initialSelectedMerkIds?.toSet() ?: emptySet())
-    }
-
-    LaunchedEffect(initialSelectedCategoryIds) {
-        tempSelectedCategoryIds = initialSelectedCategoryIds?.toSet() ?: emptySet()
-    }
-    LaunchedEffect(initialSelectedMerkIds) {
-        tempSelectedMerkIds = initialSelectedMerkIds?.toSet() ?: emptySet()
-    }
-
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
@@ -86,30 +73,25 @@ fun ProductFilterBottomSheet(
                 text = "Filter Produk",
                 style = MaterialTheme.typography.titleLarge.copy(
                     fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp // Ukuran font yang jelas
+                    fontSize = 22.sp
                 ),
                 modifier = Modifier
-                    .padding(bottom = 20.dp) // Jarak dari judul ke konten filter
+                    .padding(bottom = 20.dp)
                     .align(Alignment.CenterHorizontally),
             )
 
-            // Konten filter yang bisa di-scroll jika melebihi tinggi
             Column(
                 modifier = Modifier
-                    .weight(1f, fill = false) // Agar bisa expand tapi tidak mengisi semua ruang jika konten sedikit
+                    .weight(1f, fill = false)
                     .verticalScroll(rememberScrollState())
             ) {
                 FilterChipSection(
                     title = "Kategori",
                     pagingItems = categoriesPagingItems,
-                    selectedIds = tempSelectedCategoryIds,
+                    selectedIds = selectedCategoryIdsInSheet?.toSet() ?: emptySet(),
                     isLoading = isCategoryLoading,
-                    onChipSelected = { id, isSelected ->
-                        tempSelectedCategoryIds = if (isSelected) {
-                            tempSelectedCategoryIds + id
-                        } else {
-                            tempSelectedCategoryIds - id
-                        }
+                    onChipSelected = { id, _ ->
+                        onToggleCategory(id)
                     },
                     idExtractor = { it.id ?: -1 },
                     nameExtractor = { it.name ?: "N/A" },
@@ -123,14 +105,10 @@ fun ProductFilterBottomSheet(
                 FilterChipSection(
                     title = "Merk/Brand",
                     pagingItems = merksPagingItems,
-                    selectedIds = tempSelectedMerkIds,
+                    selectedIds = selectedMerkIdsInSheet?.toSet() ?: emptySet(),
                     isLoading = isMerkLoading,
-                    onChipSelected = { id, isSelected ->
-                        tempSelectedMerkIds = if (isSelected) {
-                            tempSelectedMerkIds + id
-                        } else {
-                            tempSelectedMerkIds - id
-                        }
+                    onChipSelected = { id, _ ->
+                        onToggleMerk(id)
                     },
                     idExtractor = { it.id ?: -1 },
                     nameExtractor = { it.name ?: "N/A" },
@@ -145,28 +123,19 @@ fun ProductFilterBottomSheet(
             ) {
                 OutlinedButton(
                     onClick = {
-                        tempSelectedCategoryIds = emptySet()
-                        tempSelectedMerkIds = emptySet()
                         onResetFilters()
                     },
                     modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(12.dp), // Bentuk tombol yang modern
+                    shape = RoundedCornerShape(12.dp),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = CashierRed),
-                    border = BorderStroke(
-                        1.dp,
-                        CashierRed.copy(alpha = 0.7f)
-                    ),
+                    border = BorderStroke(1.dp, CashierRed.copy(alpha = 0.7f)),
                 ) {
                     Text("Reset Filter", fontWeight = FontWeight.SemiBold)
                 }
 
                 Button(
                     onClick = {
-                        onApplyFilters(
-                            tempSelectedCategoryIds.toList().ifEmpty { null },
-                            tempSelectedMerkIds.toList().ifEmpty { null },
-                        )
-                        onDismiss()
+                        onApplyFilters()
                     },
                     modifier = Modifier.weight(1f),
                     shape = RoundedCornerShape(12.dp),
@@ -205,41 +174,19 @@ private fun <T : Any> FilterChipSection(
         when {
             (loadState.refresh is LoadState.Loading || isLoading) && pagingItems.itemCount == 0 -> {
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(80.dp),
+                    modifier = Modifier.fillMaxWidth().height(80.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     CashierLoadingIndicator()
                 }
             }
+
             loadState.refresh is LoadState.Error && pagingItems.itemCount == 0 -> {
-                val error = (loadState.refresh as LoadState.Error).error
-                Text(
-                    text = "Gagal memuat ${title.lowercase()}.\n${error.localizedMessage ?: "Coba lagi nanti."}",
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-                Button(onClick = { pagingItems.retry() }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                    Text("Coba Lagi")
-                }
+
             }
             loadState.refresh is LoadState.NotLoading && pagingItems.itemCount == 0 && !isLoading && loadState.append.endOfPaginationReached -> {
-                Text(
-                    text = "Tidak ada ${title.lowercase()} tersedia.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-            }
 
+            }
             else -> {
                 FlowRow(
                     modifier = Modifier.fillMaxWidth(),
@@ -263,10 +210,8 @@ private fun <T : Any> FilterChipSection(
                                     )
                                 },
                                 colors = FilterChipDefaults.filterChipColors(
-
                                     selectedContainerColor = CashierBlue,
                                     selectedLabelColor = Color.White,
-
                                     containerColor = Color.White,
                                     labelColor = MaterialTheme.colorScheme.onSurfaceVariant
                                 ),
@@ -275,8 +220,8 @@ private fun <T : Any> FilterChipSection(
                                     selectedBorderColor = CashierBlue.copy(alpha = 0.8f),
                                     borderWidth = 1.dp,
                                     selectedBorderWidth = 1.5.dp,
-                                    enabled = true,
-                                    selected = isSelected
+                                    selected = isSelected,
+                                    enabled = true
                                 ),
                                 shape = RoundedCornerShape(8.dp)
                             )
@@ -284,22 +229,9 @@ private fun <T : Any> FilterChipSection(
                     }
 
                     if (loadState.append is LoadState.Loading) {
-                        Box(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp), contentAlignment = Alignment.Center) {
-                            CashierLoadingIndicator()
-                        }
+
                     } else if (loadState.append is LoadState.Error) {
-                        Text(
-                            "Gagal memuat lebih banyak. Coba lagi.",
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(vertical = 8.dp).fillMaxWidth(),
-                            textAlign = TextAlign.Center
-                        )
-                        Button(
-                            onClick = { pagingItems.retry() },
-                            modifier = Modifier.align(Alignment.CenterVertically)
-                        ) {
-                            Text("Coba Lagi (Append)")
-                        }
+
                     }
                 }
             }
@@ -316,15 +248,9 @@ fun ProductFilterBottomSheetPreview() {
         val dummyCategories = listOf(
             Category(1, "Elektronik", "", 1),
             Category(2, "Fashion Pria Super Panjang Sekali Nama Kategorinya", "", 1),
-            Category(3, "Rumah Tangga", "", 1),
-            Category(4, "Kecantikan", "", 1),
-            Category(5, "Olahraga & Outdoor", "", 1),
         )
         val dummyMerks = listOf(
             Merk(10, "BrandX", "", 1),
-            Merk(11, "BrandY", "", 1),
-            Merk(12, "BrandZ Internasional", "", 1),
-            Merk(13, "Merk Lokal Jaya", "", 1),
         )
 
         val categoriesFlow = flowOf(PagingData.from(dummyCategories))
@@ -333,26 +259,33 @@ fun ProductFilterBottomSheetPreview() {
         val categoriesPagingItems = categoriesFlow.collectAsLazyPagingItems()
         val merksPagingItems = merksFlow.collectAsLazyPagingItems()
 
-        var initialSelectedCategories by remember { mutableStateOf<List<Int>?>(listOf(1)) }
-        var initialSelectedMerks by remember { mutableStateOf<List<Int>?>(null) }
+        val previewSelectedCategories = listOf(1)
+        val previewSelectedMerks = emptyList<Int>()
+
 
         ProductFilterBottomSheet(
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
             onDismiss = {},
-            onApplyFilters = { selectedCategories, selectedMerks ->
-                initialSelectedCategories = selectedCategories
-                initialSelectedMerks = selectedMerks
-            },
-            onResetFilters = {
-                initialSelectedCategories = null
-                initialSelectedMerks = null
-            },
-            initialSelectedCategoryIds = initialSelectedCategories,
-            initialSelectedMerkIds = initialSelectedMerks,
+            selectedCategoryIdsInSheet = previewSelectedCategories,
+            selectedMerkIdsInSheet = previewSelectedMerks,
             categoriesPagingItems = categoriesPagingItems,
             merksPagingItems = merksPagingItems,
             isCategoryLoading = false,
-            isMerkLoading = false
+            isMerkLoading = false,
+            onToggleCategory = { categoryId ->
+
+                println("Preview: Toggle Category $categoryId")
+            },
+            onToggleMerk = { merkId ->
+                println("Preview: Toggle Merk $merkId")
+            },
+            onApplyFilters = {
+                println("Preview: Apply Filters")
+            },
+            onResetFilters = {
+
+                println("Preview: Reset Filters")
+            }
         )
     }
 }

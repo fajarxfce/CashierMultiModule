@@ -88,7 +88,6 @@ internal fun PosScreen(
     var searchQuery by uiState.searchQuery
 //    var searchQuery by rememberSaveable { mutableStateOf("") }
     val selectedCategoryIds by rememberSaveable { mutableStateOf<List<Int>?>(null) }
-    val selectedCategoryIdsx by rememberSaveable { mutableStateOf<List<Int>?>(null) }
     val selectedSubCategoryIds by rememberSaveable { mutableStateOf<List<Int>?>(null) }
     val selectedMerkIds by rememberSaveable { mutableStateOf<List<Int>?>(null) }
 
@@ -224,24 +223,28 @@ internal fun PosScreen(
         ProductFilterBottomSheet(
             sheetState = filterModalSheetState,
             onDismiss = { showFilterBottomSheet = false },
-            onApplyFilters = { selectedCategoryIds, selectedMerkIds ->
-                onAction(PosContract.UiAction.ApplyFilters(selectedCategoryIds, selectedMerkIds))
-                // showFilterBottomSheet = false // Ditutup dari dalam BottomSheet
-            },
-            onResetFilters = {
-                onAction(PosContract.UiAction.ResetAppliedFilters)
-                // Pilihan reset di dalam bottom sheet sudah membersihkan temp state.
-                // Jika ingin menutup sheet setelah reset, bisa ditambahkan di sini atau di dalam onResetFilters di BottomSheet.
-            },
-            // Berikan filter yang *sedang aktif* dari uiState.params sebagai initial
-            initialSelectedCategoryIds = uiState.params.productCategoryId,
-            initialSelectedMerkIds = uiState.params.productMerkId,
+            selectedCategoryIdsInSheet = uiState.tempSelectedCategoryIdsInSheet,
+            selectedMerkIdsInSheet = uiState.tempSelectedMerkIdsInSheet,
             categoriesPagingItems = categoryFilterPagingItems,
             merksPagingItems = merkFilterPagingItems,
-            isCategoryLoading = uiState.isCategoryFilterLoading, // dari UiState
-            isMerkLoading = uiState.isMerkFilterLoading        // dari UiState
+            isCategoryLoading = uiState.isCategoryFilterLoading,
+            isMerkLoading = uiState.isMerkFilterLoading,
+            onToggleCategory = { categoryId ->
+                onAction(PosContract.UiAction.ToggleCategoryFilterInSheet(categoryId))
+            },
+            onToggleMerk = { merkId ->
+                onAction(PosContract.UiAction.ToggleMerkFilterInSheet(merkId))
+            },
+            onApplyFilters = {
+                onAction(PosContract.UiAction.ApplyFiltersFromSheet)
+                showFilterBottomSheet = false // Tutup sheet setelah menekan apply
+            },
+            onResetFilters = {
+                onAction(PosContract.UiAction.ResetTempFiltersInSheet)
+            }
         )
     }
+
 }
 
 @Composable
@@ -260,7 +263,7 @@ private fun PosContent(
             ErrorStateView(
                 modifier = Modifier.align(Alignment.Center),
                 message = error.localizedMessage
-                    ?: "An unknown error occurred", // stringResource(id = R.string.unknown_error),
+                    ?: "An unknown error occurred",
                 onRetry = { pagingItems.retry() },
             )
         } else if (pagingItems.loadState.refresh is LoadState.NotLoading && pagingItems.itemCount == 0 && pagingItems.loadState.append.endOfPaginationReached) {
@@ -283,14 +286,14 @@ private fun PosContent(
                     if (product != null) {
                         ProductItemCard(
                             product = product,
-                            onClick = { product.id?.let { onProductClick(product) } },
+                            onClick = { onProductClick(product) },
                         )
                     } else {
                         Spacer(
                             modifier = Modifier
                                 .height(100.dp)
                                 .fillMaxWidth()
-                                .background(MaterialTheme.colorScheme.surfaceVariant),
+                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f))
                         )
                     }
                 }
@@ -320,6 +323,7 @@ private fun PosContent(
         }
     }
 }
+
 
 @Preview(showBackground = true, name = "POS Screen - Populated")
 @Composable

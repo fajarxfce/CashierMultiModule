@@ -30,6 +30,9 @@ internal object PosContract {
         val categoryParams: GetCategoryByQueryParams = GetCategoryByQueryParams(page = 1),
         val productMerkParams: GetProductMerkByQueryParams = GetProductMerkByQueryParams(page = 1),
 
+        val tempSelectedCategoryIdsInSheet: List<Int>? = null,
+        val tempSelectedMerkIdsInSheet: List<Int>? = null,
+
         val isCategoryFilterLoading: Boolean = false,
         val isMerkFilterLoading: Boolean = false,
     )
@@ -44,11 +47,11 @@ internal object PosContract {
 
         data object OnDismissProductDetailsSheet : UiAction
 
-        data class ApplyFilters(
-            val selectedCategoryIds: List<Int>?,
-            val selectedMerkIds: List<Int>?
-        ) : UiAction
-        data object ResetAppliedFilters : UiAction
+        data object OpenFilterSheet : UiAction
+        data class ToggleCategoryFilterInSheet(val categoryId: Int) : UiAction
+        data class ToggleMerkFilterInSheet(val merkId: Int) : UiAction
+        data object ResetTempFiltersInSheet : UiAction
+        data object ApplyFiltersFromSheet : UiAction
     }
 
     sealed interface UiEffect {

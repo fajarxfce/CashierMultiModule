@@ -108,23 +108,59 @@ internal class PosViewModel @Inject constructor(
                     }
                 }
 
-                is PosContract.UiAction.ApplyFilters -> {
-                    val currentParams = uiState.value.params
-                    val newParams = currentParams.copy(
-                        page = 1,
-                        productCategoryId = uiAction.selectedCategoryIds,
-                        productMerkId = uiAction.selectedMerkIds,
-                    )
-                    onAction(PosContract.UiAction.LoadProducts(newParams))
+                PosContract.UiAction.OpenFilterSheet -> {
+                    updateUiState {
+                        copy(
+                            // Saat membuka sheet, inisialisasi state sementara dengan filter yang sedang aktif
+                            tempSelectedCategoryIdsInSheet = params.productCategoryId,
+                            tempSelectedMerkIdsInSheet = params.productMerkId
+                        )
+                    }
+                    // Anda mungkin masih perlu memicu efek untuk menampilkan sheet di UI,
+                    // atau biarkan `showFilterBottomSheet` di PosScreen yang menanganinya.
                 }
-                is PosContract.UiAction.ResetAppliedFilters -> {
-                    val currentParams = uiState.value.params
-                    val newParams = currentParams.copy(
+
+                is PosContract.UiAction.ToggleCategoryFilterInSheet -> {
+                    val currentSelection = uiState.value.tempSelectedCategoryIdsInSheet?.toMutableSet() ?: mutableSetOf()
+                    if (currentSelection.contains(uiAction.categoryId)) {
+                        currentSelection.remove(uiAction.categoryId)
+                    } else {
+                        currentSelection.add(uiAction.categoryId)
+                    }
+                    updateUiState { copy(tempSelectedCategoryIdsInSheet = currentSelection.toList().ifEmpty { null }) }
+                }
+
+                is PosContract.UiAction.ToggleMerkFilterInSheet -> {
+                    val currentSelection = uiState.value.tempSelectedMerkIdsInSheet?.toMutableSet() ?: mutableSetOf()
+                    if (currentSelection.contains(uiAction.merkId)) {
+                        currentSelection.remove(uiAction.merkId)
+                    } else {
+                        currentSelection.add(uiAction.merkId)
+                    }
+                    updateUiState { copy(tempSelectedMerkIdsInSheet = currentSelection.toList().ifEmpty { null }) }
+                }
+
+                PosContract.UiAction.ResetTempFiltersInSheet -> {
+                    updateUiState {
+                        copy(
+                            tempSelectedCategoryIdsInSheet = null,
+                            tempSelectedMerkIdsInSheet = null
+                        )
+                    }
+                }
+
+                PosContract.UiAction.ApplyFiltersFromSheet -> {
+                    val newParams = uiState.value.params.copy(
                         page = 1,
-                        productCategoryId = null,
-                        productMerkId = null,
+                        productCategoryId = uiState.value.tempSelectedCategoryIdsInSheet,
+                        productMerkId = uiState.value.tempSelectedMerkIdsInSheet,
+                        // searchQuery tetap dari uiState.value.searchQuery.value
+                        search = uiState.value.searchQuery.value.ifBlank { null }
                     )
+                    // Logika ini sama dengan ApplyFilters yang lama, hanya saja sumbernya dari temp state
+                    updateUiState { copy(params = newParams) } // Update params aktif
                     onAction(PosContract.UiAction.LoadProducts(newParams))
+                    // Anda mungkin ingin menutup sheet di sini via UiEffect atau flag di UiState
                 }
             }
         }
