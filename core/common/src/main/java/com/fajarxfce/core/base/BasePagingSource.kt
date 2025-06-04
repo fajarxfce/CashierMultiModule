@@ -1,4 +1,4 @@
-package com.fajarxfce.core.data
+package com.fajarxfce.core.base
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
@@ -8,12 +8,8 @@ import java.io.IOException
 const val DEFAULT_PAGE_SIZE = 10
 const val DEFAULT_INITIAL_PAGE_NUMBER = 1
 
-abstract class BasePagingSource<
-        LocalData : Any,
-        RemoteData : Any
-        >(
-
-) : PagingSource<Int, LocalData>() {
+abstract class BasePagingSource<LocalData : Any, RemoteData : Any>() :
+    PagingSource<Int, LocalData>() {
     abstract suspend fun fetchData(page: Int, pageSize: Int): List<RemoteData>
 
     abstract fun mapToLocalData(remoteData: List<RemoteData>): List<LocalData>
@@ -27,12 +23,13 @@ abstract class BasePagingSource<
             val localDataList = mapToLocalData(remoteDataList)
 
             val prevKey = if (pageNumber == DEFAULT_INITIAL_PAGE_NUMBER) null else pageNumber - 1
-            val nextKey = if (remoteDataList.isEmpty() || remoteDataList.size < pageSize) null else pageNumber + 1
+            val nextKey =
+                if (remoteDataList.isEmpty() || remoteDataList.size < pageSize) null else pageNumber + 1
 
             LoadResult.Page(
                 data = localDataList,
                 prevKey = prevKey,
-                nextKey = nextKey
+                nextKey = nextKey,
             )
         } catch (e: IOException) {
             LoadResult.Error(e)

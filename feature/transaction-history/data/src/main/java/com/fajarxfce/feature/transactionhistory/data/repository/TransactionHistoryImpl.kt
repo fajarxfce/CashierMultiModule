@@ -3,7 +3,7 @@ package com.fajarxfce.feature.transactionhistory.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.fajarxfce.core.data.DEFAULT_PAGE_SIZE
+import com.fajarxfce.core.base.DEFAULT_PAGE_SIZE
 import com.fajarxfce.feature.transactionhistory.data.TransactionHistoryPagingSource
 import com.fajarxfce.feature.transactionhistory.data.source.TransactionHistoryApi
 import com.fajarxfce.feature.transactionhistory.domain.model.TransactionHistory

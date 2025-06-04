@@ -1,6 +1,6 @@
 package com.fajarxfce.feature.transactionhistory.data
 
-import com.fajarxfce.core.data.BasePagingSource
+import com.fajarxfce.core.base.BasePagingSource
 import com.fajarxfce.feature.transactionhistory.data.mapper.toDomainList
 import com.fajarxfce.feature.transactionhistory.data.model.TransactionDataItem
 import com.fajarxfce.feature.transactionhistory.data.source.TransactionHistoryApi

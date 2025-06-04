@@ -1,8 +1,10 @@
 plugins {
-    alias(libs.plugins.nowinandroid.jvm.library)
+    alias(libs.plugins.nowinandroid.android.feature)
 }
 
-group = "com.fajarxfce.feature.login.domain"
+android {
+    namespace = "com.fajarxfce.feature.login.domain"
+}
 
 dependencies {
     implementation(projects.core.common)
