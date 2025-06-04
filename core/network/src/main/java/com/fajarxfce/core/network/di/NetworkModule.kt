@@ -1,10 +1,10 @@
 package com.fajarxfce.core.network.di
 
-import com.fajarxfce.core.network.AuthApiService
-import com.fajarxfce.core.network.AuthInterceptor
+import com.fajarxfce.core.network.api.AuthApiService
+import com.fajarxfce.core.network.interceptor.AuthInterceptor
 import com.fajarxfce.core.network.BuildConfig
-import com.fajarxfce.core.network.ProductApiService
-import com.fajarxfce.core.network.UnauthorizedInterceptor
+import com.fajarxfce.core.network.api.ProductApiService
+import com.fajarxfce.core.network.interceptor.UnauthorizedInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

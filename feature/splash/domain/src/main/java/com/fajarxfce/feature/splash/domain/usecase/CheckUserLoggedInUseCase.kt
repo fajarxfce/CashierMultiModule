@@ -6,5 +6,5 @@ import javax.inject.Inject
 class CheckUserLoggedInUseCase @Inject constructor(
     private val splashRepository: SplashRepository
 ){
-    suspend operator fun invoke() = splashRepository.CheckUserLoggedIn()
+    suspend operator fun invoke() = splashRepository.checkUserLoggedIn()
 }

@@ -2,8 +2,8 @@
     <g class="graph">
         <path fill="#fff" d="M0 188V0h308.51v188z"/>
         <g class="node" transform="translate(4 184)">
-            <ellipse cx="106.07" cy="-162" fill="none" stroke="#000" rx="85.13" ry="18"/>
-            <text x="106.07" y="-156.95" font-family="Times,serif" font-size="14" text-anchor="middle">:feature:pos:domain</text>
+            <ellipse cx="106.07" cy="-162" fill="none" stroke="#000" rx="86.15" ry="18"/>
+            <text x="106.07" y="-156.95" font-family="Times,serif" font-size="14" text-anchor="middle">:feature:cart:domain</text>
         </g>
         <g class="node" transform="translate(4 184)">
             <ellipse cx="39.07" cy="-90" fill="none" stroke="#000" rx="39.07" ry="18"/>

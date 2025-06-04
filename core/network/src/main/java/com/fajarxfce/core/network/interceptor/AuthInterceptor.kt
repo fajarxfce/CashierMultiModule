@@ -1,6 +1,5 @@
-package com.fajarxfce.core.network
+package com.fajarxfce.core.network.interceptor
 
-import android.util.Log
 import com.fajarxfce.core.datastore.NiaPreferencesDataSource
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor

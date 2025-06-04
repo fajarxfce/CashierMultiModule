@@ -1,8 +1,7 @@
-package com.fajarxfce.core.network
+package com.fajarxfce.core.network.api
 
 import com.fajarxfce.core.network.response.ProductResponse
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.Query
 
 interface ProductApiService {

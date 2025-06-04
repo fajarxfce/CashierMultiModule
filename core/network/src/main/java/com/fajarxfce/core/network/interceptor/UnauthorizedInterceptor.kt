@@ -1,6 +1,5 @@
-package com.fajarxfce.core.network
+package com.fajarxfce.core.network.interceptor
 
-import android.util.Log
 import com.fajarxfce.core.AuthEvent
 import com.fajarxfce.core.AuthEventBus
 import com.fajarxfce.core.datastore.NiaPreferencesDataSource

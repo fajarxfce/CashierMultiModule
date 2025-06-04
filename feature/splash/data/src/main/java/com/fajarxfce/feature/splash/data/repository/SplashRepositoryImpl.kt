@@ -14,7 +14,7 @@ class SplashRepositoryImpl @Inject constructor(
     private val api : SplashApi,
     private val niaPreferencesDataSource: NiaPreferencesDataSource
 ) : SplashRepository {
-    override suspend fun CheckUserLoggedIn(): Resource<Unit> {
+    override suspend fun checkUserLoggedIn(): Resource<Unit> {
         val token = niaPreferencesDataSource.getAuthToken()
         Log.d("SplashRepositoryImpl", "CheckUserLoggedIn: $token")
         return safeApiCall { api.checkToken("Bearer $token") }
