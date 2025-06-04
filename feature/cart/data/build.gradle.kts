@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.nowinandroid.android.library)
     alias(libs.plugins.nowinandroid.hilt)
     alias(libs.plugins.nowinandroid.android.feature)
+    alias(libs.plugins.nowinandroid.android.room)
     id("kotlinx-serialization")
 }
 
@@ -15,6 +16,8 @@ android {
 dependencies {
     implementation(projects.core.common)
     implementation(projects.core.database)
+    implementation(projects.core.model)
+    implementation(projects.core.domain)
     implementation(projects.feature.cart.domain)
     implementation(libs.retrofit.core)
     implementation(projects.core.network)

@@ -1,56 +1,19 @@
 package com.fajarxfce.feature.cart.data.repository
 
-import com.fajarxfce.core.database.dao.CartDao
-import com.fajarxfce.core.exception.BaseException
-import com.fajarxfce.core.network.safeApiCall
-import com.fajarxfce.core.result.Resource
-import com.fajarxfce.feature.cart.data.model.CreateTransactionRequest
-import com.fajarxfce.feature.cart.data.model.DataItem
-import com.fajarxfce.feature.cart.data.source.CartApi
-import com.fajarxfce.feature.cart.data.toCartItems
-import com.fajarxfce.feature.cart.domain.model.CartItem
-import com.fajarxfce.feature.cart.domain.repository.CartRepository
+import com.fajarxfce.core.domain.repository.CartRepository
+import com.fajarxfce.core.model.cart.CartItem
+import com.fajarxfce.feature.cart.data.source.local.CartDao
+import com.fajarxfce.feature.cart.data.source.local.entity.toDomain
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emitAll
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CartRepositoryImpl @Inject constructor(
-    private val cartDao: CartDao,
-    private val cartApi: CartApi,
+    private val cartDao: CartDao
 ) : CartRepository {
-    override fun getCartItems(): Flow<List<CartItem>> = flow {
-        emitAll(cartDao.getAll().map { it.toCartItems() })
-    }
-
-    override suspend fun increaseProductQuantity(productId: Int): Resource<Unit> {
-        return try {
-            Resource.Success(cartDao.increaseProductQuantity(productId))
-        } catch (e: Exception) {
-            Resource.Error(BaseException("Error increasing product quantity"))
+    override fun getCartItems(): Flow<List<CartItem>> {
+        return cartDao.getCartItems().map { entities ->
+            entities.map { it.toDomain() }
         }
     }
-
-    override suspend fun decreaseProductQuantity(productId: Int): Resource<Unit> {
-        return try {
-            Resource.Success(cartDao.decreaseProductQuantity(productId))
-        } catch (e: Exception) {
-            Resource.Error(BaseException("Error decreasing product quantity"))
-        }
-    }
-
-    override suspend fun createTransaction(cartItems: List<CartItem>): Resource<Unit> =
-        safeApiCall {
-            cartApi.createTransaction(
-                CreateTransactionRequest(
-                    data = cartItems.map { cartItem ->
-                        DataItem(
-                            quantity = cartItem.quantity,
-                            productId = cartItem.productId,
-                        )
-                    },
-                ),
-            )
-        }
 }

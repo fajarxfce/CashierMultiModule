@@ -9,6 +9,7 @@ android {
 
 dependencies {
     implementation(projects.feature.cart.domain)
+    implementation(projects.core.model)
     implementation(libs.androidx.material)
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.0")
 }

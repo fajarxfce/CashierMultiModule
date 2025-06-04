@@ -1,7 +1,7 @@
 package com.fajarxfce.feature.cart.data.di
 
+import com.fajarxfce.core.domain.repository.CartRepository
 import com.fajarxfce.feature.cart.data.repository.CartRepositoryImpl
-import com.fajarxfce.feature.cart.domain.repository.CartRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

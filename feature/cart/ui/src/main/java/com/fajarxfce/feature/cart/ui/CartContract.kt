@@ -1,6 +1,6 @@
 package com.fajarxfce.feature.cart.ui
 
-import com.fajarxfce.feature.cart.domain.model.CartItem
+import com.fajarxfce.core.model.cart.CartItem
 
 object CartContract {
     data class UiState(

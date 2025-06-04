@@ -14,8 +14,6 @@ import com.fajarxfce.feature.pos.domain.params.UpsertProductToCartParam
 import com.fajarxfce.feature.pos.domain.usecase.GetCategoryByQueryUseCase
 import com.fajarxfce.feature.pos.domain.usecase.GetProductMerkByQueryUseCase
 import com.fajarxfce.feature.pos.domain.usecase.GetProductPagingUseCase
-import com.fajarxfce.feature.pos.domain.usecase.GetTotalCartItemsUseCase
-import com.fajarxfce.feature.pos.domain.usecase.UpsertProductToCartUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -35,8 +33,6 @@ import javax.inject.Inject
 @HiltViewModel
 internal class PosViewModel @Inject constructor(
     private val getProductPagingUseCase: GetProductPagingUseCase,
-    private val upsertProductToCartUseCase: UpsertProductToCartUseCase,
-    private val getTotalCartItemsUseCase: GetTotalCartItemsUseCase,
     private val getCategoryByQueryUseCase: GetCategoryByQueryUseCase,
     private val getProductMerkByQueryUseCase: GetProductMerkByQueryUseCase,
 ) : ViewModel(),
@@ -84,9 +80,7 @@ internal class PosViewModel @Inject constructor(
 
                 PosContract.UiAction.LoadTotalCartItem -> {
                     viewModelScope.launch {
-                        getTotalCartItemsUseCase().collect {
-                            updateUiState { copy(totalCartItem = it) }
-                        }
+
                     }
                 }
 
@@ -111,13 +105,10 @@ internal class PosViewModel @Inject constructor(
                 PosContract.UiAction.OpenFilterSheet -> {
                     updateUiState {
                         copy(
-                            // Saat membuka sheet, inisialisasi state sementara dengan filter yang sedang aktif
                             tempSelectedCategoryIdsInSheet = params.productCategoryId,
                             tempSelectedMerkIdsInSheet = params.productMerkId
                         )
                     }
-                    // Anda mungkin masih perlu memicu efek untuk menampilkan sheet di UI,
-                    // atau biarkan `showFilterBottomSheet` di PosScreen yang menanganinya.
                 }
 
                 is PosContract.UiAction.ToggleCategoryFilterInSheet -> {
@@ -154,13 +145,11 @@ internal class PosViewModel @Inject constructor(
                         page = 1,
                         productCategoryId = uiState.value.tempSelectedCategoryIdsInSheet,
                         productMerkId = uiState.value.tempSelectedMerkIdsInSheet,
-                        // searchQuery tetap dari uiState.value.searchQuery.value
+
                         search = uiState.value.searchQuery.value.ifBlank { null }
                     )
-                    // Logika ini sama dengan ApplyFilters yang lama, hanya saja sumbernya dari temp state
                     updateUiState { copy(params = newParams) } // Update params aktif
                     onAction(PosContract.UiAction.LoadProducts(newParams))
-                    // Anda mungkin ingin menutup sheet di sini via UiEffect atau flag di UiState
                 }
             }
         }
@@ -174,19 +163,7 @@ internal class PosViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
-            upsertProductToCartUseCase(param = UpsertProductToCartParam(
-                productId = product.id,
-                name = product.name,
-                price = product.price,
-                quantity = quantitySelected,
-                imageUrl = product.imageUrl
-            ))
-                .onSuccess {
-                    emitUiEffect(PosContract.UiEffect.ShowSnackbar("Product added to cart"))
-                }
-                .onFailure {
-                    emitUiEffect(PosContract.UiEffect.ShowSnackbar(it.message.toString()))
-                }
+
         }
     }
 }

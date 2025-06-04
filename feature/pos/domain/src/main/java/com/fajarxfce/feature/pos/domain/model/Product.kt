@@ -1,6 +1,6 @@
 package com.fajarxfce.feature.pos.domain.model
 
-import com.fajarxfce.core.model.cart.Cart
+import com.fajarxfce.core.model.cart.CartItem
 
 data class Product(
     val id: Int?,
@@ -10,7 +10,7 @@ data class Product(
     val imageUrl: String?
 )
 
-fun Product.toCart(): Cart = Cart(
+fun Product.toCart(): CartItem = CartItem(
     productId = id,
     name = name,
     price = price,
