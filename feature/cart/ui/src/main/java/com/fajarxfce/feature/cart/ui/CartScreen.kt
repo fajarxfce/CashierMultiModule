@@ -123,7 +123,7 @@ internal fun CartScreen(
                                 ),
                             )
                         },
-                        onRemoveItem = { /* implement this later */ },
+                        onRemoveItem = { uiAction(CartContract.UiAction.DeleteCartItem(it.productId!!)) },
                     )
                 }
             }

@@ -32,6 +32,12 @@ interface CartDao {
     @Query("DELETE FROM cart_items")
     suspend fun clearAllCartItems()
 
+    @Query("UPDATE cart_items SET quantity = quantity + 1 WHERE productId = :productId")
+    suspend fun increaseProductQuantity(productId: Int)
+
+    @Query("UPDATE cart_items SET quantity = quantity - 1 WHERE productId = :productId")
+    suspend fun decreaseProductQuantity(productId: Int)
+
     @Transaction
     suspend fun upsertIncrementQuantity(itemToAdd: CartItemEntity) {
         val existingItem = getCartItemByProductId(itemToAdd.productId)

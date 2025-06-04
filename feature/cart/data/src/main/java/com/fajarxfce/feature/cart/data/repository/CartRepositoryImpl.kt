@@ -38,4 +38,31 @@ class CartRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun increaseProductQuantity(productId: Int): Resource<Unit> {
+        return try {
+            val result = cartDao.increaseProductQuantity(productId)
+            Resource.Success(result)
+        } catch (e: Exception) {
+            Resource.Error(BaseException("Failed to increase product quantity"))
+        }
+    }
+
+    override suspend fun decreaseProductQuantity(productId: Int): Resource<Unit> {
+        return try {
+            val result = cartDao.decreaseProductQuantity(productId)
+            Resource.Success(result)
+        } catch (e: Exception) {
+            Resource.Error(BaseException("Failed to increase product quantity"))
+        }
+    }
+
+    override suspend fun deleteCartItemByProductId(productId: Int): Resource<Unit> {
+        return try {
+            val result = cartDao.deleteCartItemByProductId(productId)
+            Resource.Success(result)
+        } catch (e: Exception) {
+            Resource.Error(BaseException("Failed to delete product"))
+        }
+    }
+
 }

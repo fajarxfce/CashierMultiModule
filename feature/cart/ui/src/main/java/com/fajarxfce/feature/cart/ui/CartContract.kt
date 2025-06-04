@@ -14,6 +14,7 @@ object CartContract {
         data object OnCreateTransaction : UiAction
         data class OnIncreaseQuantity(val productId: Int) : UiAction
         data class OnDecreaseQuantity(val productId: Int) : UiAction
+        data class DeleteCartItem(val productId: Int) : UiAction
     }
     sealed interface UiEffect {
         data class ShowSnackbar(val message: String, val isError: Boolean = false) : UiEffect
