@@ -1,5 +1,6 @@
 package com.fajarxfce.feature.cart.data.repository
 
+import com.fajarxfce.core.database.safeDbCall
 import com.fajarxfce.core.domain.repository.CartRepository
 import com.fajarxfce.core.exception.BaseException
 import com.fajarxfce.core.model.cart.CartItem
@@ -22,47 +23,26 @@ class CartRepositoryImpl @Inject constructor(
     }
 
     override suspend fun upsertProductToCart(product: Product, quantity: Int): Resource<Unit> {
-        return try {
-            val itemToAdd = CartItemEntity(
-                productId = product.id!!,
-                name = product.name,
-                price = product.price,
-                quantity = quantity,
-                imageUrl = product.imageUrl
-            )
-            cartDao.upsertIncrementQuantity(itemToAdd)
-            Resource.Success(Unit)
-        } catch (e: Exception) {
-            Resource.Error(BaseException("Failed to insert product to cart"))
-
-        }
+        val itemToAdd = CartItemEntity(
+            productId = product.id!!,
+            name = product.name,
+            price = product.price,
+            quantity = quantity,
+            imageUrl = product.imageUrl
+        )
+        return safeDbCall { cartDao.upsertIncrementQuantity(itemToAdd) }
     }
 
     override suspend fun increaseProductQuantity(productId: Int): Resource<Unit> {
-        return try {
-            val result = cartDao.increaseProductQuantity(productId)
-            Resource.Success(result)
-        } catch (e: Exception) {
-            Resource.Error(BaseException("Failed to increase product quantity"))
-        }
+        return safeDbCall { cartDao.increaseProductQuantity(productId) }
     }
 
     override suspend fun decreaseProductQuantity(productId: Int): Resource<Unit> {
-        return try {
-            val result = cartDao.decreaseProductQuantity(productId)
-            Resource.Success(result)
-        } catch (e: Exception) {
-            Resource.Error(BaseException("Failed to increase product quantity"))
-        }
+        return safeDbCall { cartDao.decreaseProductQuantity(productId) }
     }
 
     override suspend fun deleteCartItemByProductId(productId: Int): Resource<Unit> {
-        return try {
-            val result = cartDao.deleteCartItemByProductId(productId)
-            Resource.Success(result)
-        } catch (e: Exception) {
-            Resource.Error(BaseException("Failed to delete product"))
-        }
+        return safeDbCall { cartDao.deleteCartItemByProductId(productId) }
     }
 
 }
