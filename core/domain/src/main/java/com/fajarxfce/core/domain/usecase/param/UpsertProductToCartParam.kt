@@ -1,0 +1,1 @@
+package com.fajarxfce.core.domain.usecase.param

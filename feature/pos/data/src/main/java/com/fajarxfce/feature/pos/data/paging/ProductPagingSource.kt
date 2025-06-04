@@ -6,7 +6,7 @@ import com.fajarxfce.feature.pos.domain.params.GetAllProductParams
 import com.fajarxfce.feature.pos.data.model.ProductDataItem
 import com.fajarxfce.feature.pos.domain.params.toQueryMap
 import com.fajarxfce.feature.pos.data.source.PosApi
-import com.fajarxfce.feature.pos.domain.model.Product
+import com.fajarxfce.core.model.product.Product
 
 internal class ProductPagingSource(
     private val posApi: PosApi,

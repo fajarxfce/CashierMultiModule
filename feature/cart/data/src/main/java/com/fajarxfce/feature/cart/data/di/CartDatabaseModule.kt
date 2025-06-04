@@ -2,7 +2,7 @@ package com.fajarxfce.feature.cart.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.fajarxfce.feature.cart.data.source.local.CartDao
+import com.fajarxfce.feature.cart.data.source.local.dao.CartDao
 import com.fajarxfce.feature.cart.data.source.local.CartDatabase
 import dagger.Module
 import dagger.Provides

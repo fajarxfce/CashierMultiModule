@@ -1,8 +1,7 @@
 package com.fajarxfce.feature.pos.data.mapper
 
-import com.fajarxfce.feature.pos.data.model.GetAllProductResponse
 import com.fajarxfce.feature.pos.data.model.ProductDataItem
-import com.fajarxfce.feature.pos.domain.model.Product
+import com.fajarxfce.core.model.product.Product
 
 internal fun ProductDataItem.toDomain(): Product {
 

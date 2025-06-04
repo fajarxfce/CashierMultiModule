@@ -25,7 +25,6 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -52,7 +51,7 @@ import com.fajarxfce.core.ui.extension.collectWithLifecycle
 import com.fajarxfce.core.ui.theme.CashierBlue
 import com.fajarxfce.feature.pos.domain.model.Category
 import com.fajarxfce.feature.pos.domain.model.Merk
-import com.fajarxfce.feature.pos.domain.model.Product
+import com.fajarxfce.core.model.product.Product
 import com.fajarxfce.feature.pos.ui.component.CustomProductDetailBottomSheet
 import com.fajarxfce.feature.pos.ui.component.PosBottomBar
 import com.fajarxfce.feature.pos.ui.component.ProductFilterBottomSheet

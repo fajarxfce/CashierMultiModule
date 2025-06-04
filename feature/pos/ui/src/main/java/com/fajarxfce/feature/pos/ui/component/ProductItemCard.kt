@@ -26,7 +26,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.fajarxfce.core.ui.component.CashierText
 import com.fajarxfce.core.ui.theme.CashierBlue
-import com.fajarxfce.feature.pos.domain.model.Product
+import com.fajarxfce.core.model.product.Product
 import java.text.NumberFormat
 import java.util.Locale
 

@@ -10,7 +10,7 @@ import com.fajarxfce.feature.pos.data.paging.ProductPagingSource
 import com.fajarxfce.feature.pos.data.source.PosApi
 import com.fajarxfce.feature.pos.domain.model.Category
 import com.fajarxfce.feature.pos.domain.model.Merk
-import com.fajarxfce.feature.pos.domain.model.Product
+import com.fajarxfce.core.model.product.Product
 import com.fajarxfce.feature.pos.domain.params.GetCategoryByQueryParams
 import com.fajarxfce.feature.pos.domain.params.GetProductMerkByQueryParams
 import com.fajarxfce.feature.pos.domain.repository.PosRepository

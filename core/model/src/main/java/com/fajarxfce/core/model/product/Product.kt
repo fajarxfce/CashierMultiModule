@@ -1,4 +1,4 @@
-package com.fajarxfce.feature.pos.domain.model
+package com.fajarxfce.core.model.product
 
 import com.fajarxfce.core.model.cart.CartItem
 
@@ -11,9 +11,9 @@ data class Product(
 )
 
 fun Product.toCart(): CartItem = CartItem(
-    productId = id,
-    name = name,
-    price = price,
+    productId = id!!,
+    name = name.orEmpty(),
+    price = price ?: 0,
     quantity = 1,
     imageUrl = imageUrl
 )
